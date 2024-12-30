@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E32A68A52D1D7A660028F217 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E32A68A42D1D7A660028F217 /* FirebaseAnalytics */; };
+		E32A68A72D1D7A660028F217 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E32A68A62D1D7A660028F217 /* FirebaseAuth */; };
+		E32A68A92D1D7A660028F217 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E32A68A82D1D7A660028F217 /* FirebaseDatabase */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		E32A68692D1D66340028F217 /* exploreGeorgia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = exploreGeorgia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +42,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E32A68A92D1D7A660028F217 /* FirebaseDatabase in Frameworks */,
+				E32A68A52D1D7A660028F217 /* FirebaseAnalytics in Frameworks */,
+				E32A68A72D1D7A660028F217 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +87,9 @@
 			);
 			name = exploreGeorgia;
 			packageProductDependencies = (
+				E32A68A42D1D7A660028F217 /* FirebaseAnalytics */,
+				E32A68A62D1D7A660028F217 /* FirebaseAuth */,
+				E32A68A82D1D7A660028F217 /* FirebaseDatabase */,
 			);
 			productName = exploreGeorgia;
 			productReference = E32A68692D1D66340028F217 /* exploreGeorgia.app */;
@@ -107,6 +119,9 @@
 			);
 			mainGroup = E32A68602D1D66340028F217;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E32A68A32D1D7A660028F217 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E32A686A2D1D66340028F217 /* Products */;
 			projectDirPath = "";
@@ -353,6 +368,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E32A68A32D1D7A660028F217 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E32A68A42D1D7A660028F217 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E32A68A32D1D7A660028F217 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		E32A68A62D1D7A660028F217 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E32A68A32D1D7A660028F217 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		E32A68A82D1D7A660028F217 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E32A68A32D1D7A660028F217 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E32A68612D1D66340028F217 /* Project object */;
 }
