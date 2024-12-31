@@ -63,6 +63,50 @@ final class LoginVC: UIViewController {
     return button
   }()
   
+  private lazy var signupStack: UIStackView = {
+    let stack  = UIStackView()
+    stack.createCustomStack(
+        axis: .horizontal,
+        distribution: .equalSpacing,
+        spacing: 10
+      )
+    return stack
+  }()
+  
+  private lazy var noAccLabel: UILabel = {
+    let label = UILabel()
+    label.createLabel(
+        text: "Don’t have an account?",
+        fontSize: 14,
+        textColor: .customGray
+      )
+    return label
+  }()
+  
+  private lazy var signupButton: UIButton = {
+    let button = UIButton()
+    button.createCustomButton(
+        title: "Sign Up",
+        fontSize: 14,
+        fontWeight: .medium,
+        titleColor: .customVine
+      )
+    button.addAction(UIAction(handler: {[weak self] _ in
+      self?.navigateToSignupVC()
+    }), for: .touchUpInside)
+    return button
+  }()
+  
+  private lazy var connectLabel: UILabel = {
+    let label = UILabel()
+    label.createLabel(
+        text: "Or connect",
+        fontSize: 14,
+        textColor: .customGray
+      )
+    return label
+  }()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -79,6 +123,10 @@ final class LoginVC: UIViewController {
     inputsStack.addArrangedSubview(passwordInput)
     view.addSubview(forgetPwdButton)
     view.addSubview(loginButton)
+    view.addSubview(signupStack)
+    signupStack.addArrangedSubview(noAccLabel)
+    signupStack.addArrangedSubview(signupButton)
+    view.addSubview(connectLabel)
     
     setupConstraints()
   }
@@ -102,6 +150,16 @@ final class LoginVC: UIViewController {
       loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
       loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
       loginButton.heightAnchor.constraint(equalToConstant: 50),
+      
+      signupStack.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 40),
+      signupStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      
+      connectLabel.topAnchor.constraint(equalTo: signupStack.bottomAnchor, constant: 20),
+      connectLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
     ])
+  }
+  
+  private func navigateToSignupVC() {
+    navigationController?.pushViewController(SignupVC(), animated: true)
   }
 }

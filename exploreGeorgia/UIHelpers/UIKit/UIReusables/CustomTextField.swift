@@ -18,7 +18,8 @@ final class CustomTextField: UIView {
     field.isSecureTextEntry = isPassword
     field.clipsToBounds = true
     field.layer.cornerRadius = 12
-    field.backgroundColor = .customLightGray
+    field.layer.borderWidth = 1
+    field.layer.borderColor = UIColor.customVine.cgColor
     
     let leftContainer = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 50))
     field.leftView = leftContainer
