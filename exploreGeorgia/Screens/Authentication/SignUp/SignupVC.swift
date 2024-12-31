@@ -30,7 +30,7 @@ final class SignupVC: UIViewController {
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
-      self?.goBackVC()
+      self?.navigationController?.popViewController(animated: true)
     }), for: .touchUpInside)
     return button
   }()
@@ -126,7 +126,7 @@ final class SignupVC: UIViewController {
       titleColor: .customVine
     )
     button.addAction(UIAction(handler: {[weak self] _ in
-      self?.goBackVC()
+      self?.navigationController?.popViewController(animated: true)
     }), for: .touchUpInside)
     return button
   }()
@@ -200,10 +200,6 @@ final class SignupVC: UIViewController {
       signinStack.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
       signinStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20)
     ])
-  }
-  
-  private func goBackVC() {
-    navigationController?.popViewController(animated: true)
   }
   
   private func makeViewScrollable() {

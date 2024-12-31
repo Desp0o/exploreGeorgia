@@ -60,6 +60,11 @@ final class LoginVC: UIViewController {
       fontWeight: .medium,
       titleColor: .customVine
     )
+    
+    button.addAction(UIAction(handler: { [weak self] _ in
+      self?.navigateToPasswordReset()
+    }), for: .touchUpInside)
+    
     return button
   }()
   
@@ -161,5 +166,9 @@ final class LoginVC: UIViewController {
   
   private func navigateToSignupVC() {
     navigationController?.pushViewController(SignupVC(), animated: true)
+  }
+  
+  private func navigateToPasswordReset() {
+    navigationController?.pushViewController(PasswordResetVC(), animated: true)
   }
 }
