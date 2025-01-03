@@ -7,19 +7,24 @@
 
 import FirebaseCore
 import FirebaseAuth
+import FirebaseFirestore
 
 protocol SignupProtocol {
-  func createUser(email: String, password: String) async throws
+  func createUser(user: RegisteredUserModel) async throws
 }
 
 final class AuthManager: SignupProtocol {
   
-  func createUser(email: String, password: String) async throws {
-    try await Auth.auth().createUser(withEmail: email, password: password)
-  }
-  
-  func test() {
+  func createUser(user: RegisteredUserModel) async throws {
+    let authResult = try await Auth.auth().createUser(withEmail: user.email, password: user.password)
     
+    let db = Firestore.firestore()
+    let userData: [String: Any] = [
+      "firstName": user.firstName,
+      "lastName": user.lastName,
+      "email": user.email
+    ]
+
+    try await db.collection("users").document(authResult.user.uid).setData(userData)
   }
-  
 }

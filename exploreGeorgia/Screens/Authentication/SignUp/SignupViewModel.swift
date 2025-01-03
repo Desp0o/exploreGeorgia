@@ -12,42 +12,26 @@ protocol RegisterErrorMessageDelegate: AnyObject {
 }
 
 final class SignupViewModel {
-    weak var errorDelegate: RegisterErrorMessageDelegate?
-    var firstName = ""
-    var lastName = ""
-    var email = ""
-    var password = ""
-    var errorMessage: String?
-    
-    var authManager: SignupProtocol
+  weak var errorDelegate: RegisterErrorMessageDelegate?
+  var authManager: SignupProtocol
+  var errorMessage: String?
 
-    init(authManager: SignupProtocol = AuthManager()) {
-        self.authManager = authManager
-    }
-    
-    func signUpUser() {
-        Task {
-            do {
-              try await authManager.createUser(email: email, password: password)
-                errorMessage = nil
-            } catch {
-                errorMessage = error.localizedDescription
-            }
-        }
-    }
+  init(authManager: SignupProtocol = AuthManager()) {
+    self.authManager = authManager
+  }
   
-  func checkUser(
-    firstNameValue: String,
-    lastNameValue: String,
-    emailValue: String,
-    pwdValue: String,
-    rePwdValue: String
-  ) {
-    firstName = firstNameValue
-    lastName = lastNameValue
-    email = emailValue
-    password = pwdValue
-    
+  func signUpUser(user: RegisteredUserModel) {
+    Task {
+      do {
+        try await authManager.createUser(user: user)
+        errorMessage = nil
+      } catch {
+        errorMessage = error.localizedDescription
+      }
+    }
+  }
+  
+  func checkUser(firstName: String, lastName: String, email: String, password: String, rePassword: String) {
     guard firstName.count > 1 else {
       errorMessage = "The first name must be at least 2 characters long"
       errorDelegate?.didErrorDuringSignup()
@@ -90,13 +74,15 @@ final class SignupViewModel {
       return
     }
     
-    guard password == rePwdValue else {
+    guard password == rePassword else {
       errorMessage = "The passwords do not match."
       errorDelegate?.didErrorDuringSignup()
       return
     }
     
-    print(firstName, lastName, email, password)
+    let user = RegisteredUserModel(firstName: firstName, lastName: lastName, email: email, password: password)
+    
+    signUpUser(user: user)
   }
 }
 

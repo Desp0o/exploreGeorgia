@@ -10,6 +10,7 @@
 		E32A68A52D1D7A660028F217 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E32A68A42D1D7A660028F217 /* FirebaseAnalytics */; };
 		E32A68A72D1D7A660028F217 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E32A68A62D1D7A660028F217 /* FirebaseAuth */; };
 		E32A68A92D1D7A660028F217 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E32A68A82D1D7A660028F217 /* FirebaseDatabase */; };
+		E3A005822D28A50B003D4A2C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E3A005812D28A50B003D4A2C /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E32A68A92D1D7A660028F217 /* FirebaseDatabase in Frameworks */,
+				E3A005822D28A50B003D4A2C /* FirebaseFirestore in Frameworks */,
 				E32A68A52D1D7A660028F217 /* FirebaseAnalytics in Frameworks */,
 				E32A68A72D1D7A660028F217 /* FirebaseAuth in Frameworks */,
 			);
@@ -55,6 +57,7 @@
 			isa = PBXGroup;
 			children = (
 				E32A686B2D1D66340028F217 /* exploreGeorgia */,
+				E3A005802D28A50B003D4A2C /* Frameworks */,
 				E32A686A2D1D66340028F217 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +68,13 @@
 				E32A68692D1D66340028F217 /* exploreGeorgia.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E3A005802D28A50B003D4A2C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -90,6 +100,7 @@
 				E32A68A42D1D7A660028F217 /* FirebaseAnalytics */,
 				E32A68A62D1D7A660028F217 /* FirebaseAuth */,
 				E32A68A82D1D7A660028F217 /* FirebaseDatabase */,
+				E3A005812D28A50B003D4A2C /* FirebaseFirestore */,
 			);
 			productName = exploreGeorgia;
 			productReference = E32A68692D1D66340028F217 /* exploreGeorgia.app */;
@@ -395,6 +406,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E32A68A32D1D7A660028F217 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabase;
+		};
+		E3A005812D28A50B003D4A2C /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E32A68A32D1D7A660028F217 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

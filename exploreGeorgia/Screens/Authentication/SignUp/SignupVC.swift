@@ -227,18 +227,17 @@ final class SignupVC: UIViewController {
   
   private func registerUser() {
     vm.checkUser(
-        firstNameValue: firstNameInput.value(),
-        lastNameValue: lastNameInput.value(),
-        emailValue: emailInput.value(),
-        pwdValue: passwordInput.value(),
-        rePwdValue: confirmPasswordInput.value()
+        firstName: firstNameInput.value(),
+        lastName: lastNameInput.value(),
+        email: emailInput.value(),
+        password: passwordInput.value(),
+        rePassword: confirmPasswordInput.value()
       )
   }
 }
 
 extension SignupVC: RegisterErrorMessageDelegate {
   func didErrorDuringSignup() {
-    print(vm.errorMessage)
   }
 }
 
