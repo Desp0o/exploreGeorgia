@@ -16,13 +16,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="mainLogo" translatesAutoresizingMaskIntoConstraints="NO" id="qb4-Jd-mPd">
-                                <rect key="frame" x="100" y="364" width="193" height="125"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="mainLogo" translatesAutoresizingMaskIntoConstraints="NO" id="qb4-Jd-mPd">
+                                <rect key="frame" x="100" y="363.66666666666669" width="193" height="125"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" name="customVine"/>
+                        <constraints>
+                            <constraint firstItem="qb4-Jd-mPd" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Rjs-Rm-5V4"/>
+                            <constraint firstItem="qb4-Jd-mPd" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="zvM-SU-Xzp"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>

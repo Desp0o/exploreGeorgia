@@ -8,6 +8,8 @@
 import UIKit
 
 final class SignupVC: UIViewController {
+  private let vm: SignupViewModel
+  
   private lazy var scrollView: UIScrollView = {
     let view = UIScrollView()
     view.translatesAutoresizingMaskIntoConstraints = false
@@ -79,12 +81,12 @@ final class SignupVC: UIViewController {
   )
   
   private lazy var passwordInput = CustomTextField(
-    placeholderName: "Enter Email",
+    placeholderName: "Enter Password",
     isPassword: true
   )
   
   private lazy var confirmPasswordInput = CustomTextField(
-    placeholderName: "Enter Email",
+    placeholderName: "Confirm Password",
     isPassword: true
   )
   
@@ -94,6 +96,11 @@ final class SignupVC: UIViewController {
       title: "Sign up",
       backgroundColor: .customVine
     )
+    
+    button.addAction(UIAction(handler: { [weak self] _ in
+      self?.registerUser()
+    }), for: .touchUpInside)
+    
     return button
   }()
   
@@ -131,8 +138,19 @@ final class SignupVC: UIViewController {
     return button
   }()
   
+  init(vm: SignupViewModel = SignupViewModel()) {
+    self.vm = vm
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    vm.errorDelegate = self
     
     setupUI()
   }
@@ -205,6 +223,22 @@ final class SignupVC: UIViewController {
   private func makeViewScrollable() {
     let isScrollEnabled = contentView.frame.height > scrollView.frame.height
     scrollView.isScrollEnabled = isScrollEnabled
+  }
+  
+  private func registerUser() {
+    vm.checkUser(
+        firstNameValue: firstNameInput.value(),
+        lastNameValue: lastNameInput.value(),
+        emailValue: emailInput.value(),
+        pwdValue: passwordInput.value(),
+        rePwdValue: confirmPasswordInput.value()
+      )
+  }
+}
+
+extension SignupVC: RegisterErrorMessageDelegate {
+  func didErrorDuringSignup() {
+    print(vm.errorMessage)
   }
 }
 
