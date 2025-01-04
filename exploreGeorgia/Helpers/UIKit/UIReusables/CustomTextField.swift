@@ -8,7 +8,7 @@
 import UIKit
 
 final class CustomTextField: UIView {
-  private let placeholderName: String
+  var placeholderName: String
   private let isPassword: Bool
   
   private lazy var inputField: UITextField = {
@@ -60,6 +60,10 @@ final class CustomTextField: UIView {
     setupUI()
   }
   
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   func setupUI() {
     NSLayoutConstraint.activate([
       inputField.topAnchor.constraint(equalTo: topAnchor),
@@ -68,10 +72,6 @@ final class CustomTextField: UIView {
       inputField.bottomAnchor.constraint(equalTo: bottomAnchor),
       inputField.heightAnchor.constraint(equalToConstant: 50)
     ])
-  }
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
   }
   
   private func toggleVisibility(_ sender: UIButton) {

@@ -216,7 +216,7 @@ final class SignupVC: UIViewController {
       
       signinStack.topAnchor.constraint(equalTo: inputsStack.bottomAnchor, constant: 40),
       signinStack.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-      signinStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20)
+      signinStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20),  
     ])
   }
   
@@ -227,17 +227,19 @@ final class SignupVC: UIViewController {
   
   private func registerUser() {
     vm.checkUser(
-        firstName: firstNameInput.value(),
-        lastName: lastNameInput.value(),
-        email: emailInput.value(),
-        password: passwordInput.value(),
-        rePassword: confirmPasswordInput.value()
-      )
+      firstName: firstNameInput.value(),
+      lastName: lastNameInput.value(),
+      email: emailInput.value(),
+      password: passwordInput.value(),
+      rePassword: confirmPasswordInput.value()
+    )
   }
 }
 
 extension SignupVC: RegisterErrorMessageDelegate {
   func didErrorDuringSignup() {
+    let overLayerView = UIKitCustomAlert()
+    overLayerView.appear(sender: self, message: vm.errorMessage ?? "Error", messageType: .error)
   }
 }
 
