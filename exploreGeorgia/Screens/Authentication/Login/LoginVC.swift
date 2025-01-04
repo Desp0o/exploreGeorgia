@@ -8,6 +8,8 @@
 import UIKit
 
 final class LoginVC: UIViewController {
+  private var vm: LoginViewModel?
+  
   private lazy var screenTitle: UILabel = {
     let label = UILabel()
     label.createLabel(
@@ -50,6 +52,11 @@ final class LoginVC: UIViewController {
       title: "Log In",
       backgroundColor: .customBlue
     )
+    
+    button.addAction(UIAction(handler: {[weak self] _ in
+      self?.loginUser()
+    }), for: .touchUpInside)
+    
     return button
   }()
   
@@ -113,8 +120,19 @@ final class LoginVC: UIViewController {
     return label
   }()
   
+  init(vm: LoginViewModel = LoginViewModel()) {
+    self.vm = vm
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    vm?.loginErrorDelegate = self
     
     setupUI()
   }
@@ -171,5 +189,16 @@ final class LoginVC: UIViewController {
   
   private func navigateToPasswordReset() {
     navigationController?.pushViewController(PasswordResetVC(), animated: true)
+  }
+  
+  private func loginUser() {
+    vm?.checkUser(email: emailInput.value(), password: passwordInput.value())
+  }
+}
+
+extension LoginVC: LoginErrorDelegate {
+  func didErrorDuringLogin() {
+    let overlay = UIKitCustomAlert()
+    overlay.appear(sender: self, message: vm?.loginErrorMsg ?? "", messageType: .error)
   }
 }
