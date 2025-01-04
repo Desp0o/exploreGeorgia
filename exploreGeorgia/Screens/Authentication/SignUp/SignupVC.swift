@@ -152,6 +152,8 @@ final class SignupVC: UIViewController {
     super.viewDidLoad()
     
     vm.errorDelegate = self
+    vm.regResultDelegate = self
+    vm.regLoadingDelegate = self
     
     setupUI()
   }
@@ -241,6 +243,29 @@ extension SignupVC: RegisterErrorMessageDelegate {
   func didErrorDuringSignup() {
     let overLayerView = UIKitCustomAlert()
     overLayerView.appear(sender: self, message: vm.errorMessage ?? "Error", messageType: .error)
+  }
+}
+
+extension SignupVC: RegisterResultMessageDelegate {
+  func didRegisterMessageChanged() {
+    showToast(
+      message: self.vm.registerResultMessage ?? "",
+      toastType: .successfully
+    )
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {[weak self] in
+      self?.navigationController?.popViewController(animated: true)
+    }
+  }
+}
+
+extension SignupVC: RegistrationLoadingDelegate {
+  func didRegistrationLoaded() {
+    if vm.isLoading {
+      showLoading()
+    } else {
+      hideLoading()
+    }
   }
 }
 

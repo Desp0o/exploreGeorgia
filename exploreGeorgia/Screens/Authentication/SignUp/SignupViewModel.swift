@@ -11,27 +11,60 @@ protocol RegisterErrorMessageDelegate: AnyObject {
   func didErrorDuringSignup()
 }
 
+protocol RegisterResultMessageDelegate: AnyObject {
+  func didRegisterMessageChanged()
+}
+
+protocol RegistrationLoadingDelegate: AnyObject {
+  func didRegistrationLoaded()
+}
+
 final class SignupViewModel {
   weak var errorDelegate: RegisterErrorMessageDelegate?
+  weak var regResultDelegate: RegisterResultMessageDelegate?
+  weak var regLoadingDelegate: RegistrationLoadingDelegate?
   var authManager: SignupProtocol
   var errorMessage: String?
-
+  var registerResultMessage: String?
+  var isLoading: Bool = false
+  
   init(authManager: SignupProtocol = AuthManager()) {
     self.authManager = authManager
   }
   
   func signUpUser(user: RegisteredUserModel) {
+    isLoading = true
+    regLoadingDelegate?.didRegistrationLoaded()
+    
     Task {
       do {
         try await authManager.createUser(user: user)
-        errorMessage = nil
+        await MainActor.run {
+          registerResultMessage = "Registration completed successfully"
+          regResultDelegate?.didRegisterMessageChanged()
+          
+          isLoading = false
+          regLoadingDelegate?.didRegistrationLoaded()
+        }
       } catch {
-        errorMessage = error.localizedDescription
+        await MainActor.run {
+          errorMessage = error.localizedDescription
+          errorDelegate?.didErrorDuringSignup()
+          
+          isLoading = false
+          regLoadingDelegate?.didRegistrationLoaded()
+        }
       }
     }
   }
   
-  func checkUser(firstName: String, lastName: String, email: String, password: String, rePassword: String) {
+  func checkUser(
+    firstName: String,
+    lastName: String,
+    email: String,
+    password: String,
+    rePassword: String
+  ) {
     guard firstName.count > 1 else {
       errorMessage = "The first name must be at least 2 characters long"
       errorDelegate?.didErrorDuringSignup()
@@ -85,12 +118,3 @@ final class SignupViewModel {
     signUpUser(user: user)
   }
 }
-
-
-
-
-
-
-
-
-

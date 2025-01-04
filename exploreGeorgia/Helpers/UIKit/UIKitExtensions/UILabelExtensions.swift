@@ -14,9 +14,10 @@ extension UILabel {
     fontWeight: UIFont.Weight = .regular,
     textColor: UIColor = .customBlack,
     textAlignment: NSTextAlignment = .natural,
-    lines: Int = 0
+    lines: Int = 0,
+    autoTranslate: Bool = false
   ) {
-    self.translatesAutoresizingMaskIntoConstraints = false
+    self.translatesAutoresizingMaskIntoConstraints = autoTranslate
     self.text = text
     self.font = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)
     self.textColor = textColor
