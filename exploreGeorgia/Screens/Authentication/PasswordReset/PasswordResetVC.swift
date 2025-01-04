@@ -13,7 +13,7 @@ final class PasswordResetVC: UIViewController {
     button.createCustomButton(
       image: UIImage(systemName: "arrow.left.circle.fill"),
       imageSize: 40,
-      tintColor: .customVine
+      tintColor: .customBlue
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
@@ -28,7 +28,8 @@ final class PasswordResetVC: UIViewController {
     label.createLabel(
       text: "Forgot password",
       fontSize: 26,
-      fontWeight: .bold
+      fontWeight: .bold,
+      textColor: .customBlue
     )
     return label
   }()
@@ -61,7 +62,7 @@ final class PasswordResetVC: UIViewController {
     let button = UIButton()
     button.createCustomButton(
       title: "Reset Password",
-      backgroundColor: .customVine
+      backgroundColor: .customBlue
     )
     return button
   }()

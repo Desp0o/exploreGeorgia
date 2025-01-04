@@ -13,7 +13,8 @@ final class LoginVC: UIViewController {
     label.createLabel(
       text: "Sign In",
       fontSize: 26,
-      fontWeight: .bold
+      fontWeight: .bold,
+      textColor: .customBlue
     )
     return label
   }()
@@ -47,7 +48,7 @@ final class LoginVC: UIViewController {
     let button = UIButton()
     button.createCustomButton(
       title: "Log In",
-      backgroundColor: .customVine
+      backgroundColor: .customBlue
     )
     return button
   }()

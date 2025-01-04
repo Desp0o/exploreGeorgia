@@ -51,7 +51,7 @@ final class UIKitCustomAlert: UIViewController {
     let button = UIButton()
     button.createCustomButton(
       title: "OK",
-      backgroundColor: .customVine
+      backgroundColor: .customBlue
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
