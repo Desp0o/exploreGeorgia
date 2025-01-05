@@ -28,3 +28,16 @@ final class AuthManager: SignupProtocol {
     try await db.collection("users").document(authResult.user.uid).setData(userData)
   }
 }
+
+
+
+protocol SigninProtocol {
+  func signInUser(with email: String, and password: String) async throws -> AuthDataResult
+}
+
+extension AuthManager: SigninProtocol {
+  func signInUser(with email: String, and password: String) async throws -> AuthDataResult {
+      let signInResult = try await Auth.auth().signIn(withEmail: email, password: password)
+      return signInResult
+  }
+}
