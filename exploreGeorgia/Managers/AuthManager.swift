@@ -14,9 +14,10 @@ protocol SignupProtocol {
 }
 
 final class AuthManager: SignupProtocol {
+  private let auth = Auth.auth()
   
   func createUser(user: RegisteredUserModel) async throws {
-    let authResult = try await Auth.auth().createUser(withEmail: user.email, password: user.password)
+    let authResult = try await auth.createUser(withEmail: user.email, password: user.password)
     
     let db = Firestore.firestore()
     let userData: [String: Any] = [
@@ -27,8 +28,15 @@ final class AuthManager: SignupProtocol {
 
     try await db.collection("users").document(authResult.user.uid).setData(userData)
   }
+  
+  func userLogOut() async throws {
+    do {
+      try auth.signOut()
+    } catch let signOutError as NSError {
+      print("Error signing out: %@", signOutError)
+    }
+  }
 }
-
 
 
 protocol SigninProtocol {

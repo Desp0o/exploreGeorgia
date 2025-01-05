@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 final class LoginVC: UIViewController {
   private var vm: LoginViewModel?
@@ -133,6 +134,7 @@ final class LoginVC: UIViewController {
     super.viewDidLoad()
     
     vm?.loginErrorDelegate = self
+    vm?.loginResultDelegate = self
     
     setupUI()
   }
@@ -200,5 +202,14 @@ extension LoginVC: LoginErrorDelegate {
   func didErrorDuringLogin() {
     let overlay = UIKitCustomAlert()
     overlay.appear(sender: self, message: vm?.loginErrorMsg ?? "", messageType: .error)
+  }
+}
+
+extension LoginVC: LoginResultDelegate {
+  func didLoginStateChanged() {
+    let MainView = MainView()
+    let hostingController = UIHostingController(rootView: MainView)
+    
+    navigationController?.pushViewController(hostingController, animated: true)
   }
 }

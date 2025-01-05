@@ -16,6 +16,7 @@ final class CustomTextField: UIView {
     field.translatesAutoresizingMaskIntoConstraints = false
     field.placeholder = placeholderName
     field.isSecureTextEntry = isPassword
+    field.autocapitalizationType = .none
     field.autocorrectionType = .no
     field.clipsToBounds = true
     field.layer.cornerRadius = 12
