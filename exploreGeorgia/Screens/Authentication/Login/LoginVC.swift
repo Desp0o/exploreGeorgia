@@ -54,6 +54,7 @@ final class LoginVC: UIViewController {
       backgroundColor: .customBlue
     )
     
+    button.addTapAnimation()
     button.addAction(UIAction(handler: {[weak self] _ in
       self?.loginUser()
     }), for: .touchUpInside)
@@ -121,6 +122,21 @@ final class LoginVC: UIViewController {
     return label
   }()
   
+  private lazy var googleButton: UIButton = {
+    let button = UIButton()
+    button.createCustomButton(
+      title: "    Sign in with Google",
+      titleColor: .customBlue,
+      image: UIImage(named: "googleIcon"),
+      imageSize: 24,
+      cornerRadius: 12,
+      borderColor: .customBlue,
+      borderWidth: 1
+    )
+    button.addTapAnimation()
+    return button
+  }()
+  
   init(vm: LoginViewModel = LoginViewModel()) {
     self.vm = vm
     super.init(nibName: nil, bundle: nil)
@@ -153,6 +169,7 @@ final class LoginVC: UIViewController {
     signupStack.addArrangedSubview(noAccLabel)
     signupStack.addArrangedSubview(signupButton)
     view.addSubview(connectLabel)
+    view.addSubview(googleButton)
     
     setupConstraints()
   }
@@ -182,6 +199,11 @@ final class LoginVC: UIViewController {
       
       connectLabel.topAnchor.constraint(equalTo: signupStack.bottomAnchor, constant: 20),
       connectLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      
+      googleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+      googleButton.topAnchor.constraint(equalTo: connectLabel.bottomAnchor, constant: 40),
+      googleButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+      googleButton.heightAnchor.constraint(equalToConstant: 50)
     ])
   }
   
@@ -213,4 +235,8 @@ extension LoginVC: LoginLoadingDelegate {
       hideLoading()
     }
   }
+}
+
+#Preview{
+  LoginVC()
 }
