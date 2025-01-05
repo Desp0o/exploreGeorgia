@@ -134,7 +134,7 @@ final class LoginVC: UIViewController {
     super.viewDidLoad()
     
     vm?.loginErrorDelegate = self
-    vm?.loginResultDelegate = self
+    vm?.loginLoadingDelegate = self
     
     setupUI()
   }
@@ -205,11 +205,12 @@ extension LoginVC: LoginErrorDelegate {
   }
 }
 
-extension LoginVC: LoginResultDelegate {
-  func didLoginStateChanged() {
-    let MainView = MainView()
-    let hostingController = UIHostingController(rootView: MainView)
-    
-    navigationController?.pushViewController(hostingController, animated: true)
+extension LoginVC: LoginLoadingDelegate {
+  func didLoginLoaded() {
+    if vm?.isLoading ?? false {
+      showLoading()
+    } else {
+      hideLoading()
+    }
   }
 }

@@ -12,15 +12,16 @@ protocol LoginErrorDelegate: AnyObject {
   func didErrorDuringLogin()
 }
 
-protocol LoginResultDelegate: AnyObject {
-  func didLoginStateChanged()
+protocol LoginLoadingDelegate: AnyObject {
+  func didLoginLoaded()
 }
 
 final class LoginViewModel {
   weak var loginErrorDelegate: LoginErrorDelegate?
-  weak var loginResultDelegate: LoginResultDelegate?
+  weak var loginLoadingDelegate: LoginLoadingDelegate?
   private let authManager: SigninProtocol
   var loginErrorMsg: String?
+  var isLoading = false
   
   init(authManager: SigninProtocol = AuthManager()) {
     self.authManager = authManager
@@ -49,12 +50,16 @@ final class LoginViewModel {
   }
   
   private func signInUser(email: String, password: String) {
+    isLoading = true
+    loginLoadingDelegate?.didLoginLoaded()
+    
     Task {
       do {
         _ = try await authManager.signInUser(with: email, and: password)
         
         await MainActor.run {
-          loginResultDelegate?.didLoginStateChanged()
+          isLoading = false
+          loginLoadingDelegate?.didLoginLoaded()
         }
       } catch let error as NSError {
         if error.domain == AuthErrorDomain {
@@ -65,6 +70,9 @@ final class LoginViewModel {
             await MainActor.run {
               loginErrorMsg = "Invalid credentials. Please check your email and password."
               loginErrorDelegate?.didErrorDuringLogin()
+              
+              isLoading = false
+              loginLoadingDelegate?.didLoginLoaded()
             }
           default:
             print("Error: \(error.localizedDescription)")
@@ -72,6 +80,9 @@ final class LoginViewModel {
             await MainActor.run {
               loginErrorMsg = "Error: \(error.localizedDescription)"
               loginErrorDelegate?.didErrorDuringLogin()
+              
+              isLoading = false
+              loginLoadingDelegate?.didLoginLoaded()
             }
           }
         }
