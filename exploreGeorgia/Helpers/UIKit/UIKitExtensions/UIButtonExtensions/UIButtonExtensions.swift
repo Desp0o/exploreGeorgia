@@ -15,9 +15,12 @@ extension UIButton {
     titleColor: UIColor? = nil,
     image: UIImage? = nil,
     imageSize: CGFloat = 0,
+    renderingMode: UIImage.RenderingMode = .automatic,
     tintColor: UIColor? = .white,
     backgroundColor: UIColor? = nil,
-    cornerRadius: CGFloat = 12
+    cornerRadius: CGFloat = 12,
+    borderColor: UIColor = .clear,
+    borderWidth: CGFloat = 0
   ) {
     self.translatesAutoresizingMaskIntoConstraints = false
     self.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: fontWeight)
@@ -27,13 +30,20 @@ extension UIButton {
     self.titleLabel?.textAlignment = .center
     self.backgroundColor = backgroundColor
     self.layer.cornerRadius = cornerRadius
+    self.layer.borderColor = borderColor.cgColor
+    self.layer.borderWidth = borderWidth
     
     if let image = image {
-      let config = UIImage.SymbolConfiguration(pointSize: imageSize)
-      self.setImage(image.withConfiguration(config)
-                         .withRenderingMode(.alwaysTemplate),
-                    for: .normal)
+        let resizedImage = resizeImage(image: image, targetSize: CGSize(width: imageSize, height: imageSize))
+        self.setImage(resizedImage.withRenderingMode(renderingMode), for: .normal)
     }
+  }
+  
+  private func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
+      let renderer = UIGraphicsImageRenderer(size: targetSize)
+      return renderer.image { _ in
+          image.draw(in: CGRect(origin: .zero, size: targetSize))
+      }
   }
 }
 

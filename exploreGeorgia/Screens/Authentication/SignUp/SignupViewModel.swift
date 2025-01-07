@@ -23,7 +23,7 @@ final class SignupViewModel {
   weak var errorDelegate: RegisterErrorMessageDelegate?
   weak var regResultDelegate: RegisterResultMessageDelegate?
   weak var regLoadingDelegate: RegistrationLoadingDelegate?
-  var authManager: SignupProtocol
+  private let authManager: SignupProtocol
   var errorMessage: String?
   var registerResultMessage: String?
   var isLoading: Bool = false

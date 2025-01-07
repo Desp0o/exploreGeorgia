@@ -29,12 +29,20 @@ struct LoginViewControllerWrapper: UIViewControllerRepresentable {
 @main
 struct YourApp: App {
   @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+  @StateObject private var vm = RouterManager()
   
   var body: some Scene {
     WindowGroup {
-      NavigationStack {
-        LoginViewControllerWrapper()
-          .ignoresSafeArea(edges: .all)
+      if vm.isUserAuthenticated {
+        NavigationStack {
+          MainView()
+            .ignoresSafeArea(edges: .all)
+        }
+      } else {
+        NavigationStack {
+          LoginViewControllerWrapper()
+            .ignoresSafeArea(edges: .all)
+        }
       }
     }
   }

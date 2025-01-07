@@ -28,6 +28,7 @@ final class SignupVC: UIViewController {
     button.createCustomButton(
       image: UIImage(systemName: "arrow.left.circle.fill"),
       imageSize: 40,
+      renderingMode: .alwaysTemplate,
       tintColor: .customBlue
     )
     
@@ -68,27 +69,31 @@ final class SignupVC: UIViewController {
   
   private lazy var firstNameInput = CustomTextField(
     placeholderName: "First Name",
-    isPassword: false
+    isPassword: false, parentView: self.view
   )
   
   private lazy var lastNameInput = CustomTextField(
     placeholderName: "Last Name",
-    isPassword: false
+    isPassword: false,
+    parentView: self.view
   )
   
   private lazy var emailInput = CustomTextField(
     placeholderName: "Enter Email",
-    isPassword: false
+    isPassword: false,
+    parentView: self.view
   )
   
   private lazy var passwordInput = CustomTextField(
     placeholderName: "Enter Password",
-    isPassword: true
+    isPassword: true,
+    parentView: self.view
   )
   
   private lazy var confirmPasswordInput = CustomTextField(
     placeholderName: "Confirm Password",
-    isPassword: true
+    isPassword: true,
+    parentView: self.view
   )
   
   private lazy var signupButton: UIButton = {

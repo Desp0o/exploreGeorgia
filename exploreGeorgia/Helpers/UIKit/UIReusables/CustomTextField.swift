@@ -7,20 +7,23 @@
 
 import UIKit
 
-final class CustomTextField: UIView {
+final class CustomTextField: UIView, UITextFieldDelegate {
   var placeholderName: String
   private let isPassword: Bool
+  private weak var parentView: UIView?
   
   private lazy var inputField: UITextField = {
     let field = UITextField()
     field.translatesAutoresizingMaskIntoConstraints = false
     field.placeholder = placeholderName
     field.isSecureTextEntry = isPassword
+    field.autocapitalizationType = .none
     field.autocorrectionType = .no
     field.clipsToBounds = true
     field.layer.cornerRadius = 12
     field.layer.borderWidth = 1
     field.layer.borderColor = UIColor.customBlue.cgColor
+    field.delegate = self
     
     let leftContainer = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 50))
     field.leftView = leftContainer
@@ -35,12 +38,10 @@ final class CustomTextField: UIView {
       
       eyeIcon.addAction(UIAction(handler: { [weak self] action in
         guard let button = action.sender as? UIButton else { return }
-        
         self?.toggleVisibility(button)
       }), for: .touchUpInside)
       
       rightContainer.addSubview(eyeIcon)
-      
       field.rightView = rightContainer
       field.rightViewMode = .always
     }
@@ -48,16 +49,20 @@ final class CustomTextField: UIView {
     return field
   }()
   
-  init(placeholderName: String, isPassword: Bool) {
+  init(
+    placeholderName: String,
+    isPassword: Bool,
+    parentView: UIView? = nil
+  ) {
     self.placeholderName = placeholderName
     self.isPassword = isPassword
+    self.parentView = parentView
     super.init(frame: .zero)
     
     self.translatesAutoresizingMaskIntoConstraints = false
-    
     addSubview(inputField)
-    
     setupUI()
+    setupKeyboardNotifications()
   }
   
   required init?(coder: NSCoder) {
@@ -74,16 +79,60 @@ final class CustomTextField: UIView {
     ])
   }
   
+  private func setupKeyboardNotifications() {
+    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+  }
+  
+  @objc private func keyboardWillShow(_ notification: Notification) {
+    guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+    guard let parentView = parentView else { return }
+    guard let window = findKeyWindow() else { return }
+    
+    if inputField.isFirstResponder {
+      let keyboardHeight = keyboardFrame.height
+      let textFieldFrame = self.convert(self.bounds, to: window)
+      let bottomSpace = window.frame.height - textFieldFrame.maxY
+      
+      if bottomSpace < keyboardHeight {
+        let offset = keyboardHeight - bottomSpace + 10
+        UIView.animate(withDuration: 0.3) {
+          parentView.transform = CGAffineTransform(translationX: 0, y: -offset)
+        }
+      }
+    }
+  }
+  
+  @objc private func keyboardWillHide(_ notification: Notification) {
+    UIView.animate(withDuration: 0.3) {
+      self.parentView?.transform = .identity
+    }
+  }
+  
+  private func findKeyWindow() -> UIWindow? {
+    return UIApplication.shared.connectedScenes
+      .compactMap { $0 as? UIWindowScene }
+      .flatMap { $0.windows }
+      .first { $0.isKeyWindow }
+  }
+  
   private func toggleVisibility(_ sender: UIButton) {
     inputField.isSecureTextEntry.toggle()
-    
     let eyeIcon = inputField.isSecureTextEntry ? "eye.slash" : "eye"
-    
     sender.setImage(UIImage(systemName: eyeIcon), for: .normal)
   }
   
   func value() -> String {
-    guard let valueString = inputField.text else { return "" }
-    return valueString
+    return inputField.text ?? ""
+  }
+  
+  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    textField.resignFirstResponder()
+    return true
+  }
+  
+  deinit {
+    NotificationCenter.default.removeObserver(self)
   }
 }
+
