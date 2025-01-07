@@ -7,6 +7,9 @@
 
 import Foundation
 import FirebaseAuth
+import GoogleSignIn
+import GoogleSignInSwift
+import FirebaseCore
 
 protocol LoginErrorDelegate: AnyObject {
   func didErrorDuringLogin()
@@ -20,11 +23,16 @@ final class LoginViewModel {
   weak var loginErrorDelegate: LoginErrorDelegate?
   weak var loginLoadingDelegate: LoginLoadingDelegate?
   private let authManager: SigninProtocol
+  private let googleAuth: GoogleAuthProtocol
   var loginErrorMsg: String?
   var isLoading = false
   
-  init(authManager: SigninProtocol = AuthManager()) {
+  init(
+    authManager: SigninProtocol = AuthManager(),
+    googleAuth: GoogleAuthProtocol = AuthManager()
+  ) {
     self.authManager = authManager
+    self.googleAuth = googleAuth
   }
   
   func checkUser(email: String, password: String) {
@@ -89,7 +97,28 @@ final class LoginViewModel {
       }
     }
   }
+  
+  func googleSignIn() {
+    isLoading = true
+    loginLoadingDelegate?.didLoginLoaded()
+    
+    Task {
+      do {
+        try await googleAuth.signupWithGoogle()
+        
+        await MainActor.run {
+          isLoading = false
+          loginLoadingDelegate?.didLoginLoaded()
+        }
+      } catch {
+        await MainActor.run {
+          isLoading = false
+          loginLoadingDelegate?.didLoginLoaded()
+          
+          loginErrorMsg = error.localizedDescription
+          loginErrorDelegate?.didErrorDuringLogin()
+        }
+      }
+    }
+  }
 }
-
-
-

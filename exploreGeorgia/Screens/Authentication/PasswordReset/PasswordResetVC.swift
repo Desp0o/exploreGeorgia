@@ -13,6 +13,7 @@ final class PasswordResetVC: UIViewController {
     button.createCustomButton(
       image: UIImage(systemName: "arrow.left.circle.fill"),
       imageSize: 40,
+      renderingMode: .alwaysTemplate,
       tintColor: .customBlue
     )
     
@@ -64,6 +65,7 @@ final class PasswordResetVC: UIViewController {
       title: "Reset Password",
       backgroundColor: .customBlue
     )
+    button.addTapAnimation()
     return button
   }()
   
@@ -89,18 +91,18 @@ final class PasswordResetVC: UIViewController {
   private func setupContstraints() {
     NSLayoutConstraint.activate([
       backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-      backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+      backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
       
       screenTitle.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 70),
       screenTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       
       screenSubTitle.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 12),
-      screenSubTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-      screenSubTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+      screenSubTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+      screenSubTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
       
       resetStack.topAnchor.constraint(equalTo: screenSubTitle.bottomAnchor, constant: 40),
-      resetStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-      resetStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+      resetStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+      resetStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
       
       resetButton.heightAnchor.constraint(equalToConstant: 50)
     ])

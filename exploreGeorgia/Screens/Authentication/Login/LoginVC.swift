@@ -10,7 +10,7 @@ import SwiftUI
 
 final class LoginVC: UIViewController {
   private var vm: LoginViewModel?
-  
+
   private lazy var screenTitle: UILabel = {
     let label = UILabel()
     label.createLabel(
@@ -134,6 +134,9 @@ final class LoginVC: UIViewController {
       borderWidth: 1
     )
     button.addTapAnimation()
+    button.addAction(UIAction(handler: { [weak self] _ in
+      self?.vm?.googleSignIn()
+    }), for: .touchUpInside)
     return button
   }()
   

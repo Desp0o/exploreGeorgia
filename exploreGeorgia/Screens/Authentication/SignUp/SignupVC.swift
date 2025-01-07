@@ -28,6 +28,7 @@ final class SignupVC: UIViewController {
     button.createCustomButton(
       image: UIImage(systemName: "arrow.left.circle.fill"),
       imageSize: 40,
+      renderingMode: .alwaysTemplate,
       tintColor: .customBlue
     )
     

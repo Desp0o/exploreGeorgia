@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIButton {
-  func addTapAnimation(scale: CGFloat = 0.95, duration: TimeInterval = 0.1) {
+  func addTapAnimation(scale: CGFloat = 0.99, duration: TimeInterval = 0.1) {
     self.addAction(UIAction(handler: { [weak self] _ in
       guard let self = self else { return }
       UIView.animate(
