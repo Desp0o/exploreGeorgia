@@ -35,7 +35,7 @@ struct YourApp: App {
     WindowGroup {
       if vm.isUserAuthenticated {
         NavigationStack {
-          MainView()
+          CustomTabBar()
             .ignoresSafeArea(edges: .all)
         }
       } else {
