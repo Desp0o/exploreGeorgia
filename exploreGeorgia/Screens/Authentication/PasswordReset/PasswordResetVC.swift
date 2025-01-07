@@ -8,6 +8,17 @@
 import UIKit
 
 final class PasswordResetVC: UIViewController {
+  private let vm: PasswordResetViewModel?
+  
+  init(vm: PasswordResetViewModel = PasswordResetViewModel()) {
+    self.vm = vm
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   private lazy var backButton: UIButton = {
     let button = UIButton()
     button.createCustomButton(
@@ -66,11 +77,18 @@ final class PasswordResetVC: UIViewController {
       backgroundColor: .customBlue
     )
     button.addTapAnimation()
+    button.addAction(UIAction(handler: { [weak self] _ in
+      self?.reqPassReset()
+    }), for: .touchUpInside)
     return button
   }()
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    vm?.passErrorDelegate = self
+    vm?.passResetLoadingDelegate = self
+    vm?.successedMessageDelegate = self
     
     setupUI()
   }
@@ -107,8 +125,36 @@ final class PasswordResetVC: UIViewController {
       resetButton.heightAnchor.constraint(equalToConstant: 50)
     ])
   }
+  
+  private func reqPassReset() {
+    let emailValue = emailInput.value()
+    
+    vm?.requestPssReset(email: emailValue)
+  }
 }
 
+extension PasswordResetVC: ResetPasswordLoadingDelegate {
+  func didLoadingStarted() {
+    if vm?.isloading ?? false {
+      showLoading()
+    } else {
+      hideLoading()
+    }
+  }
+}
+
+extension PasswordResetVC: ResetPassErrorDelegate {
+  func didErrorDuringReseting() {
+    let overLayerView = UIKitCustomAlert()
+    overLayerView.appear(sender: self, message: vm?.passResetErrMessage ?? "Error", messageType: .error)
+  }
+}
+
+extension PasswordResetVC: ResetPassowrdSuccessMessageDelegate {
+  func didRequestSuccessed() {
+    showToast(message: vm?.passSuccessMessage ?? "", toastType: .successfully)
+  }
+}
 
 #Preview {
   PasswordResetVC()

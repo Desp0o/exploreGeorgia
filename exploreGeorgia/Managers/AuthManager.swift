@@ -99,3 +99,15 @@ extension AuthManager: GoogleAuthProtocol {
     }
   }
 }
+
+
+protocol PasswordResetProtocol {
+  func resetPassword(email: String) async throws
+}
+
+extension AuthManager: PasswordResetProtocol {
+  func resetPassword(email: String) async throws {
+    try await Auth.auth().sendPasswordReset(withEmail: email)
+  }
+}
+

@@ -7,8 +7,6 @@
 
 import Foundation
 import FirebaseAuth
-import GoogleSignIn
-import GoogleSignInSwift
 import FirebaseCore
 
 protocol LoginErrorDelegate: AnyObject {
