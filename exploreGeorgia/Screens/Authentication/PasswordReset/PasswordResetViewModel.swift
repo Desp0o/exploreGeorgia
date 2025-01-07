@@ -83,8 +83,7 @@ final class PasswordResetViewModel {
   private func resetUserPassword(email: String) {
     Task {
       do {
-        let test: () = try await authManager.resetPassword(email: email)
-        print(test)
+        try await authManager.resetPassword(email: email)
         await MainActor.run {
           isloading = false
           passResetLoadingDelegate?.didLoadingStarted()
