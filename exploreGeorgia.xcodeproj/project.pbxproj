@@ -61,7 +61,6 @@
 			isa = PBXGroup;
 			children = (
 				E32A686B2D1D66340028F217 /* exploreGeorgia */,
-				E3A005802D28A50B003D4A2C /* Frameworks */,
 				E32A686A2D1D66340028F217 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -72,13 +71,6 @@
 				E32A68692D1D66340028F217 /* exploreGeorgia.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		E3A005802D28A50B003D4A2C /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
