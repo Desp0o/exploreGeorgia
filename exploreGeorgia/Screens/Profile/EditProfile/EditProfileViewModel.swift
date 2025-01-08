@@ -12,6 +12,7 @@ final class EditProfileViewModel: ObservableObject {
   private let userManager: GetCurrentUserProtocol
   private let passwordManager: ChangePasswordProtocol
   private let userInfoManager: UserInfoUpdaeProtocol
+  private let googleUserDeletionManager: DeleteGoogleUser
   @Published var firstName = ""
   @Published var lastName = ""
   @Published var password = ""
@@ -25,11 +26,13 @@ final class EditProfileViewModel: ObservableObject {
   init(
     userManager: GetCurrentUserProtocol = UserManager(),
     passwordManager: ChangePasswordProtocol = UserManager(),
-    userInfoManager: UserInfoUpdaeProtocol = UserManager()
+    userInfoManager: UserInfoUpdaeProtocol = UserManager(),
+    googleUserDeletionManager: DeleteGoogleUser = UserManager()
   ) {
     self.userManager = userManager
     self.passwordManager = passwordManager
     self.userInfoManager = userInfoManager
+    self.googleUserDeletionManager = googleUserDeletionManager
     
     fetchUser()
   }
@@ -49,8 +52,10 @@ final class EditProfileViewModel: ObservableObject {
           isLoading = false
         }
       } catch {
-        errorMessage = "Error fetching user: \(error.localizedDescription)"
-        isLoading = false
+        await MainActor.run {
+          errorMessage = "Error fetching user: \(error.localizedDescription)"
+          isLoading = false
+        }
       }
     }
   }
@@ -113,6 +118,18 @@ final class EditProfileViewModel: ObservableObject {
     Task {
       do {
         try await userInfoManager.updateUserInfo(firstName: firstName, lastName: lastName, gender: gender)
+      } catch {
+        await MainActor.run {
+          errorMessage = error.localizedDescription
+        }
+      }
+    }
+  }
+  
+  func userAccountDelete() {
+    Task {
+      do {
+        try await googleUserDeletionManager.removeGoogleUser()
       } catch {
         await MainActor.run {
           errorMessage = error.localizedDescription

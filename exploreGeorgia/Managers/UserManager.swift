@@ -8,6 +8,7 @@
 import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
+import GoogleSignIn
 
 struct UserModel {
   let avatar: String
@@ -27,6 +28,7 @@ enum FetchedUserErrors: Error {
   case userDoesntExist(message: String)
   case unknownError(message: String)
 }
+
 
 protocol GetCurrentUserProtocol {
   func getCurrentUser() async throws -> UserModel?
@@ -73,6 +75,7 @@ final class UserManager: GetCurrentUserProtocol {
   }
 }
 
+
 protocol ChangePasswordProtocol {
   func changePassword(password: String) async throws
 }
@@ -83,7 +86,7 @@ extension UserManager: ChangePasswordProtocol {
       print("User is not signed in")
       return
     }
-
+    
     do {
       try await user.updatePassword(to: password)
       print("Password updated successfully!")
@@ -100,25 +103,67 @@ protocol UserInfoUpdaeProtocol {
 
 extension UserManager: UserInfoUpdaeProtocol {
   func updateUserInfo(firstName: String, lastName: String, gender: String) async throws {
-        guard let user = Auth.auth().currentUser else {
-            print("User is not signed in")
-            return
-        }
-        
-        let db = Firestore.firestore()
-        let userRef = db.collection("users").document(user.uid)
-
-        let userInfo: [String: Any] = [
-            "firstName": firstName,
-            "lastName": lastName,
-            "gender": gender
-        ]
-        
-        do {
-            try await userRef.updateData(userInfo)
-            print("User info updated successfully!")
-        } catch {
-          throw error
-        }
+    guard let user = Auth.auth().currentUser else {
+      print("User is not signed in")
+      return
     }
+    
+    let db = Firestore.firestore()
+    let userRef = db.collection("users").document(user.uid)
+    
+    let userInfo: [String: Any] = [
+      "firstName": firstName,
+      "lastName": lastName,
+      "gender": gender
+    ]
+    
+    do {
+      try await userRef.updateData(userInfo)
+      print("User info updated successfully!")
+    } catch {
+      throw error
+    }
+  }
 }
+
+
+protocol DeleteGoogleUser {
+  func removeGoogleUser() async throws
+}
+
+extension UserManager: DeleteGoogleUser {
+  func removeGoogleUser() async throws{
+    guard let user = Auth.auth().currentUser else {
+      print("User is not signed in")
+      return
+    }
+    
+    do {
+      guard let currentUser = GIDSignIn.sharedInstance.currentUser else {
+        print("Google user is not signed in")
+        return
+      }
+      
+      guard let idToken = currentUser.idToken?.tokenString else {
+        print("Failed to retrieve Google ID token")
+        return
+      }
+      
+      let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: currentUser.accessToken.tokenString)
+      
+      try await user.reauthenticate(with: credential)
+      
+      try await user.delete()
+      print("Google user successfully removed from Firebase Authentication.")
+    } catch let error as NSError {
+      switch error.code {
+      case AuthErrorCode.requiresRecentLogin.rawValue:
+        throw AuthErrorCode.requiresRecentLogin
+      default:
+        throw error
+      }
+    }
+  }
+}
+
+

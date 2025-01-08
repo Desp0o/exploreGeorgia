@@ -18,7 +18,7 @@ struct EditProfile: View {
           .tint(.customBlue)
       }
     } else {
-      VStack(spacing: 40) {
+      VStack(spacing: 50) {
         
         VStack(spacing: 20) {
           TextField("First name", text: $vm.firstName)
@@ -66,6 +66,13 @@ struct EditProfile: View {
           }
           .customStyledButton()
         }
+        
+        Button {
+          vm.userAccountDelete()
+        } label: {
+          Text("Delete Accaunt")
+        }
+        .customStyledButton(bg: .red)
       }
       .padding(.horizontal, 20)
     }
