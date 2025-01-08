@@ -12,7 +12,7 @@ struct CustomTabBar: View {
   @State private var currentIdenx = 0
   
   var body: some View {
-    NavigationView {
+    NavigationStack {
       VStack {
         ZStack {
           switch currentIdenx {
@@ -34,10 +34,7 @@ struct CustomTabBar: View {
                 .background(.yellow)
             }
           case 4:
-            VStack {
-              Text("Profile")
-                .background(.purple)
-            }
+            ProfileView()
           default:
             VStack {
               Text("Default Tab")
@@ -61,8 +58,8 @@ struct CustomTabBar: View {
                     .resizable()
                     .scaledToFill()
                     .frame(
-                      width: 30,
-                      height: 30
+                      width: 24,
+                      height: 24
                     )
                 }
                 
@@ -80,7 +77,7 @@ struct CustomTabBar: View {
         }
         .padding(.bottom, 10)
         .frame(maxWidth: .infinity)
-        .frame(height: 80)
+        .frame(height: 70)
         .background(.customWhite)
         .clipShape(
           .rect(
@@ -90,10 +87,12 @@ struct CustomTabBar: View {
             topTrailingRadius: 40
           )
         )
-        .shadow(color: .customBlack.opacity(0.15), radius: 3, x: 0, y: -2)
+        .shadow(color: .customBlack.opacity(0.1), radius: 2, x: 0, y: -2)
       }
       .ignoresSafeArea(.container, edges: .bottom)
     }
+    .toolbar(.hidden, for: .navigationBar)
+    .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
   }
 }
 
