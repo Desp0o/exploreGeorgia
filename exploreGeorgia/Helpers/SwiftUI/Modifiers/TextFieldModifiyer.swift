@@ -1,0 +1,26 @@
+//
+//  TextFieldModifiyer.swift
+//  exploreGeorgia
+//
+//  Created by Despo on 08.01.25.
+//
+
+import SwiftUI
+
+extension TextField {
+  func styledTextField(
+    height: CGFloat = 50,
+    corners: CGFloat = 12,
+    borderColor: Color = .customBlue,
+    borderWidth: CGFloat = 1
+  ) -> some View {
+    self.padding()
+      .frame(maxWidth: .infinity)
+      .frame(height: height)
+      .clipShape(RoundedRectangle(cornerRadius: corners))
+      .overlay(
+        RoundedRectangle(cornerRadius: corners)
+          .stroke(borderColor, lineWidth: borderWidth)
+      )
+  }
+}

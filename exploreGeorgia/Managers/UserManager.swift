@@ -69,3 +69,23 @@ final class UserManager: GetCurrentUserProtocol {
     }
   }
 }
+
+protocol ChangePasswordProtocol {
+  func changePassword(password: String) async throws
+}
+
+extension UserManager: ChangePasswordProtocol {
+  func changePassword(password: String) async throws {
+    guard let user = Auth.auth().currentUser else {
+      print("User is not signed in")
+      return
+    }
+
+    do {
+      try await user.updatePassword(to: password)
+      print("Password updated successfully!")
+    } catch {
+      throw error
+    }
+  }
+}

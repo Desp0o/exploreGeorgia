@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUICore
 
 final class ProfileViewModel: ObservableObject {
   private let fetchUser: GetCurrentUserProtocol
@@ -17,13 +18,14 @@ final class ProfileViewModel: ObservableObject {
   @Published var profileStatistic: [ProfileStatModel] = []
   
   let settingsArray = [
-    ProfileSettingsModel(icon: "profile", title: "Edit Profile"),
-    ProfileSettingsModel(icon: "bookmark", title: "Bookmarked"),
-    ProfileSettingsModel(icon: "trip", title: "My Explored"),
-    ProfileSettingsModel(icon: "Settings", title: "Settings"),
-    ProfileSettingsModel(icon: "support", title: "Support")
+    ProfileSettingsModel(icon: "profile", title: "Edit Profile", location: AnyView(EditProfile())),
+    ProfileSettingsModel(icon: "bookmark", title: "Bookmarked", location: AnyView(EditProfile())),
+    ProfileSettingsModel(icon: "trip", title: "My Explored", location: AnyView(EditProfile())),
+    ProfileSettingsModel(icon: "Settings", title: "Settings", location: AnyView(EditProfile())),
+    ProfileSettingsModel(icon: "support", title: "Support", location: AnyView(EditProfile()))
   ]
-
+  
+  
   init(
     fetchUser: GetCurrentUserProtocol = UserManager(),
     authManager: LogOutProtocol = AuthManager()
