@@ -8,33 +8,31 @@
 import SwiftUI
 
 struct ProfileStatistic: View {
-  let stat = [
-    ProfileStatModel(title: "Points", count: 20),
-    ProfileStatModel(title: "Explore", count: 200),
-    ProfileStatModel(title: "Bucket List", count: 550)
-  ]
+  var user: UserModel?
+  var statisticArray: [ProfileStatModel]
   
   var body: some View {
     VStack() {
-      AsyncImage(url: URL(string: "https://media.licdn.com/dms/image/v2/D4D22AQHDnjTqx5MhgA/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1693334918018?e=2147483647&v=beta&t=ZvaqKgq3DLz-wcZutuTsxDUeKf5atvqaQHgI53CUAf8")) { image in
+      AsyncImage(url: URL(string: user?.avatar ?? "")) { image in
         image
           .defaultOptions()
           .clipShape(Circle())
         
       } placeholder: {
         ProgressView()
+          .tint(.customBlue)
       }
       .frame(width: 96, height: 96)
       
       VStack {
-        Text("Leonardo")
+        Text(user?.firstName ?? "")
           .styledText(
             .customBlack,
             24,
             .semibold
           )
         
-        Text("email")
+        Text(user?.email ?? "")
           .styledText(
             .customGray,
             14
@@ -47,18 +45,18 @@ struct ProfileStatistic: View {
           .shadow(color: .customBlack.opacity(0.15), radius: 3, y: 2)
         
         HStack {
-          ForEach(0..<stat.count, id: \.self) { index in
+          ForEach(0..<statisticArray.count, id: \.self) { index in
             Spacer()
             
             VStack(spacing: 10) {
-              Text(stat[index].title)
+              Text(statisticArray[index].title)
                 .styledText(
                   .customBlack,
                   16,
                   .semibold
                 )
               
-              Text("\(stat[index].count)")
+              Text("\(statisticArray[index].count)")
                 .styledText(
                   .customVine,
                   14,
@@ -68,7 +66,7 @@ struct ProfileStatistic: View {
             
             Spacer()
             
-            if index != stat.count - 1 {
+            if index != statisticArray.count - 1 {
               Divider()
             }
           }
@@ -84,5 +82,6 @@ struct ProfileStatistic: View {
 }
 
 #Preview {
-  ProfileStatistic()
+  let user = UserModel(avatar: "", firstName: "", lastName: "", email: "", points: 0, explored: [""], bucketList: [""], achievement: [""], createdAt: nil)
+  ProfileStatistic(user: user, statisticArray: [])
 }

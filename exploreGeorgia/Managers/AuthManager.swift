@@ -15,7 +15,7 @@ enum AuthenticationError: Error {
   case tokenError(message: String)
   case configurationError(message: String)
   case networkError(message: String)
-  case unknownError
+  case unknownError(message: String)
 }
 
 
@@ -33,18 +33,15 @@ final class AuthManager: SignupProtocol {
     let userData: [String: Any] = [
       "firstName": user.firstName,
       "lastName": user.lastName,
-      "email": user.email
+      "email": user.email,
+      "points": 0,
+      "explored": [],
+      "bucketList": [],
+      "achievement": [],
+      "createdAt": Timestamp(date: Date())
     ]
     
     try await db.collection("users").document(authResult.user.uid).setData(userData)
-  }
-  
-  func userLogOut() async throws {
-    do {
-      try auth.signOut()
-    } catch let signOutError as NSError {
-      print("Error signing out: %@", signOutError)
-    }
   }
 }
 
@@ -79,7 +76,7 @@ extension AuthManager: GoogleAuthProtocol {
           let window = windowScene.windows.first,
           let rootViewController = window.rootViewController else {
       print("There is no root view controller!")
-      throw AuthenticationError.unknownError
+      throw AuthenticationError.unknownError(message: "unknown error")
     }
     
     do {
@@ -92,7 +89,28 @@ extension AuthManager: GoogleAuthProtocol {
       let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
                                                      accessToken: accessToken.tokenString)
       
-      let _ = try await Auth.auth().signIn(with: credential)
+      let authResult = try await Auth.auth().signIn(with: credential)
+      let firebaseUser = authResult.user
+      
+      let db = Firestore.firestore()
+      let userRef = db.collection("users").document(firebaseUser.uid)
+      
+      let documentSnapshot = try await userRef.getDocument()
+      if !documentSnapshot.exists {
+        let userData: [String: Any] = [
+          "photoURL": firebaseUser.photoURL?.absoluteString ?? "",
+          "firstName": user.profile?.givenName ?? "",
+          "lastName": user.profile?.familyName ?? "",
+          "email": firebaseUser.email ?? "",
+          "points": 0,
+          "explored": [],
+          "bucketList": [],
+          "achievement": [],
+          "createdAt": Timestamp(date: Date())
+        ]
+        
+        try await userRef.setData(userData, merge: true)
+      }
     }
     catch {
       throw error
@@ -111,3 +129,16 @@ extension AuthManager: PasswordResetProtocol {
   }
 }
 
+protocol LogOutProtocol {
+  func userLogOut() async throws
+}
+
+extension AuthManager: LogOutProtocol {
+  func userLogOut() async throws {
+    do {
+      try auth.signOut()
+    } catch let signOutError as NSError {
+      throw AuthenticationError.unknownError(message: "Error signing out: %@, \(signOutError)")
+    }
+  }
+}

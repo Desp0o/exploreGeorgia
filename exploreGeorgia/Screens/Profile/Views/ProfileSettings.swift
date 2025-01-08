@@ -8,13 +8,7 @@
 import SwiftUI
 
 struct ProfileSettings: View {
-  let settingsArray = [
-    ProfileSettingsModel(icon: "homeActive", title: "Edit Profile"),
-    ProfileSettingsModel(icon: "homeActive", title: "Bookmarked"),
-    ProfileSettingsModel(icon: "homeActive", title: "My Explored"),
-    ProfileSettingsModel(icon: "homeActive", title: "Settings"),
-    ProfileSettingsModel(icon: "homeActive", title: "Support")
-  ]
+  let settingsArray: [ProfileSettingsModel]
   
   var body: some View {
     ZStack {
@@ -56,5 +50,5 @@ struct ProfileSettings: View {
 }
 
 #Preview {
-  ProfileSettings()
+  ProfileSettings(settingsArray: [])
 }
