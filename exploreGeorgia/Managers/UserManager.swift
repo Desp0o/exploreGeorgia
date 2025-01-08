@@ -14,6 +14,7 @@ struct UserModel {
   let firstName: String
   let lastName: String
   let email: String
+  let gender: String
   let points: Int
   let explored: [String]
   let bucketList: [String]
@@ -47,6 +48,7 @@ final class UserManager: GetCurrentUserProtocol {
       let firstName = data["firstName"] as? String ?? ""
       let lastName = data["lastName"] as? String ?? ""
       let email = fetchedUser.email ?? ""
+      let gender = data["gender"] as? String ?? ""
       let points = data["points"] as? Int ?? 0
       let explored = data["explored"] as? [String] ?? []
       let bucketList = data["bucketList"] as? [String] ?? []
@@ -58,6 +60,7 @@ final class UserManager: GetCurrentUserProtocol {
         firstName: firstName,
         lastName: lastName,
         email: email,
+        gender: gender,
         points: points,
         explored: explored,
         bucketList: bucketList,
@@ -88,4 +91,34 @@ extension UserManager: ChangePasswordProtocol {
       throw error
     }
   }
+}
+
+
+protocol UserInfoUpdaeProtocol {
+  func updateUserInfo(firstName: String, lastName: String, gender: String) async throws
+}
+
+extension UserManager: UserInfoUpdaeProtocol {
+  func updateUserInfo(firstName: String, lastName: String, gender: String) async throws {
+        guard let user = Auth.auth().currentUser else {
+            print("User is not signed in")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(user.uid)
+
+        let userInfo: [String: Any] = [
+            "firstName": firstName,
+            "lastName": lastName,
+            "gender": gender
+        ]
+        
+        do {
+            try await userRef.updateData(userInfo)
+            print("User info updated successfully!")
+        } catch {
+          throw error
+        }
+    }
 }

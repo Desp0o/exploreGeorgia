@@ -43,8 +43,7 @@ struct EditProfile: View {
           }
           
           Button {
-            print(vm.gender)
-            
+            vm.updateUser()
           } label: {
             Text("Update profile")
               .styledText(.customWhite, 16, .bold)

@@ -11,11 +11,12 @@ import FirebaseAuth
 final class EditProfileViewModel: ObservableObject {
   private let userManager: GetCurrentUserProtocol
   private let passwordManager: ChangePasswordProtocol
+  private let userInfoManager: UserInfoUpdaeProtocol
   @Published var firstName = ""
   @Published var lastName = ""
   @Published var password = ""
   @Published var rePassword = ""
-  @Published var gender = "Not Prefer"
+  @Published var gender = ""
   @Published var isLoading = false
   @Published var errorMessage = ""
   
@@ -23,10 +24,12 @@ final class EditProfileViewModel: ObservableObject {
 
   init(
     userManager: GetCurrentUserProtocol = UserManager(),
-    passwordManager: ChangePasswordProtocol = UserManager()
+    passwordManager: ChangePasswordProtocol = UserManager(),
+    userInfoManager: UserInfoUpdaeProtocol = UserManager()
   ) {
     self.userManager = userManager
     self.passwordManager = passwordManager
+    self.userInfoManager = userInfoManager
     
     fetchUser()
   }
@@ -41,6 +44,7 @@ final class EditProfileViewModel: ObservableObject {
         await MainActor.run {
           firstName = user?.firstName ?? ""
           lastName = user?.lastName ?? ""
+          gender = user?.gender ?? "Not Prefer"
           
           isLoading = false
         }
@@ -73,7 +77,6 @@ final class EditProfileViewModel: ObservableObject {
     Task {
       do {
         try await passwordManager.changePassword(password: password)
-        print("pass changed")
       } catch {
         await MainActor.run {
           errorMessage = error.localizedDescription
@@ -82,4 +85,39 @@ final class EditProfileViewModel: ObservableObject {
     }
   }
   
+  func updateUser() {
+    guard firstName.count > 1 else {
+      errorMessage = "The first name must be at least 2 characters long"
+      print(errorMessage)
+      return
+    }
+    
+    guard isValidNames(firstName) else {
+      errorMessage = "The first name must contain only letters"
+      print(errorMessage)
+      return
+    }
+    
+    guard lastName.count > 1 else {
+      errorMessage = "The last name must be at least 2 characters long"
+      print(errorMessage)
+      return
+    }
+    
+    guard isValidNames(lastName) else {
+      errorMessage = "The last name must contain only letters"
+      print(errorMessage)
+      return
+    }
+    
+    Task {
+      do {
+        try await userInfoManager.updateUserInfo(firstName: firstName, lastName: lastName, gender: gender)
+      } catch {
+        await MainActor.run {
+          errorMessage = error.localizedDescription
+        }
+      }
+    }
+  }
 }

@@ -82,6 +82,6 @@ struct ProfileStatistic: View {
 }
 
 #Preview {
-  let user = UserModel(avatar: "", firstName: "", lastName: "", email: "", points: 0, explored: [""], bucketList: [""], achievement: [""], createdAt: nil)
+  let user = UserModel(avatar: "", firstName: "", lastName: "", email: "", gender: "Male", points: 0, explored: [""], bucketList: [""], achievement: [""], createdAt: nil)
   ProfileStatistic(user: user, statisticArray: [])
 }
