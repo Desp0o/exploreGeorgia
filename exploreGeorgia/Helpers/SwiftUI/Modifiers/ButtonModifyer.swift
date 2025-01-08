@@ -14,7 +14,7 @@ extension Button {
   ) -> some View {
     self.frame(height: height)
       .frame(maxWidth: .infinity)
-      .background(.customBlue)
+      .background(bg)
       .clipShape(RoundedRectangle(cornerRadius: 12))
   }
 }

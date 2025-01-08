@@ -167,3 +167,32 @@ extension UserManager: DeleteGoogleUser {
 }
 
 
+protocol DeleteUserWithEmail {
+  func deleteUser(email: String, password: String) async throws
+}
+
+extension UserManager: DeleteUserWithEmail {
+  func deleteUser(email: String, password: String) async throws {
+    guard let user = Auth.auth().currentUser else {
+      print("User is not signed in")
+      return
+    }
+    
+    do {
+      if let userEmail = user.email {
+        let credential = EmailAuthProvider.credential(withEmail: userEmail, password: password)
+        try await user.reauthenticate(with: credential)
+      }
+      
+      try await user.delete()
+      print("Account deleted successfully!")
+    } catch let error as NSError {
+      switch error.code {
+      case AuthErrorCode.requiresRecentLogin.rawValue:
+        throw AuthErrorCode.requiresRecentLogin
+      default:
+        throw error
+      }
+    }
+  }
+}

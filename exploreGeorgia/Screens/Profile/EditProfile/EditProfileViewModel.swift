@@ -13,28 +13,34 @@ final class EditProfileViewModel: ObservableObject {
   private let passwordManager: ChangePasswordProtocol
   private let userInfoManager: UserInfoUpdaeProtocol
   private let googleUserDeletionManager: DeleteGoogleUser
+  private let defaultUserDeletionManager: DeleteUserWithEmail
   @Published var firstName = ""
   @Published var lastName = ""
   @Published var password = ""
   @Published var rePassword = ""
   @Published var gender = ""
+  @Published var passwordForDelete = ""
   @Published var isLoading = false
+  @Published var isUserFromGoogle = false
   @Published var errorMessage = ""
   
   let genderOptions = ["Male", "Female", "Not Prefer"]
-
+  
   init(
     userManager: GetCurrentUserProtocol = UserManager(),
     passwordManager: ChangePasswordProtocol = UserManager(),
     userInfoManager: UserInfoUpdaeProtocol = UserManager(),
-    googleUserDeletionManager: DeleteGoogleUser = UserManager()
+    googleUserDeletionManager: DeleteGoogleUser = UserManager(),
+    defaultUserDeletionManager: DeleteUserWithEmail = UserManager()
   ) {
     self.userManager = userManager
     self.passwordManager = passwordManager
     self.userInfoManager = userInfoManager
     self.googleUserDeletionManager = googleUserDeletionManager
+    self.defaultUserDeletionManager = defaultUserDeletionManager
     
     fetchUser()
+    getUserPorivuder()
   }
   
   func fetchUser() {
@@ -55,6 +61,27 @@ final class EditProfileViewModel: ObservableObject {
         await MainActor.run {
           errorMessage = "Error fetching user: \(error.localizedDescription)"
           isLoading = false
+        }
+      }
+    }
+  }
+  
+  func getUserPorivuder() {
+    Task {
+      guard let user = Auth.auth().currentUser else {
+        return
+      }
+      
+      for userInfo in user.providerData {
+        if userInfo.providerID == "google.com" {
+          await MainActor.run {
+            isUserFromGoogle = true
+            print("provider set to true")
+          }
+        } else {
+          await MainActor.run {
+            isUserFromGoogle = false
+          }
         }
       }
     }
@@ -129,7 +156,31 @@ final class EditProfileViewModel: ObservableObject {
   func userAccountDelete() {
     Task {
       do {
-        try await googleUserDeletionManager.removeGoogleUser()
+        guard let user = try await userManager.getCurrentUser() else {
+          return
+        }
+        
+        if isUserFromGoogle {
+          try await googleUserDeletionManager.removeGoogleUser()
+        } else {
+          guard passwordForDelete.count > 7 else {
+            await MainActor.run {
+              errorMessage = "The password must be at least 8 characters long."
+              print(errorMessage)
+            }
+            return
+          }
+          
+          guard isValidPassword(passwordForDelete) else {
+            await MainActor.run {
+              errorMessage = "The password must contain at least one uppercase letter, one number, and one special character."
+              print(errorMessage)
+            }
+            return
+          }
+          
+          try await defaultUserDeletionManager.deleteUser(email: user.email, password: passwordForDelete)
+        }
       } catch {
         await MainActor.run {
           errorMessage = error.localizedDescription
