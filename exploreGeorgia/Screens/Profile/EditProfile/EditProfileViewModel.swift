@@ -89,7 +89,6 @@ final class EditProfileViewModel: ObservableObject {
         if userInfo.providerID == "google.com" {
           await MainActor.run {
             isUserFromGoogle = true
-            print("provider set to true")
           }
         } else {
           await MainActor.run {

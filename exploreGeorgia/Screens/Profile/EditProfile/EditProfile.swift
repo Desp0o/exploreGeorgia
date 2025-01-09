@@ -93,22 +93,24 @@ struct EditProfile: View {
               .customStyledButton()
             }
             
-            VStack(spacing: 20) {
-              SecureField("Enter your password", text: $vm.password)
-                .styledSecureFIeld()
-              
-              SecureField("Repeat password", text: $vm.rePassword)
-                .styledSecureFIeld()
-              
-              Button {
-                vm.updatePassword()
-              } label: {
-                Text("Update password")
-                  .styledText(.customWhite, 16, .bold)
+            if !vm.isUserFromGoogle {
+              VStack(spacing: 20) {
+                SecureField("Enter your password", text: $vm.password)
+                  .styledSecureFIeld()
+                
+                SecureField("Repeat password", text: $vm.rePassword)
+                  .styledSecureFIeld()
+                
+                Button {
+                  vm.updatePassword()
+                } label: {
+                  Text("Update password")
+                    .styledText(.customWhite, 16, .bold)
+                }
+                .customStyledButton()
               }
-              .customStyledButton()
             }
-            
+           
             VStack(spacing: 20) {
               if showInput && !vm.isUserFromGoogle {
                 SecureField("Enter password for delete account", text: $vm.passwordForDelete)
