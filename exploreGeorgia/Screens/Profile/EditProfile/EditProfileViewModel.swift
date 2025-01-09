@@ -23,6 +23,7 @@ final class EditProfileViewModel: ObservableObject {
   @Published var gender = ""
   @Published var passwordForDelete = ""
   @Published var isLoading = false
+  @Published var isUpdatignInfo = false
   @Published var isUserFromGoogle = false
   @Published var errorMessage = ""
   @Published var currentAvatar = ""
@@ -118,12 +119,19 @@ final class EditProfileViewModel: ObservableObject {
       return
     }
     
+    isUpdatignInfo = true
+    
     Task {
       do {
         try await passwordManager.changePassword(password: password)
+        
+        await MainActor.run {
+          isUpdatignInfo = false
+        }
       } catch {
         await MainActor.run {
           errorMessage = error.localizedDescription
+          isUpdatignInfo = false
         }
       }
     }
@@ -154,18 +162,27 @@ final class EditProfileViewModel: ObservableObject {
       return
     }
     
+    isUpdatignInfo = true
+    
     Task {
       do {
         try await userInfoManager.updateUserInfo(firstName: firstName, lastName: lastName, gender: gender)
+        
+        await MainActor.run {
+          isUpdatignInfo = false
+        }
       } catch {
         await MainActor.run {
           errorMessage = error.localizedDescription
+          isUpdatignInfo = false
         }
       }
     }
   }
   
   func userAccountDelete() {
+    isUpdatignInfo = true
+    
     Task {
       do {
         guard let user = try await userManager.getCurrentUser() else {
@@ -174,29 +191,51 @@ final class EditProfileViewModel: ObservableObject {
         
         if isUserFromGoogle {
           try await googleUserDeletionManager.removeGoogleUser()
+          
+          await MainActor.run {
+            isUpdatignInfo = false
+          }
         } else {
-          
-          guard passwordForDelete.count > 7 else {
-            await MainActor.run {
-              errorMessage = "The password must be at least 8 characters long."
-              print(errorMessage)
-            }
-            return
-          }
-          
-          guard isValidPassword(passwordForDelete) else {
-            await MainActor.run {
-              errorMessage = "The password must contain at least one uppercase letter, one number, and one special character."
-              print(errorMessage)
-            }
-            return
-          }
-          
-          try await defaultUserDeletionManager.deleteUser(email: user.email, password: passwordForDelete)
+          deleteUserWithEmail(with: user.email)
         }
       } catch {
         await MainActor.run {
           errorMessage = error.localizedDescription
+          isUpdatignInfo = false
+        }
+      }
+    }
+  }
+  
+  private func deleteUserWithEmail(with email: String) {
+    Task {
+      do {
+        guard passwordForDelete.count > 7 else {
+          await MainActor.run {
+            errorMessage = "The password must be at least 8 characters long."
+            isUpdatignInfo = false
+          }
+          return
+        }
+        
+        guard isValidPassword(passwordForDelete) else {
+          await MainActor.run {
+            errorMessage = "The password must contain at least one uppercase letter, one number, and one special character."
+            isUpdatignInfo = false
+          }
+          return
+        }
+        
+        try await defaultUserDeletionManager.deleteUser(email: email, password: passwordForDelete)
+        
+        await MainActor.run {
+          isUpdatignInfo = false
+        }
+      }
+      catch {
+        errorMessage = error.localizedDescription
+        await MainActor.run {
+          isUpdatignInfo = false
         }
       }
     }
@@ -207,6 +246,8 @@ final class EditProfileViewModel: ObservableObject {
       return
     }
     
+    isUpdatignInfo = true
+    
     Task {
       if let data = try await selection.loadTransferable(type: Data.self) {
         if let uiImage = UIImage(data: data) {
@@ -216,8 +257,14 @@ final class EditProfileViewModel: ObservableObject {
           
           do {
             try await avatarUploadManager.updateUserProfileImage(image: uiImage)
-          } catch {
             
+            await MainActor.run {
+              isUpdatignInfo = false
+            }
+          } catch {
+            await MainActor.run {
+              isUpdatignInfo = false
+            }
           }
         }
       }
