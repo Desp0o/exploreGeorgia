@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
   @StateObject var vm = ProfileViewModel()
+  @State var isPresented = false
   
   var body: some View {
     if vm.isLoading {
@@ -28,7 +29,7 @@ struct ProfileView: View {
             statisticArray: vm.profileStatistic
           )
           
-          ProfileSettings(settingsArray: vm.settingsArray)
+          ProfileSettings(isPresented: $isPresented)
           
           Button{
             vm.logOut()
@@ -45,6 +46,14 @@ struct ProfileView: View {
       }
       .scrollIndicators(.hidden)
       .scrollBounceBehavior(.basedOnSize)
+      .sheet(isPresented: $isPresented) {
+        EditProfile()
+      }
+      .onChange(of: isPresented, { oldValue, newValue in
+        if !newValue {
+          vm.fetchProfile()
+        }
+      })
     }
   }
 }

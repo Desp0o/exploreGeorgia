@@ -18,3 +18,22 @@ extension Button {
       .clipShape(RoundedRectangle(cornerRadius: 12))
   }
 }
+
+
+
+extension Button {
+  func customBorderedButton(
+    height: CGFloat = 50,
+    corners: CGFloat = 12,
+    borderColor: Color = .customBlue,
+    borderWidth: CGFloat = 1
+  ) -> some View {
+    self.frame(maxWidth: .infinity)
+      .frame(minHeight: height)
+      .background(.clear)
+      .overlay(
+        RoundedRectangle(cornerRadius: corners)
+          .stroke(borderColor, lineWidth: borderWidth)
+      )
+  }
+}

@@ -19,9 +19,7 @@ struct ProfileStatistic: View {
           .clipShape(Circle())
         
       } placeholder: {
-        Image("noAvatar")
-          .defaultOptions()
-          .clipShape(Circle())
+        ProgressView()
       }
       .frame(width: 96, height: 96)
       

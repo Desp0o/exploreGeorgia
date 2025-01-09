@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct EditProfile: View {
   @StateObject private var vm = EditProfileViewModel()
@@ -19,8 +20,32 @@ struct EditProfile: View {
             .scaleEffect(2.0)
             .tint(.customBlue)
         }
+        .frame(maxWidth: .infinity)
       } else {
         VStack(spacing: 50) {
+          
+          VStack(spacing: 20) {
+            
+            if let image = vm.choosenAvatar {
+              Image(uiImage: image)
+                .defaultOptions()
+                .clipShape(Circle())
+                .frame(width: 96, height: 96)
+            } else {
+              AsyncImage(url: URL(string: vm.currentAvatar)) { image in
+                image
+                  .defaultOptions()
+                  .clipShape(Circle())
+              } placeholder: {
+                ProgressView()
+              }
+              .frame(width: 96, height: 96)
+            }
+            
+            PhotosPicker(selection: $vm.selectedAvatarFromPicker) {
+              Text("change avatar")
+            }
+          }
           
           VStack(spacing: 20) {
             TextField("First name", text: $vm.firstName)
@@ -42,12 +67,14 @@ struct EditProfile: View {
               ]
               UISegmentedControl.appearance().setTitleTextAttributes(attributes, for: .selected)
               UISegmentedControl.appearance().isSpringLoaded = true
+              
+              UISegmentedControl.appearance().backgroundColor = .customWhite
             }
             
             Button {
               vm.updateUser()
             } label: {
-              Text("Update profile")
+              Text("Update personal info")
                 .styledText(.customWhite, 16, .bold)
             }
             .customStyledButton()
@@ -111,6 +138,7 @@ struct EditProfile: View {
         .padding(.horizontal, 20)
       }
     }
+    .padding(.vertical, 50)
     .scrollBounceBehavior(.basedOnSize)
     .scrollIndicators(.hidden)
   }

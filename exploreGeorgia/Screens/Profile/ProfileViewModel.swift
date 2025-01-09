@@ -17,15 +17,6 @@ final class ProfileViewModel: ObservableObject {
   @Published var errorMessage: String?
   @Published var profileStatistic: [ProfileStatModel] = []
   
-  let settingsArray = [
-    ProfileSettingsModel(icon: "profile", title: "Edit Profile", location: AnyView(EditProfile())),
-    ProfileSettingsModel(icon: "bookmark", title: "Bookmarked", location: AnyView(EditProfile())),
-    ProfileSettingsModel(icon: "trip", title: "My Explored", location: AnyView(EditProfile())),
-    ProfileSettingsModel(icon: "Settings", title: "Settings", location: AnyView(EditProfile())),
-    ProfileSettingsModel(icon: "support", title: "Support", location: AnyView(EditProfile()))
-  ]
-  
-  
   init(
     fetchUser: GetCurrentUserProtocol = UserManager(),
     authManager: LogOutProtocol = AuthManager()

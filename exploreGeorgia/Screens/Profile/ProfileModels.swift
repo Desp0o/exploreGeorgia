@@ -11,10 +11,3 @@ struct ProfileStatModel {
   let title: String
   let count: Int
 }
-
-struct ProfileSettingsModel: Identifiable {
-  let id = UUID() 
-  let icon: String
-  let title: String
-  let location: AnyView
-}

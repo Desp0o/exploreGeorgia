@@ -81,10 +81,10 @@ struct CustomTabBar: View {
         .background(.customWhite)
         .clipShape(
           .rect(
-            topLeadingRadius: 40,
+            topLeadingRadius: 12,
             bottomLeadingRadius: 0,
             bottomTrailingRadius: 0,
-            topTrailingRadius: 40
+            topTrailingRadius: 12
           )
         )
         .shadow(color: .customBlack.opacity(0.1), radius: 2, x: 0, y: -2)

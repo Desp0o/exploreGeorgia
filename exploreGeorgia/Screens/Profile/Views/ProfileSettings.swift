@@ -1,9 +1,8 @@
 import SwiftUI
 
 struct ProfileSettings: View {
-  let settingsArray: [ProfileSettingsModel]
-  @State private var selectedSetting: ProfileSettingsModel?
-
+  @Binding var isPresented: Bool
+  @ObservedObject var vm = ProfileViewModel()
   var body: some View {
     ZStack {
       RoundedRectangle(cornerRadius: 12)
@@ -11,39 +10,92 @@ struct ProfileSettings: View {
         .shadow(color: .customBlack.opacity(0.15), radius: 3, y: 2)
       
       VStack(spacing: 0) {
-        ForEach(settingsArray) { setting in
-          Button(action: {
-            selectedSetting = setting
-          }) {
-            HStack(spacing: 14) {
-              Image(setting.icon)
-                .defaultOptions()
-                .frame(width: 24, height: 24)
-              
-              Text(setting.title)
-                .styledText(.customBlack, 16, .semibold)
-              
-              Spacer()
-              
-              Image("arrowRight")
-            }
-            .frame(height: 56)
-            .padding(.leading, 16)
-            .padding(.trailing, 10)
+        //edit profile
+        Button(action: {
+          isPresented = true
+        }) {
+          HStack(spacing: 14) {
+            Image("profile")
+              .defaultOptions()
+              .frame(width: 24, height: 24)
             
-            if setting.id != settingsArray.last?.id {
-              Divider()
-            }
+            Text("Edit Profile")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
           }
+          .frame(height: 56)
         }
+        
+        //bookmarked
+        Button(action: {
+          
+        }) {
+          HStack(spacing: 14) {
+            Image("bookmark")
+              .defaultOptions()
+              .frame(width: 24, height: 24)
+            
+            Text("Bookmarked")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
+        //trip
+        Button(action: {
+          
+        }) {
+          HStack(spacing: 14) {
+            Image("trip")
+              .defaultOptions()
+              .frame(width: 24, height: 24)
+            
+            Text("My Explored")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
+        //contact
+        Button(action: {
+          
+        }) {
+          HStack(spacing: 14) {
+            Image("support")
+              .defaultOptions()
+              .frame(width: 24, height: 24)
+            
+            Text("Contact")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
+        
+        
       }
-    }
-    .frame(height: CGFloat(settingsArray.count) * 56)
-    .sheet(item: $selectedSetting) { setting in
-      setting.location
+      .frame(height: CGFloat(4) * 56)
+      .padding(.leading, 16)
+      .padding(.trailing, 10)
     }
   }
 }
 #Preview {
-  ProfileSettings(settingsArray: [])
+  @Previewable @State var test = false
+  ProfileSettings(isPresented: $test)
 }

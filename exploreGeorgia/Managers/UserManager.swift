@@ -9,6 +9,7 @@ import FirebaseCore
 import FirebaseAuth
 import FirebaseFirestore
 import GoogleSignIn
+import FirebaseStorage
 
 struct UserModel {
   let avatar: String
@@ -34,6 +35,27 @@ protocol GetCurrentUserProtocol {
   func getCurrentUser() async throws -> UserModel?
 }
 
+protocol ChangePasswordProtocol {
+  func changePassword(password: String) async throws
+}
+
+protocol UserInfoUpdaeProtocol {
+  func updateUserInfo(firstName: String, lastName: String, gender: String) async throws
+}
+
+protocol DeleteGoogleUser {
+  func removeGoogleUser() async throws
+}
+
+protocol DeleteUserWithEmail {
+  func deleteUser(email: String, password: String) async throws
+}
+
+protocol AvatarUpdateProtocol {
+  func updateUserProfileImage(image: UIImage) async throws
+}
+
+
 final class UserManager: GetCurrentUserProtocol {
   
   func getCurrentUser() async throws -> UserModel? {
@@ -46,7 +68,7 @@ final class UserManager: GetCurrentUserProtocol {
     let document = try await db.collection("users").document(fetchedUser.uid).getDocument()
     
     if document.exists, let data = document.data() {
-      let avatar = fetchedUser.photoURL?.absoluteString ?? ""
+      let avatar = data["photoURL"] as? String ?? ""
       let firstName = data["firstName"] as? String ?? ""
       let lastName = data["lastName"] as? String ?? ""
       let email = fetchedUser.email ?? ""
@@ -75,11 +97,6 @@ final class UserManager: GetCurrentUserProtocol {
   }
 }
 
-
-protocol ChangePasswordProtocol {
-  func changePassword(password: String) async throws
-}
-
 extension UserManager: ChangePasswordProtocol {
   func changePassword(password: String) async throws {
     guard let user = Auth.auth().currentUser else {
@@ -94,11 +111,6 @@ extension UserManager: ChangePasswordProtocol {
       throw error
     }
   }
-}
-
-
-protocol UserInfoUpdaeProtocol {
-  func updateUserInfo(firstName: String, lastName: String, gender: String) async throws
 }
 
 extension UserManager: UserInfoUpdaeProtocol {
@@ -124,11 +136,6 @@ extension UserManager: UserInfoUpdaeProtocol {
       throw error
     }
   }
-}
-
-
-protocol DeleteGoogleUser {
-  func removeGoogleUser() async throws
 }
 
 extension UserManager: DeleteGoogleUser {
@@ -166,11 +173,6 @@ extension UserManager: DeleteGoogleUser {
   }
 }
 
-
-protocol DeleteUserWithEmail {
-  func deleteUser(email: String, password: String) async throws
-}
-
 extension UserManager: DeleteUserWithEmail {
   func deleteUser(email: String, password: String) async throws {
     guard let user = Auth.auth().currentUser else {
@@ -193,6 +195,55 @@ extension UserManager: DeleteUserWithEmail {
       default:
         throw error
       }
+    }
+  }
+}
+
+extension UserManager: AvatarUpdateProtocol {
+  func generateAvatarURL(image: UIImage, userId: String) async throws -> String {
+    guard let imageData = image.jpegData(compressionQuality: 0.2) else {
+      throw NSError(domain: "Image Conversion Error", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert image to JPEG data"])
+    }
+    
+    let storageRef = Storage.storage().reference().child("profile_pictures/\(userId).jpg")
+    
+    do {
+      let _ = try await storageRef.putDataAsync(imageData)
+    } catch {
+      throw error
+    }
+    
+    do {
+      let downloadURL = try await storageRef.downloadURL()
+      print("🟢", downloadURL)
+      return downloadURL.absoluteString
+    } catch {
+      throw error
+    }
+  }
+  
+  func updateUserProfileImage(image: UIImage) async throws {
+    guard let user = Auth.auth().currentUser else {
+      return
+    }
+    
+    let generatedAvatarURL: String
+    do {
+      generatedAvatarURL = try await generateAvatarURL(image: image, userId: user.uid)
+    } catch {
+      throw error
+    }
+    
+    let db = Firestore.firestore()
+    let userRef = db.collection("users").document(user.uid)
+    
+    let userInfo: [String: Any] = ["photoURL": generatedAvatarURL]
+    
+    do {
+      try await userRef.updateData(userInfo)
+      print("✅ User Avatar updated successfully!")
+    } catch {
+      throw error
     }
   }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import _PhotosUI_SwiftUI
 
 final class EditProfileViewModel: ObservableObject {
   private let userManager: GetCurrentUserProtocol
@@ -14,6 +15,7 @@ final class EditProfileViewModel: ObservableObject {
   private let userInfoManager: UserInfoUpdaeProtocol
   private let googleUserDeletionManager: DeleteGoogleUser
   private let defaultUserDeletionManager: DeleteUserWithEmail
+  private let avatarUploadManager: AvatarUpdateProtocol
   @Published var firstName = ""
   @Published var lastName = ""
   @Published var password = ""
@@ -23,6 +25,13 @@ final class EditProfileViewModel: ObservableObject {
   @Published var isLoading = false
   @Published var isUserFromGoogle = false
   @Published var errorMessage = ""
+  @Published var currentAvatar = ""
+  @Published var choosenAvatar: UIImage? = nil
+  @Published var selectedAvatarFromPicker: PhotosPickerItem? = nil {
+    didSet {
+      avatarUpload(from: selectedAvatarFromPicker)
+    }
+  }
   
   let genderOptions = ["Male", "Female", "Not Prefer"]
   
@@ -31,13 +40,15 @@ final class EditProfileViewModel: ObservableObject {
     passwordManager: ChangePasswordProtocol = UserManager(),
     userInfoManager: UserInfoUpdaeProtocol = UserManager(),
     googleUserDeletionManager: DeleteGoogleUser = UserManager(),
-    defaultUserDeletionManager: DeleteUserWithEmail = UserManager()
+    defaultUserDeletionManager: DeleteUserWithEmail = UserManager(),
+    avatarUpdateManager: AvatarUpdateProtocol = UserManager()
   ) {
     self.userManager = userManager
     self.passwordManager = passwordManager
     self.userInfoManager = userInfoManager
     self.googleUserDeletionManager = googleUserDeletionManager
     self.defaultUserDeletionManager = defaultUserDeletionManager
+    self.avatarUploadManager = avatarUpdateManager
     
     fetchUser()
     getUserPorivuder()
@@ -51,6 +62,7 @@ final class EditProfileViewModel: ObservableObject {
         let user = try await userManager.getCurrentUser()
         
         await MainActor.run {
+          currentAvatar = user?.avatar ?? ""
           firstName = user?.firstName ?? ""
           lastName = user?.lastName ?? ""
           gender = user?.gender ?? "Not Prefer"
@@ -163,6 +175,7 @@ final class EditProfileViewModel: ObservableObject {
         if isUserFromGoogle {
           try await googleUserDeletionManager.removeGoogleUser()
         } else {
+          
           guard passwordForDelete.count > 7 else {
             await MainActor.run {
               errorMessage = "The password must be at least 8 characters long."
@@ -184,6 +197,28 @@ final class EditProfileViewModel: ObservableObject {
       } catch {
         await MainActor.run {
           errorMessage = error.localizedDescription
+        }
+      }
+    }
+  }
+  
+  private func avatarUpload(from selection: PhotosPickerItem?) {
+    guard let selection else {
+      return
+    }
+    
+    Task {
+      if let data = try await selection.loadTransferable(type: Data.self) {
+        if let uiImage = UIImage(data: data) {
+          await MainActor.run {
+            choosenAvatar = uiImage
+          }
+          
+          do {
+            try await avatarUploadManager.updateUserProfileImage(image: uiImage)
+          } catch {
+            
+          }
         }
       }
     }
