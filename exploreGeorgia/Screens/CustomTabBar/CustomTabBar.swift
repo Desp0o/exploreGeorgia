@@ -7,6 +7,14 @@
 
 import SwiftUI
 
+struct VocabularyViewControllerWrapper: UIViewControllerRepresentable {
+  func makeUIViewController(context: Context) -> VocabularyVC {
+    return VocabularyVC()
+  }
+  
+  func updateUIViewController(_ uiViewController: VocabularyVC, context: Context) {}
+}
+
 struct CustomTabBar: View {
   @StateObject private var vm = CustomTabBarViewModel()
   @State private var currentIdenx = 0
@@ -24,10 +32,7 @@ struct CustomTabBar: View {
                 .background(.blue)
             }
           case 2:
-            VStack {
-              Text("Notifications")
-                .background(.green)
-            }
+            VocabularyViewControllerWrapper()
           case 3:
             VStack {
               Text("Messages")
