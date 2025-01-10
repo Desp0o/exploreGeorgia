@@ -9,15 +9,25 @@ import SwiftUI
 import PhotosUI
 
 struct EditProfile: View {
+  @Environment(\.colorScheme) var colorScheme  // Add this
   @StateObject private var vm = EditProfileViewModel()
   @ObservedObject private var toastManager = ToastManager()
   @ObservedObject private var alertManager = CustomAlertManager()
   @State private var showInput = false
   @State private var toastMessage = ""
   @State private var alertBoxMessage = ""
+  @AppStorage("isDarkTheme") private var isDarkTheme = UITraitCollection.current.userInterfaceStyle == .dark
   
   var body: some View {
     ZStack(alignment: .top) {
+      Color.primaryWhite.ignoresSafeArea()
+      
+      Button {
+        isDarkTheme.toggle()
+      } label: {
+        Text("click mode")
+      }
+      
       if toastManager.isShown {
         ToastView(
           message: toastMessage,
@@ -187,6 +197,7 @@ struct EditProfile: View {
       .scrollBounceBehavior(.basedOnSize)
       .scrollIndicators(.hidden)
     }
+    .preferredColorScheme(isDarkTheme ? .dark : .light)
     .onReceive(vm.$completionMessage) { message in
       if !message.isEmpty {
         toastMessage = message

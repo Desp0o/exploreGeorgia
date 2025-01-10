@@ -94,7 +94,7 @@ final class PasswordResetVC: UIViewController {
   }
   
   private func setupUI() {
-    view.backgroundColor = .customWhite
+    view.backgroundColor = .primaryWhite
     
     view.addSubview(backButton)
     view.addSubview(screenTitle)

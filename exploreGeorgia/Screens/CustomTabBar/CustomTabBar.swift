@@ -91,6 +91,7 @@ struct CustomTabBar: View {
       }
       .ignoresSafeArea(.container, edges: .bottom)
     }
+    .background(.primaryWhite)
     .toolbar(.hidden, for: .navigationBar)
     .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
   }
