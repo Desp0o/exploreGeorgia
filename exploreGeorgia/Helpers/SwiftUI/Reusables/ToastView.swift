@@ -21,7 +21,7 @@ struct ToastView: View {
         .frame(maxWidth: .infinity)
         .frame(height: 50)
         .background(bgColor)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .roundedCorners(12)
         .transition(.move(edge: .top).combined(with: .opacity))
         .zIndex(99)
         .padding(.top, 10)

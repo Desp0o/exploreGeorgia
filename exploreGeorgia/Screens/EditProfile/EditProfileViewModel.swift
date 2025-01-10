@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseAuth
 import _PhotosUI_SwiftUI
+import SwiftUI
 
 final class EditProfileViewModel: ObservableObject {
   private let userManager: GetCurrentUserProtocol
@@ -34,9 +35,12 @@ final class EditProfileViewModel: ObservableObject {
       avatarUpload(from: selectedAvatarFromPicker)
     }
   }
-  
+  @AppStorage("Language") var selectedLanguage = "Eng"
+  @AppStorage("isDarkTheme") var isDarkTheme = UITraitCollection.current.userInterfaceStyle == .dark
+
   let genderOptions = ["Male", "Female", "Not Prefer"]
-  
+  let languageArr = ["Eng", "Geo"]
+
   init(
     userManager: GetCurrentUserProtocol = UserManager(),
     passwordManager: ChangePasswordProtocol = UserManager(),

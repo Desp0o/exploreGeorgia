@@ -48,7 +48,7 @@ struct CustomAlert: View {
       .padding(.vertical, 20)
       .padding(.horizontal, 20)
       .background(.customWhite)
-      .clipShape(RoundedRectangle(cornerRadius: 12))
+      .roundedCorners(12)
       .padding(.horizontal, 50)
       .scaleEffect(scaleEffect)
       .onAppear {

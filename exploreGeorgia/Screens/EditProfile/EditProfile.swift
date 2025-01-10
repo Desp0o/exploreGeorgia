@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct EditProfile: View {
-  @Environment(\.colorScheme) var colorScheme  // Add this
+  @Environment(\.colorScheme) var colorScheme
   @StateObject private var vm = EditProfileViewModel()
   @ObservedObject private var toastManager = ToastManager()
   @ObservedObject private var alertManager = CustomAlertManager()
   @State private var showInput = false
   @State private var toastMessage = ""
   @State private var alertBoxMessage = ""
-  @AppStorage("isDarkTheme") private var isDarkTheme = UITraitCollection.current.userInterfaceStyle == .dark
   
   var body: some View {
     ZStack(alignment: .top) {
@@ -58,11 +57,18 @@ struct EditProfile: View {
         } else {
           VStack(spacing: 50) {
             UserAvatarChangeComponent(vm: vm)
+            
             UserInfoUpdateComponent(vm: vm)
+            
             if !vm.isUserFromGoogle {
               UserPasswordChangeComponent(vm: vm)
             }
-            ThemeTogglerComponent(isDarkTheme: $isDarkTheme)
+            
+            VStack(spacing: 20) {
+              ThemeTogglerComponent(vm: vm)
+              LanguageSelectorComponent(vm: vm)
+            }
+            
             UserDeleteComponent(vm: vm, showInput: $showInput)
           }
           .padding(.horizontal, 20)
@@ -72,7 +78,7 @@ struct EditProfile: View {
       .scrollBounceBehavior(.basedOnSize)
       .scrollIndicators(.hidden)
     }
-    .preferredColorScheme(isDarkTheme ? .dark : .light)
+    .preferredColorScheme(vm.isDarkTheme ? .dark : .light)
     .onReceive(vm.$completionMessage) { message in
       if !message.isEmpty {
         toastMessage = message

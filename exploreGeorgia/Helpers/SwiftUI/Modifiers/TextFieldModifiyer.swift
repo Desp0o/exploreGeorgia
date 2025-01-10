@@ -19,7 +19,7 @@ extension TextField {
       .frame(maxWidth: .infinity)
       .frame(height: height)
       .background(bg)
-      .clipShape(RoundedRectangle(cornerRadius: corners))
+      .roundedCorners(12)
       .overlay(
         RoundedRectangle(cornerRadius: corners)
           .stroke(borderColor, lineWidth: borderWidth)

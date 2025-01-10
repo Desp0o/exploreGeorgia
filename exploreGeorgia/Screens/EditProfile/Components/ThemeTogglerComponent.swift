@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ThemeTogglerComponent: View {
-  @Binding var isDarkTheme: Bool
+  @ObservedObject var vm: EditProfileViewModel
   
   var body: some View {
     HStack {
@@ -25,7 +25,7 @@ struct ThemeTogglerComponent: View {
         ZStack {
           
           HStack {
-            if isDarkTheme {
+            if vm.isDarkTheme {
               Image(systemName: "sun.min")
                 .foregroundStyle(.yellow)
               Spacer()
@@ -39,7 +39,7 @@ struct ThemeTogglerComponent: View {
           
           
           HStack {
-            if isDarkTheme {
+            if vm.isDarkTheme {
               Spacer()
             }
             
@@ -47,7 +47,7 @@ struct ThemeTogglerComponent: View {
               .fill(.customBlue)
               .frame(width: 30, height: 30)
             
-            if !isDarkTheme {
+            if !vm.isDarkTheme {
               Spacer()
             }
           }
@@ -57,15 +57,15 @@ struct ThemeTogglerComponent: View {
       .background(.customWhite)
       .clipShape(Capsule())
       .frame(width: 70, height: 30)
-      .animation(.easeIn(duration: 0.2), value: isDarkTheme)
+      .animation(.easeIn(duration: 0.2), value: vm.isDarkTheme)
       .onTapGesture {
-        isDarkTheme.toggle()
+        vm.isDarkTheme.toggle()
       }
     }
   }
 }
 
 #Preview {
-  @Previewable @State var toggler = false
-  ThemeTogglerComponent(isDarkTheme: $toggler)
+  @ObservedObject var vm = EditProfileViewModel()
+  ThemeTogglerComponent(vm: vm)
 }
