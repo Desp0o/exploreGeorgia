@@ -19,7 +19,7 @@ extension UIViewController {
     toast.createLabel(
       text: message,
       fontWeight: .bold,
-      textColor: .customWhite,
+      textColor: .primaryWhite,
       textAlignment: .center,
       autoTranslate: true
     )

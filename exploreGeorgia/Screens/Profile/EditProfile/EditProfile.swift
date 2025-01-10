@@ -11,15 +11,26 @@ import PhotosUI
 struct EditProfile: View {
   @StateObject private var vm = EditProfileViewModel()
   @ObservedObject private var toastManager = ToastManager()
-  
+  @ObservedObject private var alertManager = CustomAlertManager()
   @State private var showInput = false
-  @State var isToast = false
   @State private var toastMessage = ""
   
   var body: some View {
     ZStack(alignment: .top) {
       if toastManager.isShown {
-        ToastView(message: toastMessage, bgColor: .green)
+        ToastView(
+          message: toastMessage,
+          bgColor: .green
+        )
+      }
+      
+      if alertManager.isShown {
+        CustomAlert(
+          alertManager: alertManager,
+          alertMessage: "alert message",
+          errorType: .error
+        )
+          .zIndex(999)
       }
       
       VStack{
@@ -34,10 +45,12 @@ struct EditProfile: View {
       
       ScrollView {
         Button {
-          toastManager.showToast()
+          alertManager.showAlert()
         } label: {
-          Text("click me")
+          Text("show alert")
         }
+        
+        
         if vm.isLoading {
           VStack {
             ProgressView()
