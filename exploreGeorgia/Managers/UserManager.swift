@@ -11,26 +11,6 @@ import FirebaseFirestore
 import GoogleSignIn
 import FirebaseStorage
 
-struct UserModel {
-  let avatar: String
-  let firstName: String
-  let lastName: String
-  let email: String
-  let gender: String
-  let points: Int
-  let explored: [String]
-  let bucketList: [String]
-  let achievement: [String]
-  let createdAt: Timestamp?
-}
-
-enum FetchedUserErrors: Error {
-  case noUserLogged(message: String)
-  case userDoesntExist(message: String)
-  case unknownError(message: String)
-}
-
-
 protocol GetCurrentUserProtocol {
   func getCurrentUser() async throws -> UserModel?
 }

@@ -5,11 +5,6 @@
 //  Created by Despo on 04.01.25.
 //
 
-enum MessageType {
-  case error
-  case warning
-}
-
 import UIKit
 
 final class UIKitCustomAlert: UIViewController {

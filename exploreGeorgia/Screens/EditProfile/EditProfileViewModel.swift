@@ -102,19 +102,19 @@ final class EditProfileViewModel: ObservableObject {
   
   func updatePassword() {
     guard password.count > 7 else {
-      errorMessage = "The password must be at least 8 characters long"
+      errorMessage = ValidationError.shortPassword.rawValue
       print(errorMessage)
       return
     }
     
     guard isValidPassword(password) else {
-      errorMessage = "The password must contain at least one uppercase letter, one number, and one special character"
+      errorMessage = ValidationError.wrongPassword.rawValue
       print(errorMessage)
       return
     }
     
     guard password == rePassword else {
-      errorMessage = "The passwords do not match"
+      errorMessage = ValidationError.passNoMatch.rawValue
       print(errorMessage)
       return
     }
@@ -140,25 +140,25 @@ final class EditProfileViewModel: ObservableObject {
   
   func updateUser() {
     guard firstName.count > 1 else {
-      errorMessage = "The first name must be at least 2 characters long"
+      errorMessage = ValidationError.shortFirstName.rawValue
       print(errorMessage)
       return
     }
     
     guard isValidNames(firstName) else {
-      errorMessage = "The first name must contain only letters"
+      errorMessage = ValidationError.wrongFirsName.rawValue
       print(errorMessage)
       return
     }
     
     guard lastName.count > 1 else {
-      errorMessage = "The last name must be at least 2 characters long"
+      errorMessage = ValidationError.shortLastName.rawValue
       print(errorMessage)
       return
     }
     
     guard isValidNames(lastName) else {
-      errorMessage = "The last name must contain only letters"
+      errorMessage = ValidationError.wrongLastName.rawValue
       print(errorMessage)
       return
     }
@@ -214,7 +214,7 @@ final class EditProfileViewModel: ObservableObject {
       do {
         guard passwordForDelete.count > 7 else {
           await MainActor.run {
-            errorMessage = "The password must be at least 8 characters long."
+            errorMessage = ValidationError.shortPassword.rawValue
             isUpdatignInfo = false
           }
           return
@@ -222,7 +222,7 @@ final class EditProfileViewModel: ObservableObject {
         
         guard isValidPassword(passwordForDelete) else {
           await MainActor.run {
-            errorMessage = "The password must contain at least one uppercase letter, one number, and one special character."
+            errorMessage = ValidationError.wrongPassword.rawValue
             isUpdatignInfo = false
           }
           return

@@ -5,12 +5,6 @@
 //  Created by Despo on 05.01.25.
 //
 
-enum ToastTypes {
-  case successfully
-  case warning
-  case error
-}
-
 import UIKit
 
 extension UIViewController {

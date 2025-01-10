@@ -24,5 +24,6 @@ extension TextField {
         RoundedRectangle(cornerRadius: corners)
           .stroke(borderColor, lineWidth: borderWidth)
       )
+    .autocorrectionDisabled()
   }
 }

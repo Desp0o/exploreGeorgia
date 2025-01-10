@@ -35,19 +35,19 @@ final class LoginViewModel {
   
   func checkUser(email: String, password: String) {
     guard isValidEmail(email) else {
-      loginErrorMsg = "Enter correct email format"
+      loginErrorMsg = ValidationError.wrongEmail.rawValue
       loginErrorDelegate?.didErrorDuringLogin()
       return
     }
     
     guard password.count > 7 else {
-      loginErrorMsg = "The password must be at least 8 characters long."
+      loginErrorMsg = ValidationError.shortPassword.rawValue
       loginErrorDelegate?.didErrorDuringLogin()
       return
     }
     
     guard isValidPassword(password) else {
-      loginErrorMsg = "The password must contain at least one uppercase letter, one number, and one special character."
+      loginErrorMsg = ValidationError.wrongPassword.rawValue
       loginErrorDelegate?.didErrorDuringLogin()
       return
     }

@@ -11,14 +11,6 @@ import FirebaseFirestore
 import GoogleSignIn
 import GoogleSignInSwift
 
-enum AuthenticationError: Error {
-  case tokenError(message: String)
-  case configurationError(message: String)
-  case networkError(message: String)
-  case unknownError(message: String)
-}
-
-
 protocol SignupProtocol {
   func createUser(user: RegisteredUserModel) async throws
 }
