@@ -170,7 +170,7 @@ final class SignupVC: UIViewController {
   }
   
   private func setupUI() {
-    view.backgroundColor = .customWhite
+    view.backgroundColor = .primaryWhite
     
     view.addSubview(scrollView)
     scrollView.addSubview(contentView)

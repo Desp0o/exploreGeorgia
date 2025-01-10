@@ -5,12 +5,6 @@
 //  Created by Despo on 05.01.25.
 //
 
-enum ToastTypes {
-  case successfully
-  case warning
-  case error
-}
-
 import UIKit
 
 extension UIViewController {
@@ -19,7 +13,7 @@ extension UIViewController {
     toast.createLabel(
       text: message,
       fontWeight: .bold,
-      textColor: .customWhite,
+      textColor: .primaryWhite,
       textAlignment: .center,
       autoTranslate: true
     )

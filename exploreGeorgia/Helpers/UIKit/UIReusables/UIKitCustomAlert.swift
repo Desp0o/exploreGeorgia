@@ -5,11 +5,6 @@
 //  Created by Despo on 04.01.25.
 //
 
-enum MessageType {
-  case error
-  case warning
-}
-
 import UIKit
 
 final class UIKitCustomAlert: UIViewController {
@@ -42,7 +37,6 @@ final class UIKitCustomAlert: UIViewController {
   private lazy var label: UILabel = {
     let label = UILabel()
     label.translatesAutoresizingMaskIntoConstraints = false
-    label.textColor = .white
     label.textAlignment = .center
     return label
   }()

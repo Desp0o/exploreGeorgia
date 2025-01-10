@@ -66,49 +66,49 @@ final class SignupViewModel {
     rePassword: String
   ) {
     guard firstName.count > 1 else {
-      errorMessage = "The first name must be at least 2 characters long"
+      errorMessage = ValidationError.shortFirstName.rawValue
       errorDelegate?.didErrorDuringSignup()
       return
     }
     
     guard isValidNames(firstName) else {
-      errorMessage = "The first name must contain only letters"
+      errorMessage = ValidationError.wrongFirsName.rawValue
       errorDelegate?.didErrorDuringSignup()
       return
     }
     
     guard lastName.count > 1 else {
-      errorMessage = "The last name must be at least 2 characters long"
+      errorMessage = ValidationError.shortLastName.rawValue
       errorDelegate?.didErrorDuringSignup()
       return
     }
     
     guard isValidNames(lastName) else {
-      errorMessage = "The last name must contain only letters"
+      errorMessage = ValidationError.wrongLastName.rawValue
       errorDelegate?.didErrorDuringSignup()
       return
     }
     
     guard isValidEmail(email) else {
-      errorMessage = "Enter correct email format"
+      errorMessage = ValidationError.wrongEmail.rawValue
       errorDelegate?.didErrorDuringSignup()
       return
     }
     
     guard password.count > 7 else {
-      errorMessage = "The password must be at least 8 characters long."
+      errorMessage = ValidationError.shortPassword.rawValue
       errorDelegate?.didErrorDuringSignup()
       return
     }
     
     guard isValidPassword(password) else {
-      errorMessage = "The password must contain at least one uppercase letter, one number, and one special character."
+      errorMessage = ValidationError.wrongPassword.rawValue
       errorDelegate?.didErrorDuringSignup()
       return
     }
     
     guard password == rePassword else {
-      errorMessage = "The passwords do not match."
+      errorMessage = ValidationError.passNoMatch.rawValue
       errorDelegate?.didErrorDuringSignup()
       return
     }

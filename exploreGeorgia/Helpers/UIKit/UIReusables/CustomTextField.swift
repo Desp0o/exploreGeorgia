@@ -23,6 +23,7 @@ final class CustomTextField: UIView, UITextFieldDelegate {
     field.layer.cornerRadius = 12
     field.layer.borderWidth = 1
     field.layer.borderColor = UIColor.customBlue.cgColor
+    field.backgroundColor = .customWhite
     field.delegate = self
     
     let leftContainer = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 50))

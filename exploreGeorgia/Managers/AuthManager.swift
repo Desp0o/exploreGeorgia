@@ -11,19 +11,29 @@ import FirebaseFirestore
 import GoogleSignIn
 import GoogleSignInSwift
 
-enum AuthenticationError: Error {
-  case tokenError(message: String)
-  case configurationError(message: String)
-  case networkError(message: String)
-  case unknownError
-}
-
-
 protocol SignupProtocol {
   func createUser(user: RegisteredUserModel) async throws
 }
 
+protocol SigninProtocol {
+  func signInUser(with email: String, and password: String) async throws -> AuthDataResult
+}
+
+protocol GoogleAuthProtocol {
+  func signupWithGoogle() async throws
+}
+
+protocol PasswordResetProtocol {
+  func resetPassword(email: String) async throws
+}
+
+protocol LogOutProtocol {
+  func userLogOut() async throws
+}
+
+
 final class AuthManager: SignupProtocol {
+  private let noAvatarURL = "https://firebasestorage.googleapis.com/v0/b/explore-georgia-7d646.firebasestorage.app/o/noAvatar.png?alt=media&token=fbc30487-743f-4258-939b-127645fc4786"
   private let auth = Auth.auth()
   
   func createUser(user: RegisteredUserModel) async throws {
@@ -31,26 +41,20 @@ final class AuthManager: SignupProtocol {
     
     let db = Firestore.firestore()
     let userData: [String: Any] = [
+      "photoURL" : noAvatarURL,
       "firstName": user.firstName,
       "lastName": user.lastName,
-      "email": user.email
+      "email": user.email,
+      "gender": "Not Prefer",
+      "points": 0,
+      "explored": [],
+      "bucketList": [],
+      "achievement": [],
+      "createdAt": Timestamp(date: Date())
     ]
     
     try await db.collection("users").document(authResult.user.uid).setData(userData)
   }
-  
-  func userLogOut() async throws {
-    do {
-      try auth.signOut()
-    } catch let signOutError as NSError {
-      print("Error signing out: %@", signOutError)
-    }
-  }
-}
-
-
-protocol SigninProtocol {
-  func signInUser(with email: String, and password: String) async throws -> AuthDataResult
 }
 
 extension AuthManager: SigninProtocol {
@@ -58,11 +62,6 @@ extension AuthManager: SigninProtocol {
     let signInResult = try await Auth.auth().signIn(withEmail: email, password: password)
     return signInResult
   }
-}
-
-
-protocol GoogleAuthProtocol {
-  func signupWithGoogle() async throws
 }
 
 extension AuthManager: GoogleAuthProtocol {
@@ -79,7 +78,7 @@ extension AuthManager: GoogleAuthProtocol {
           let window = windowScene.windows.first,
           let rootViewController = window.rootViewController else {
       print("There is no root view controller!")
-      throw AuthenticationError.unknownError
+      throw AuthenticationError.unknownError(message: "unknown error")
     }
     
     do {
@@ -92,17 +91,34 @@ extension AuthManager: GoogleAuthProtocol {
       let credential = GoogleAuthProvider.credential(withIDToken: idToken.tokenString,
                                                      accessToken: accessToken.tokenString)
       
-      let _ = try await Auth.auth().signIn(with: credential)
+      let authResult = try await Auth.auth().signIn(with: credential)
+      let firebaseUser = authResult.user
+      
+      let db = Firestore.firestore()
+      let userRef = db.collection("users").document(firebaseUser.uid)
+      
+      let documentSnapshot = try await userRef.getDocument()
+      if !documentSnapshot.exists {
+        let userData: [String: Any] = [
+          "photoURL": firebaseUser.photoURL?.absoluteString ?? "",
+          "firstName": user.profile?.givenName ?? "",
+          "lastName": user.profile?.familyName ?? "",
+          "email": firebaseUser.email ?? "",
+          "gender": "Not Prefer",
+          "points": 0,
+          "explored": [],
+          "bucketList": [],
+          "achievement": [],
+          "createdAt": Timestamp(date: Date())
+        ]
+        
+        try await userRef.setData(userData, merge: true)
+      }
     }
     catch {
       throw error
     }
   }
-}
-
-
-protocol PasswordResetProtocol {
-  func resetPassword(email: String) async throws
 }
 
 extension AuthManager: PasswordResetProtocol {
@@ -111,3 +127,12 @@ extension AuthManager: PasswordResetProtocol {
   }
 }
 
+extension AuthManager: LogOutProtocol {
+  func userLogOut() async throws {
+    do {
+      try auth.signOut()
+    } catch let signOutError as NSError {
+      throw AuthenticationError.unknownError(message: "Error signing out: %@, \(signOutError)")
+    }
+  }
+}

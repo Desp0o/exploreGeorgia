@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E309FA802D2FF7A700928646 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = E309FA7F2D2FF7A700928646 /* FirebaseStorage */; };
 		E32A68A52D1D7A660028F217 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E32A68A42D1D7A660028F217 /* FirebaseAnalytics */; };
 		E32A68A72D1D7A660028F217 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E32A68A62D1D7A660028F217 /* FirebaseAuth */; };
 		E32A68A92D1D7A660028F217 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E32A68A82D1D7A660028F217 /* FirebaseDatabase */; };
@@ -49,6 +50,7 @@
 				E32A68A92D1D7A660028F217 /* FirebaseDatabase in Frameworks */,
 				E3A005822D28A50B003D4A2C /* FirebaseFirestore in Frameworks */,
 				E3BE61442D2D25A30037C63C /* GoogleSignInSwift in Frameworks */,
+				E309FA802D2FF7A700928646 /* FirebaseStorage in Frameworks */,
 				E32A68A52D1D7A660028F217 /* FirebaseAnalytics in Frameworks */,
 				E32A68A72D1D7A660028F217 /* FirebaseAuth in Frameworks */,
 			);
@@ -57,10 +59,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E309FA7E2D2FF7A700928646 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E32A68602D1D66340028F217 = {
 			isa = PBXGroup;
 			children = (
 				E32A686B2D1D66340028F217 /* exploreGeorgia */,
+				E309FA7E2D2FF7A700928646 /* Frameworks */,
 				E32A686A2D1D66340028F217 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -99,6 +109,7 @@
 				E3A005812D28A50B003D4A2C /* FirebaseFirestore */,
 				E3BE61412D2D25A30037C63C /* GoogleSignIn */,
 				E3BE61432D2D25A30037C63C /* GoogleSignInSwift */,
+				E309FA7F2D2FF7A700928646 /* FirebaseStorage */,
 			);
 			productName = exploreGeorgia;
 			productReference = E32A68692D1D66340028F217 /* exploreGeorgia.app */;
@@ -401,6 +412,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E309FA7F2D2FF7A700928646 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E32A68A32D1D7A660028F217 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
 		E32A68A42D1D7A660028F217 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E32A68A32D1D7A660028F217 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
