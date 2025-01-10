@@ -14,6 +14,7 @@ struct EditProfile: View {
   @ObservedObject private var alertManager = CustomAlertManager()
   @State private var showInput = false
   @State private var toastMessage = ""
+  @State private var alertBoxMessage = ""
   
   var body: some View {
     ZStack(alignment: .top) {
@@ -30,7 +31,7 @@ struct EditProfile: View {
           alertMessage: "alert message",
           errorType: .error
         )
-          .zIndex(999)
+        .zIndex(999)
       }
       
       VStack{
@@ -187,9 +188,15 @@ struct EditProfile: View {
       .scrollIndicators(.hidden)
     }
     .onReceive(vm.$completionMessage) { message in
-      if message != "" {
+      if !message.isEmpty {
         toastMessage = message
         toastManager.showToast()
+      }
+    }
+    .onReceive(vm.$errorMessage) { error in
+      if !error.isEmpty {
+        alertBoxMessage = error
+        alertManager.showAlert()
       }
     }
   }
