@@ -22,7 +22,7 @@ struct UserPasswordChangeComponent: View {
         vm.updatePassword()
       } label: {
         Text("Update password")
-          .styledText(.customBlack, 16, .bold)
+          .styledText(.buttonPrimary, 16, .bold)
       }
       .customStyledButton()
     }

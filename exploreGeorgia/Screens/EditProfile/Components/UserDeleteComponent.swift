@@ -29,7 +29,7 @@ struct UserDeleteComponent: View {
           }
         } label: {
           Text("Delete account")
-            .styledText(.customBlack)
+            .styledText(.buttonPrimary)
         }
         .customStyledButton(bg: showInput ? .red : .customBlue)
         

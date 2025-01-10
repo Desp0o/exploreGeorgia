@@ -39,7 +39,7 @@ struct UserInfoUpdateComponent: View {
         vm.updateUser()
       } label: {
         Text("Update personal info")
-          .styledText(.customBlack, 16, .bold)
+          .styledText(.buttonPrimary, 16, .bold)
       }
       .customStyledButton()
     }

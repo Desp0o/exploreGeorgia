@@ -37,7 +37,7 @@ struct CustomAlert: View {
         } label: {
           Text("OK")
             .styledText(
-              .primaryWhite,
+              .buttonPrimary,
               16,
               .bold
             )
