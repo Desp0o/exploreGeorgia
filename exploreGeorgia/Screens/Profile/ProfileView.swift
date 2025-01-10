@@ -27,12 +27,12 @@ struct ProfileView: View {
           VStack(spacing: 40) {
             Spacer()
             
-            ProfileStatistic(
+            ProfileStatisticComponent(
               user: vm.user,
               statisticArray: vm.profileStatistic
             )
             
-            ProfileSettings(isPresented: $isPresented)
+            ProfileSettingsComponent(isPresented: $isPresented)
             
             Button{
               vm.logOut()

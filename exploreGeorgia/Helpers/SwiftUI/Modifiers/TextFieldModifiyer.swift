@@ -10,6 +10,7 @@ import SwiftUI
 extension TextField {
   func styledTextField(
     height: CGFloat = 50,
+    bg: Color = .customWhite,
     corners: CGFloat = 12,
     borderColor: Color = .customBlue,
     borderWidth: CGFloat = 1
@@ -17,6 +18,7 @@ extension TextField {
     self.padding()
       .frame(maxWidth: .infinity)
       .frame(height: height)
+      .background(bg)
       .clipShape(RoundedRectangle(cornerRadius: corners))
       .overlay(
         RoundedRectangle(cornerRadius: corners)

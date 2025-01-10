@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ProfileSettings: View {
+struct ProfileSettingsComponent: View {
   @Binding var isPresented: Bool
   @ObservedObject var vm = ProfileViewModel()
   var body: some View {
@@ -97,5 +97,5 @@ struct ProfileSettings: View {
 }
 #Preview {
   @Previewable @State var test = false
-  ProfileSettings(isPresented: $test)
+  ProfileSettingsComponent(isPresented: $test)
 }

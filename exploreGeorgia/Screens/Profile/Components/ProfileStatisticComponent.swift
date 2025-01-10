@@ -1,5 +1,5 @@
 //
-//  ProfileStatistic.swift
+//  ProfileStatisticComponent.swift
 //  exploreGeorgia
 //
 //  Created by Despo on 08.01.25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProfileStatistic: View {
+struct ProfileStatisticComponent: View {
   var user: UserModel?
   var statisticArray: [ProfileStatModel]
   
@@ -82,5 +82,5 @@ struct ProfileStatistic: View {
 
 #Preview {
   let user = UserModel(avatar: "", firstName: "", lastName: "", email: "", gender: "Male", points: 0, explored: [""], bucketList: [""], achievement: [""], createdAt: nil)
-  ProfileStatistic(user: user, statisticArray: [])
+  ProfileStatisticComponent(user: user, statisticArray: [])
 }
