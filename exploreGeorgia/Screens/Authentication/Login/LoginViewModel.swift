@@ -71,7 +71,6 @@ final class LoginViewModel {
         if error.domain == AuthErrorDomain {
           switch error.code {
           case AuthErrorCode.invalidCredential.rawValue:
-            print("Invalid credentials. Please check your email and password.")
             
             await MainActor.run {
               loginErrorMsg = "Invalid credentials. Please check your email and password."

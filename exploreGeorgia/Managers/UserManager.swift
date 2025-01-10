@@ -195,7 +195,7 @@ extension UserManager: AvatarUpdateProtocol {
     
     do {
       let downloadURL = try await storageRef.downloadURL()
-      print("🟢", downloadURL)
+
       return downloadURL.absoluteString
     } catch {
       throw error
@@ -221,7 +221,6 @@ extension UserManager: AvatarUpdateProtocol {
     
     do {
       try await userRef.updateData(userInfo)
-      print("✅ User Avatar updated successfully!")
     } catch {
       throw error
     }

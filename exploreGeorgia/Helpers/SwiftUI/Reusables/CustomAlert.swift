@@ -15,7 +15,7 @@ struct CustomAlert: View {
   
   var body: some View {
     ZStack {
-      Color.customBlack.opacity(0.3).ignoresSafeArea()
+      Color.black.opacity(0.3).ignoresSafeArea()
       
       VStack(spacing: 20) {
         
@@ -33,7 +33,6 @@ struct CustomAlert: View {
           .multilineTextAlignment(.center)
         
         Button {
-          print("test")
           alertManager.hideAlert()
         } label: {
           Text("OK")

@@ -107,19 +107,16 @@ final class EditProfileViewModel: ObservableObject {
   func updatePassword() {
     guard password.count > 7 else {
       errorMessage = ValidationError.shortPassword.rawValue
-      print(errorMessage)
       return
     }
     
     guard isValidPassword(password) else {
       errorMessage = ValidationError.wrongPassword.rawValue
-      print(errorMessage)
       return
     }
     
     guard password == rePassword else {
       errorMessage = ValidationError.passNoMatch.rawValue
-      print(errorMessage)
       return
     }
     
@@ -145,25 +142,21 @@ final class EditProfileViewModel: ObservableObject {
   func updateUser() {
     guard firstName.count > 1 else {
       errorMessage = ValidationError.shortFirstName.rawValue
-      print(errorMessage)
       return
     }
     
     guard isValidNames(firstName) else {
       errorMessage = ValidationError.wrongFirsName.rawValue
-      print(errorMessage)
       return
     }
     
     guard lastName.count > 1 else {
       errorMessage = ValidationError.shortLastName.rawValue
-      print(errorMessage)
       return
     }
     
     guard isValidNames(lastName) else {
       errorMessage = ValidationError.wrongLastName.rawValue
-      print(errorMessage)
       return
     }
     

@@ -25,7 +25,7 @@ extension Button {
   func customBorderedButton(
     height: CGFloat = 50,
     corners: CGFloat = 12,
-    borderColor: Color = .customBlue,
+    borderColor: Color = .customBlack,
     borderWidth: CGFloat = 1
   ) -> some View {
     self.frame(maxWidth: .infinity)

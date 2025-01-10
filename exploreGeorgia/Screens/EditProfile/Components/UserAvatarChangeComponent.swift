@@ -31,11 +31,11 @@ struct UserAvatarChangeComponent: View {
       }
       
       PhotosPicker(selection: $vm.selectedAvatarFromPicker) {
-        Text("Change profile photo")
+        Text("Tap to upload profile photo")
           .styledText(
             .customVine,
-            16,
-            .semibold
+            18,
+            .bold
           )
       }
     }

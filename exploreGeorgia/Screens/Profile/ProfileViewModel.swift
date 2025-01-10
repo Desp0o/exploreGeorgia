@@ -65,7 +65,7 @@ final class ProfileViewModel: ObservableObject {
       do {
         try await authManager.userLogOut()
       } catch {
-        print(error)
+        errorMessage = error.localizedDescription
       }
     }
   }
