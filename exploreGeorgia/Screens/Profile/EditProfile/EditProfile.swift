@@ -10,18 +10,34 @@ import PhotosUI
 
 struct EditProfile: View {
   @StateObject private var vm = EditProfileViewModel()
+  @ObservedObject private var toastManager = ToastManager()
+  
   @State private var showInput = false
+  @State var isToast = false
+  @State private var toastMessage = ""
   
   var body: some View {
-    ZStack {
-      if vm.isUpdatignInfo {
-        ProgressView()
-          .scaleEffect(2.0)
-          .tint(.customVine)
-          .zIndex(99)
+    ZStack(alignment: .top) {
+      if toastManager.isShown {
+        ToastView(message: toastMessage, bgColor: .green)
       }
       
+      VStack{
+        if vm.isUpdatignInfo {
+          ProgressView()
+            .scaleEffect(2.0)
+            .tint(.customVine)
+        }
+      }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .zIndex(99)
+      
       ScrollView {
+        Button {
+          toastManager.showToast()
+        } label: {
+          Text("click me")
+        }
         if vm.isLoading {
           VStack {
             ProgressView()
@@ -110,7 +126,7 @@ struct EditProfile: View {
                 .customStyledButton()
               }
             }
-           
+            
             VStack(spacing: 20) {
               if showInput && !vm.isUserFromGoogle {
                 SecureField("Enter password for delete account", text: $vm.passwordForDelete)
@@ -157,8 +173,16 @@ struct EditProfile: View {
       .scrollBounceBehavior(.basedOnSize)
       .scrollIndicators(.hidden)
     }
+    .onReceive(vm.$completionMessage) { message in
+      if message != "" {
+        toastMessage = message
+        toastManager.showToast()
+      }
+    }
   }
+  
 }
+
 
 #Preview {
   EditProfile()

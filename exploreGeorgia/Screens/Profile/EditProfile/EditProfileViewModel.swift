@@ -27,6 +27,7 @@ final class EditProfileViewModel: ObservableObject {
   @Published var isUserFromGoogle = false
   @Published var errorMessage = ""
   @Published var currentAvatar = ""
+  @Published var completionMessage = ""
   @Published var choosenAvatar: UIImage? = nil
   @Published var selectedAvatarFromPicker: PhotosPickerItem? = nil {
     didSet {
@@ -101,19 +102,19 @@ final class EditProfileViewModel: ObservableObject {
   
   func updatePassword() {
     guard password.count > 7 else {
-      errorMessage = "The password must be at least 8 characters long."
+      errorMessage = "The password must be at least 8 characters long"
       print(errorMessage)
       return
     }
     
     guard isValidPassword(password) else {
-      errorMessage = "The password must contain at least one uppercase letter, one number, and one special character."
+      errorMessage = "The password must contain at least one uppercase letter, one number, and one special character"
       print(errorMessage)
       return
     }
     
     guard password == rePassword else {
-      errorMessage = "The passwords do not match."
+      errorMessage = "The passwords do not match"
       print(errorMessage)
       return
     }
@@ -126,6 +127,7 @@ final class EditProfileViewModel: ObservableObject {
         
         await MainActor.run {
           isUpdatignInfo = false
+          completionMessage = "Password updated successfully"
         }
       } catch {
         await MainActor.run {
@@ -169,6 +171,7 @@ final class EditProfileViewModel: ObservableObject {
         
         await MainActor.run {
           isUpdatignInfo = false
+          completionMessage = "Your info updated successfully"
         }
       } catch {
         await MainActor.run {
@@ -259,6 +262,7 @@ final class EditProfileViewModel: ObservableObject {
             
             await MainActor.run {
               isUpdatignInfo = false
+              completionMessage = "Profile photo updated successfully"
             }
           } catch {
             await MainActor.run {
