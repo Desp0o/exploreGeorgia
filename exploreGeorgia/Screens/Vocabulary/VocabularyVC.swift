@@ -10,15 +10,6 @@ import UIKit
 final class VocabularyVC: UIViewController {
   private let vm: VocabularyViewModel
   
-  init(vm: VocabularyViewModel = VocabularyViewModel()) {
-    self.vm = vm
-    super.init(nibName: nil, bundle: nil)
-  }
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-  
   private lazy var searchBar: UISearchBar = {
     let searchBar = UISearchBar()
     searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -52,6 +43,15 @@ final class VocabularyVC: UIViewController {
     table.register(VocabularyCell.self, forCellReuseIdentifier: "VocabularyCell")
     return table
   }()
+  
+  init(vm: VocabularyViewModel = VocabularyViewModel()) {
+    self.vm = vm
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -122,6 +122,28 @@ extension VocabularyVC: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     let sectionTitle = vm.sortedPhrases[section].0
     return sectionTitle
+  }
+  
+  func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    let headerView = UIView()
+    headerView.backgroundColor = .customBlue
+    
+    let label = UILabel()
+    label.createLabel(
+      text: vm.sortedPhrases[section].0,
+      fontSize: 18,
+      fontWeight: .bold,
+      textColor: .buttonPrimary
+    )
+    
+    headerView.addSubview(label)
+    
+    NSLayoutConstraint.activate([
+      label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+      label.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+    ])
+    
+    return headerView
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

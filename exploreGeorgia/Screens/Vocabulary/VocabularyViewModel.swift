@@ -26,7 +26,6 @@ final class VocabularyViewModel {
   var isLoading = false
   var errorMessage = ""
   var phrases: [String: [String]] = [:]
-  
   var sortedPhrases: [(String, [String])] = []
   
   init() {
