@@ -11,7 +11,7 @@ final class UIKitCustomAlert: UIViewController {
   private lazy var toast: UIView = {
     let view = UIView()
     view.translatesAutoresizingMaskIntoConstraints = false
-    view.backgroundColor = .customBlack.withAlphaComponent(0.3)
+    view.backgroundColor = .black.withAlphaComponent(0.3)
     return view
   }()
   

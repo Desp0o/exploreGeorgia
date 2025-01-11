@@ -26,23 +26,31 @@ final class VocabularyViewModel {
   var isLoading = false
   var errorMessage = ""
   var phrases: [String: [String]] = [:]
-  
   var sortedPhrases: [(String, [String])] = []
+  var filteredPhrases: [(String, [String])] = []
+  var searchTerm: String = "" {
+    didSet {
+      filterPhrases()
+    }
+  }
   
   init() {
     useVocabularyData()
   }
   
   func useVocabularyData() {
-    isLoading = true
-    vocabularyLoadingDelegate?.didVocabularyLoaded()
-    
     Task {
       do {
+        await MainActor.run {
+          isLoading = true
+          vocabularyLoadingDelegate?.didVocabularyLoaded()
+        }
+        
         try await fetchVocabulary()
         
         await MainActor.run {
           sortedPhrases = phrases.sorted { $0.key < $1.key }
+          filterPhrases()
           
           delegate?.didPhrasesFetched()
           
@@ -81,5 +89,23 @@ final class VocabularyViewModel {
       print("Error fetching vocabulary: \(error.localizedDescription)")
       throw error
     }
+  }
+  
+  func filterPhrases() {
+    let normalizedSearchTerm = searchTerm.trimmingCharacters(in: .whitespaces).lowercased()
+    
+    if normalizedSearchTerm.isEmpty {
+      filteredPhrases = sortedPhrases
+    } else {
+      filteredPhrases = sortedPhrases.compactMap { category, words in
+        let matchedWords = words.filter { word in
+          word.lowercased().contains(normalizedSearchTerm)
+        }
+        
+        return matchedWords.isEmpty ? nil : (category, matchedWords)
+      }
+    }
+    
+    delegate?.didPhrasesFetched()
   }
 }
