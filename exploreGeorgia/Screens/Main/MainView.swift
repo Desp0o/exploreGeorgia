@@ -11,20 +11,22 @@ import FirebaseAuth
 struct MainView: View {
   let vm  = AuthManager()
   
-    var body: some View {
-      VStack{
-        Text("Hello World")
-        Button {
-          Task {
-            try await vm.userLogOut()
-          }
-        } label: {
-          Text("Log Out")
-        }
-      }
+  var body: some View {
+    VStack{
+      MainViewTitleComponent()
+      
+      
+      
+      
+      
+      
+      
+      
     }
+    .padding(.horizontal, 20)
+  }
 }
 
 #Preview {
-    MainView()
+  MainView()
 }
