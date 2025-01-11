@@ -273,7 +273,3 @@ extension SignupVC: RegistrationLoadingDelegate {
     }
   }
 }
-
-#Preview {
-  SignupVC()
-}

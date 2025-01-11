@@ -278,7 +278,3 @@ extension LoginVC: LoginLoadingDelegate {
     }
   }
 }
-
-#Preview{
-  LoginVC()
-}

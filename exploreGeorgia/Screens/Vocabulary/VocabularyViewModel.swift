@@ -27,6 +27,8 @@ final class VocabularyViewModel {
   var errorMessage = ""
   var phrases: [String: [String]] = [:]
   
+  var sortedPhrases: [(String, [String])] = []
+  
   init() {
     useVocabularyData()
   }
@@ -40,6 +42,8 @@ final class VocabularyViewModel {
         try await fetchVocabulary()
         
         await MainActor.run {
+          sortedPhrases = phrases.sorted { $0.key < $1.key }
+          
           delegate?.didPhrasesFetched()
           
           isLoading = false
@@ -79,4 +83,3 @@ final class VocabularyViewModel {
     }
   }
 }
-

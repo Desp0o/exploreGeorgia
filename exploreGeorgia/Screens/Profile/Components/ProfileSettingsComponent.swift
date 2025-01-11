@@ -95,7 +95,3 @@ struct ProfileSettingsComponent: View {
     }
   }
 }
-#Preview {
-  @Previewable @State var test = false
-  ProfileSettingsComponent(isPresented: $test)
-}

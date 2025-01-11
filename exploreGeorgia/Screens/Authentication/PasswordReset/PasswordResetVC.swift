@@ -155,7 +155,3 @@ extension PasswordResetVC: ResetPassowrdSuccessMessageDelegate {
     showToast(message: vm?.passSuccessMessage ?? "", toastType: .successfully)
   }
 }
-
-#Preview {
-  PasswordResetVC()
-}

@@ -52,11 +52,11 @@ struct ProfileView: View {
         .sheet(isPresented: $isPresented) {
           EditProfile()
         }
-        .onChange(of: isPresented, { oldValue, newValue in
+        .onChange(of: isPresented) { newValue in
           if !newValue {
             vm.fetchProfile()
           }
-        })
+        }
       }
     }
   }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class VocabularyVC: UIViewController, UISearchBarDelegate {
+final class VocabularyVC: UIViewController {
   private let vm: VocabularyViewModel
   
   init(vm: VocabularyViewModel = VocabularyViewModel()) {
@@ -24,6 +24,8 @@ final class VocabularyVC: UIViewController, UISearchBarDelegate {
     searchBar.translatesAutoresizingMaskIntoConstraints = false
     searchBar.placeholder = "Search"
     searchBar.backgroundColor = .clear
+    searchBar.searchBarStyle = .minimal
+    searchBar.delegate = self
     
     return searchBar
   }()
@@ -69,6 +71,18 @@ final class VocabularyVC: UIViewController, UISearchBarDelegate {
     view.addSubview(table)
     
     setupConstraints()
+    
+    gesture()
+  }
+  
+  private func gesture() {
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+    tapGesture.cancelsTouchesInView = false
+    view.addGestureRecognizer(tapGesture)
+  }
+  
+  @objc private func dismissKeyboard() {
+    view.endEditing(true)
   }
   
   private func setupConstraints() {
@@ -80,7 +94,6 @@ final class VocabularyVC: UIViewController, UISearchBarDelegate {
       searchBar.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 20),
       searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
       
-      
       table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
       table.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 0),
       table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -89,30 +102,39 @@ final class VocabularyVC: UIViewController, UISearchBarDelegate {
   }
 }
 
+extension VocabularyVC: UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    if searchText.isEmpty {
+      searchBar.resignFirstResponder()
+    }
+  }
+  
+  func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    searchBar.resignFirstResponder()
+  }
+}
+
 extension VocabularyVC: UITableViewDataSource, UITableViewDelegate {
   func numberOfSections(in tableView: UITableView) -> Int {
-    return vm.phrases.keys.count
+    return vm.sortedPhrases.count
   }
   
   func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    let sectionTitles = Array(vm.phrases.keys)
-    return sectionTitles[section]
+    let sectionTitle = vm.sortedPhrases[section].0
+    return sectionTitle
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    let sectionTitles = Array(vm.phrases.keys)
-    let key = sectionTitles[section]
-    return vm.phrases[key]?.count ?? 0
+    let items = vm.sortedPhrases[section].1
+    return items.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "VocabularyCell", for: indexPath) as? VocabularyCell
     
-    let sectionTitles = Array(vm.phrases.keys)
-    let key = sectionTitles[indexPath.section]
-    let items = vm.phrases[key] ?? []
-    
+    let items = vm.sortedPhrases[indexPath.section].1
     cell?.setupCell(with: items[indexPath.row])
+    cell?.selectionStyle = .none
     
     return cell ?? VocabularyCell()
   }
@@ -139,8 +161,4 @@ extension VocabularyVC: VocabularyErrorMessageDelegate {
     let overlay = UIKitCustomAlert()
     overlay.appear(sender: self, message: vm.errorMessage, messageType: .error)
   }
-}
-
-#Preview {
-  VocabularyVC()
 }

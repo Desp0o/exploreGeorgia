@@ -55,10 +55,10 @@ final class VocabularyCell: UITableViewCell {
       stack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
       stack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
       
-      cellView.heightAnchor.constraint(equalToConstant: 50),
-      
       phraseLabel.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 10),
-      phraseLabel.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
+      phraseLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+      phraseLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+      phraseLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
     ])
   }
   
@@ -66,7 +66,8 @@ final class VocabularyCell: UITableViewCell {
     phraseLabel.createLabel(
       text: phrase,
       fontSize: 16,
-      textColor: .customBlack
+      textColor: .customBlack,
+      lines: 0
     )
   }
 }
