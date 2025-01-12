@@ -13,6 +13,7 @@ struct PlaceDetailsView: View {
   @State var isLoaded = false
   @State var selectedImage = ""
   @State var isLightBoxVisible = false
+  @State var isPresented = false
   
   var body: some View {
     ZStack {
@@ -26,7 +27,8 @@ struct PlaceDetailsView: View {
           PlaceDetailsInfoComponent(
             vm: vm,
             selectedImage: $selectedImage,
-            isLightBoxVisible: $isLightBoxVisible
+            isLightBoxVisible: $isLightBoxVisible,
+            isPresented: $isPresented
           )
           .offset(y: -20)
         }
@@ -43,6 +45,14 @@ struct PlaceDetailsView: View {
           )
           .ignoresSafeArea(.all)
         }
+      }
+      .sheet(isPresented: $isPresented) {
+        MapViewReusable(
+          latitudeProp: Double(vm.currentPlace?.latitude ?? 0),
+          longitudeProp: Double(vm.currentPlace?.longitude ?? 0),
+          locationName: vm.currentPlace?.name ?? "",
+          isEditable: false
+        )
       }
     }
     .onAppear {

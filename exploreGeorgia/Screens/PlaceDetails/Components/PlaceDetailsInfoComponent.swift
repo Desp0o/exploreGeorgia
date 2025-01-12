@@ -11,6 +11,7 @@ struct PlaceDetailsInfoComponent: View {
   @ObservedObject var vm: PlaceDetailsViewModel
   @Binding var selectedImage: String
   @Binding var isLightBoxVisible: Bool
+  @Binding var isPresented: Bool
   
   var body: some View {
     ScrollView {
@@ -115,7 +116,7 @@ struct PlaceDetailsInfoComponent: View {
         }
         
         Button {
-          print("123")
+          isPresented.toggle()
         } label: {
           Text("Show on map")
             .styledText(
