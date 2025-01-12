@@ -14,7 +14,7 @@ struct MainViewTitleComponent: View {
         Text("Explore The")
           .styledText(
             .customBlack,
-            24
+            28
           )
       }
       
@@ -22,13 +22,13 @@ struct MainViewTitleComponent: View {
         Text("Beautiful ")
           .styledText(
             .customBlack,
-            24
+            28
           )
         
         Text("G e o r g i a")
           .styledText(
             .customBlue,
-            24,
+            28,
             .bold
           )
           .overlay {

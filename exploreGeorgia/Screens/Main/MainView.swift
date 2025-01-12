@@ -9,21 +9,40 @@ import SwiftUI
 import FirebaseAuth
 
 struct MainView: View {
-  let vm  = AuthManager()
+  @StateObject var vm = MainViewModel()
   
   var body: some View {
     VStack{
       MainViewTitleComponent()
       
-      
-      
+
+      ScrollView(.horizontal, showsIndicators: false) {
+                  LazyHStack {
+                      if vm.placesFromApp.isEmpty {
+                          // Show loading or empty state
+                          ProgressView()
+                              .frame(width: 300, height: 200)
+                      } else {
+                          ForEach(vm.placesFromApp) { place in
+                              SightSeenReusableView(
+                                  cover: place.cover,
+                                  name: place.name,
+                                  locationRegion: place.region,
+                                  rating: place.rating,
+                                  price: place.price
+                              )
+                          }
+                        
+                      }
+                  }
+              }
       
       
       
       
       
     }
-    .padding(.horizontal, 20)
+    .padding(.all, 20)
   }
 }
 
