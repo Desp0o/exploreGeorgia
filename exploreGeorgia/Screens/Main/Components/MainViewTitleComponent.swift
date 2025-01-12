@@ -22,7 +22,8 @@ struct MainViewTitleComponent: View {
         Text("Beautiful ")
           .styledText(
             .customBlack,
-            28
+            28,
+            .bold
           )
         
         Text("G e o r g i a")

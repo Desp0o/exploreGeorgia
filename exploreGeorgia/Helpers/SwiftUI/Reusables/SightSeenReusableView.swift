@@ -20,7 +20,7 @@ struct SightSeenReusableView: View {
       AsyncImage(url: URL(string: cover)) { image in
         image
           .defaultOptions()
-          .frame(width: 240, height: 280)
+          .frame(width: 240, height: 250)
           .roundedCorners(12)
           .overlay(alignment: .topTrailing) {
             Button {
@@ -41,7 +41,7 @@ struct SightSeenReusableView: View {
       } placeholder: {
         Image("imagePlaceholder")
           .defaultOptions()
-          .frame(width: 240, height: 280)
+          .frame(width: 240, height: 250)
           .roundedCorners(12)
       }
       
@@ -95,6 +95,7 @@ struct SightSeenReusableView: View {
     .frame(maxWidth: 268)
     .background(.customWhite)
     .roundedCorners(12)
+    .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
   }
 }
 

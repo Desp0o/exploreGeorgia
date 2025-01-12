@@ -41,7 +41,7 @@ struct ProfileStatisticComponent: View {
       ZStack {
         RoundedRectangle(cornerRadius: 12)
           .fill(Color.customWhite)
-          .shadow(color: .customBlack.opacity(0.15), radius: 3, y: 2)
+          .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
         
         HStack {
           ForEach(0..<statisticArray.count, id: \.self) { index in

@@ -12,37 +12,23 @@ struct MainView: View {
   @StateObject var vm = MainViewModel()
   
   var body: some View {
-    VStack{
+    VStack(spacing: 30) {
+      MainUserComponet(vm: vm)
+        .padding(.leading, 20)
+      
       MainViewTitleComponent()
+        .padding(.leading, 20)
       
+      PlacesFromAppComponents(vm: vm)
 
-      ScrollView(.horizontal, showsIndicators: false) {
-                  LazyHStack {
-                      if vm.placesFromApp.isEmpty {
-                          // Show loading or empty state
-                          ProgressView()
-                              .frame(width: 300, height: 200)
-                      } else {
-                          ForEach(vm.placesFromApp) { place in
-                              SightSeenReusableView(
-                                  cover: place.cover,
-                                  name: place.name,
-                                  locationRegion: place.region,
-                                  rating: place.rating,
-                                  price: place.price
-                              )
-                          }
-                        
-                      }
-                  }
-              }
+     
       
-      
+      Spacer()
       
       
       
     }
-    .padding(.all, 20)
+    .padding(.top, 10)
   }
 }
 

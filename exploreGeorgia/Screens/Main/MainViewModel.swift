@@ -9,17 +9,37 @@ import FirebaseFirestore
 
 final class MainViewModel: ObservableObject {
   private let db = Firestore.firestore()
+  private let userManager: GetCurrentUserProtocol
+  @Published var user: UserModel? = nil
+  @Published var errorMessage = ""
   @Published var placesFromApp: [SightSeenModel] = []
   
-  init() {
+  
+  init(userManager: GetCurrentUserProtocol = UserManager()) {
+    self.userManager = userManager
+    
+    fetchCurrentUser()
     getAppPLaces()
+  }
+  
+  private func fetchCurrentUser() {
+    Task {
+      do {
+        let data = try await userManager.getCurrentUser()
+        
+        await MainActor.run {
+          user = data
+        }
+      } catch {
+        errorMessage = error.localizedDescription
+      }
+    }
   }
   
   private func getAppPLaces() {
     Task {
       do {
         let data = try await fetchPlaces()
-        print("🚀 Fetched \(data.count) places")
         
         await MainActor.run {
           placesFromApp = data
