@@ -12,6 +12,11 @@ struct PlaceDetailsBGComponent: View {
   
   var body: some View {
     ZStack(alignment: .top) {
+      NavigationBarReusable(title: vm.currentPlace?.name ?? "")
+        .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
+        .frame(width: UIScreen.main.bounds.width - 20)
+        .zIndex(2)
+      
       AsyncImage(url: URL(string: vm.currentPlace?.cover ?? "")) { image in
         image
           .defaultOptions()
@@ -21,17 +26,6 @@ struct PlaceDetailsBGComponent: View {
       }
       .frame(maxWidth: .infinity)
       .frame(height: UIScreen.main.bounds.height < 800 ? 270 : 400)
-      
-      Button {
-        print("test")
-      } label: {
-        Text("u k a n g a m o s v l a")
-          .styledText(
-            .red,
-            28,
-            .bold
-          )
-      }
     }
   }
 }

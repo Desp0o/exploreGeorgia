@@ -12,7 +12,6 @@ struct LightBoxViewReusable: View {
   @Binding var isLightBoxVisible: Bool
   @State private var scale: CGFloat = 1.0
   @State private var imageScale: CGFloat = 0.5
-  let wid: CGFloat = 40
   var album: [String]
   @State private var currentIndex: Int = 0
   
