@@ -51,7 +51,7 @@ struct PlacesFromAppComponents: View {
             }
           }
         }
-        .padding(.leading, 20)
+        .padding(.horizontal, 20)
       }
       .frame(height: 350)
     }

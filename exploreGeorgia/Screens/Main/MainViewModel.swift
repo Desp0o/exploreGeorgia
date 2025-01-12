@@ -43,10 +43,13 @@ final class MainViewModel: ObservableObject {
         
         await MainActor.run {
           placesFromApp = data
-          print(placesFromApp)
         }
       } catch {
         print("❌ Error in getAppPlaces:", error)
+        
+        await MainActor.run {
+          errorMessage = "Something went wrong!"
+        }
       }
     }
   }

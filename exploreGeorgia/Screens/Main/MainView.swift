@@ -20,7 +20,6 @@ struct MainView: View {
         .padding(.leading, 20)
       
       PlacesFromAppComponents(vm: vm)
-
      
       
       Spacer()
