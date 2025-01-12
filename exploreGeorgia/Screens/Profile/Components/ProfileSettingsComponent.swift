@@ -7,7 +7,7 @@ struct ProfileSettingsComponent: View {
     ZStack {
       RoundedRectangle(cornerRadius: 12)
         .fill(Color.customWhite)
-        .shadow(color: .customBlack.opacity(0.15), radius: 3, y: 2)
+        .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
       
       VStack(spacing: 0) {
         //edit profile

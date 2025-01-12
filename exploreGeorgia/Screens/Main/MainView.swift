@@ -9,22 +9,28 @@ import SwiftUI
 import FirebaseAuth
 
 struct MainView: View {
-  let vm  = AuthManager()
+  @StateObject var vm = MainViewModel()
   
-    var body: some View {
-      VStack{
-        Text("Hello World")
-        Button {
-          Task {
-            try await vm.userLogOut()
-          }
-        } label: {
-          Text("Log Out")
-        }
-      }
+  var body: some View {
+    VStack(spacing: 30) {
+      MainUserComponet(vm: vm)
+        .padding(.leading, 20)
+      
+      MainViewTitleComponent()
+        .padding(.leading, 20)
+      
+      PlacesFromAppComponents(vm: vm)
+     
+      
+      Spacer()
+      
+      
+      
     }
+    .padding(.top, 10)
+  }
 }
 
 #Preview {
-    MainView()
+  MainView()
 }
