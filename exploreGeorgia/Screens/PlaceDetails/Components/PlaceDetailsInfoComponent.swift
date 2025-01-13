@@ -16,7 +16,7 @@ struct PlaceDetailsInfoComponent: View {
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 20) {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 0) {
           Text(vm.currentPlace?.name ?? "")
             .styledText(
               .customBlack,
@@ -107,12 +107,11 @@ struct PlaceDetailsInfoComponent: View {
               .semibold
             )
           
-          Text(vm.currentPlace?.description ?? "")
+          Text(vm.currentPlace?.description.prefix(1000) ?? "")
             .styledText(
               .customGray,
               14
             )
-            .lineLimit(12)
         }
         
         Button {
