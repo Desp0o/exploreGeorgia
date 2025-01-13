@@ -22,7 +22,7 @@ struct PlaceDetailsBGComponent: View {
           .defaultOptions()
       }
       .frame(maxWidth: .infinity)
-      .frame(height: UIScreen.main.bounds.height < 800 ? 270 : 400)
+      .frame(height: UIScreen.main.bounds.height < 800 ? 270 : 350)
     }
   }
 }
