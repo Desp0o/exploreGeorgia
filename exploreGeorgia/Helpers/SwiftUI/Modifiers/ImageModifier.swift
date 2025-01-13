@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension Image {
-  func defaultOptions(rounded: Bool = false, cornerSize: CGFloat = 0) -> some View {
+  func defaultOptions() -> some View {
     self
       .resizable()
       .scaledToFill()
