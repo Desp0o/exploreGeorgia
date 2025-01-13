@@ -27,7 +27,6 @@ struct MapViewReusable: View {
     self.locationName = locationName
     self.isEditable = isEditable
     
-    
     _myLocation = State(initialValue: Location(coordinate: CLLocationCoordinate2D(latitude: latitudeProp, longitude: longitudeProp)))
     _region = State(initialValue: MKCoordinateRegion(
       center: CLLocationCoordinate2D(latitude: latitudeProp, longitude: longitudeProp),
@@ -59,6 +58,19 @@ struct MapViewReusable: View {
           .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
       .ignoresSafeArea()
+    }
+  }
+  
+  func openGoogleMaps(latitude: Double, longitude: Double) {
+    let googleMapsURL = "comgooglemaps://?q=\(latitude),\(longitude)"
+    
+    if let url = URL(string: googleMapsURL), UIApplication.shared.canOpenURL(url) {
+      UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    } else {
+      let fallbackURL = "https://www.google.com/maps?q=\(latitude),\(longitude)"
+      if let fallbackUrl = URL(string: fallbackURL) {
+        UIApplication.shared.open(fallbackUrl, options: [:], completionHandler: nil)
+      }
     }
   }
 }

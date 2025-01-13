@@ -16,8 +16,9 @@ struct LightBoxViewReusable: View {
   @State private var currentIndex: Int = 0
   
   var body: some View {
-    ZStack{
+    ZStack {
       Color.black.opacity(0.7)
+        .ignoresSafeArea()
       
       VStack {
         AsyncImage(url: URL(string: selectedImage)) { image in
@@ -30,12 +31,14 @@ struct LightBoxViewReusable: View {
         } placeholder: {
           ProgressView()
             .scaleEffect(1.5)
-            .foregroundStyle(.customBlue)
+            .foregroundStyle(.blue)
+            .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: .infinity)
+            .background(Color.clear)
         }
-        .animation(.easeInOut(duration: 0.3), value: selectedImage)
+        .id(selectedImage)
         .scaleEffect(scale)
         .gesture(
-          SimultaneousGesture (
+          SimultaneousGesture(
             MagnificationGesture()
               .onChanged { value in
                 scale = min(max(1.0, value), 4.0)
@@ -45,7 +48,6 @@ struct LightBoxViewReusable: View {
                   scale = 1.0
                 }
               },
-            
             DragGesture()
               .onEnded { value in
                 withAnimation {
@@ -68,15 +70,11 @@ struct LightBoxViewReusable: View {
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .zIndex(4)
-    .onAppear {
-      if let index = album.firstIndex(of: selectedImage) {
-        currentIndex = index
-      }
-    }
     .onTapGesture {
       selectedImage = ""
       isLightBoxVisible = false
     }
+    .animation(.easeInOut(duration: 0.3), value: currentIndex)
   }
   
   private func goToNextImage() {
