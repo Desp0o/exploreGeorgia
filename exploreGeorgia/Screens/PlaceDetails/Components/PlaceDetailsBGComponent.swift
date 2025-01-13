@@ -12,10 +12,7 @@ struct PlaceDetailsBGComponent: View {
   
   var body: some View {
     ZStack(alignment: .top) {
-      NavigationBarReusable(title: vm.currentPlace?.name ?? "")
-        .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
-        .frame(width: UIScreen.main.bounds.width - 20)
-        .zIndex(2)
+      NavigationBarReusable()
       
       AsyncImage(url: URL(string: vm.currentPlace?.cover ?? "")) { image in
         image

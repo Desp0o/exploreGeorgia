@@ -9,7 +9,6 @@ import SwiftUI
 
 struct NavigationBarReusable: View {
   @Environment(\.dismiss) var dismiss
-  let title: String
   
   var body: some View {
     HStack {
@@ -37,9 +36,12 @@ struct NavigationBarReusable: View {
           .clipShape(Circle())
       }
     }
+    .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
+    .frame(width: UIScreen.main.bounds.width - 20)
+    .zIndex(2)
   }
 }
 
 #Preview {
-  NavigationBarReusable(title: "liberty Square")
+  NavigationBarReusable()
 }
