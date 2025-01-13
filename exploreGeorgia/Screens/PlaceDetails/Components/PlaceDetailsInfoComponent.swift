@@ -82,21 +82,13 @@ struct PlaceDetailsInfoComponent: View {
         
         LazyVGrid(columns: vm.gridItems, alignment: .leading, spacing: 20) {
           ForEach(vm.currentPlace?.album ?? [""], id: \.self) { imageUrl in
-            AsyncImage(url: URL(string: imageUrl)) { image in
-              image
-                .resizable()
-                .scaledToFill()
-                .frame(width: 50, height: 50)
-                .roundedCorners(12)
-            } placeholder: {
-              ProgressView()
-                .tint(.customBlue)
-            }
-            .frame(width: 50, height: 50)
-            .onTapGesture {
-              selectedImage = imageUrl
-              isLightBoxVisible = true
-            }
+            CachedAsyncImage(url: URL(string: imageUrl))
+              .frame(width: 50, height: 50)
+              .roundedCorners(12)
+              .onTapGesture {
+                selectedImage = imageUrl
+                isLightBoxVisible = true
+              }
           }
         }
         

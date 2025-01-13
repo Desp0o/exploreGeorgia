@@ -30,13 +30,11 @@ final class BookMarkManager: ObservableObject {
 
       do {
           if isBookmarked {
-              // Remove the place ID from bookmarks
               try await userRef.updateData([
                   "bucketList": FieldValue.arrayRemove([placeId])
               ])
               print("Bookmark removed successfully")
           } else {
-              // Add the place ID to bookmarks
               try await userRef.updateData([
                   "bucketList": FieldValue.arrayUnion([placeId])
               ])

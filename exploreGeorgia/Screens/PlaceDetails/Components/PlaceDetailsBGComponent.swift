@@ -17,15 +17,9 @@ struct PlaceDetailsBGComponent: View {
         placeID: vm.currentPlace?.id ?? ""
       )
       
-      AsyncImage(url: URL(string: vm.currentPlace?.cover ?? "")) { image in
-        image
-          .defaultOptions()
-      } placeholder: {
-        Image("imagePlaceholder")
-          .defaultOptions()
-      }
-      .frame(maxWidth: .infinity)
-      .frame(height: UIScreen.main.bounds.height < 800 ? 270 : 350)
+      CachedAsyncImage(url: URL(string: vm.currentPlace?.cover ?? ""))
+        .frame(maxWidth: .infinity)
+        .frame(height: UIScreen.main.bounds.height < 800 ? 270 : 350)
     }
   }
 }

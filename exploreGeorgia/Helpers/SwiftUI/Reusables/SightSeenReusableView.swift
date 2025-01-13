@@ -14,38 +14,25 @@ struct SightSeenReusableView: View {
   
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
-      AsyncImage(url: URL(string: place.cover)) { image in
-        image
-          .defaultOptions()
-          .frame(width: 240, height: 250)
-          .roundedCorners(12)
-          .overlay(alignment: .topTrailing) {
-            Button {
-              place.isBookmarked?.toggle()
-              bookmarkManager
-                .savePlaceInBookmark(
-                  placeId: place.id ?? "",
-                  isBookmarked: !(place.isBookmarked ?? false)
-                )
-            } label: {
-              ZStack {
-                Circle()
-                  .fill(.customWhite.opacity(0.7))
-                
-                Image(systemName: place.isBookmarked ?? false ? "bookmark.fill" : "bookmark")
-                  .renderingMode(.template)
-                  .foregroundStyle(.customBlue)
-              }
+      CachedAsyncImage(url: URL(string: place.cover))
+        .frame(width: 240, height: 250)
+        .roundedCorners(12)
+        .overlay(alignment: .topTrailing) {
+          Button {
+            isSaved.toggle()
+          } label: {
+            ZStack {
+              Circle()
+                .fill(.customWhite.opacity(0.7))
+              
+              Image(systemName: place.isBookmarked ?? false ? "bookmark.fill" : "bookmark")
+                .renderingMode(.template)
+                .foregroundStyle(.customBlue)
             }
-            .offset(x: -10, y: 10)
-            .frame(width: 34, height: 34)
           }
-      } placeholder: {
-        Image("imagePlaceholder")
-          .defaultOptions()
-          .frame(width: 240, height: 250)
-          .roundedCorners(12)
-      }
+          .offset(x: -10, y: 10)
+          .frame(width: 34, height: 34)
+        }
       
       HStack(spacing: 2) {
         Text(place.name)
