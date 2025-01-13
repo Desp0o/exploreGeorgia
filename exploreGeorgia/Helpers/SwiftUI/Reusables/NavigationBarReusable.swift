@@ -9,31 +9,45 @@ import SwiftUI
 
 struct NavigationBarReusable: View {
   @Environment(\.dismiss) var dismiss
+  @ObservedObject var bookmarkManager = BookMarkManager()
+  let placeID: String
+  @Binding var isBookMarked: Bool
   
   var body: some View {
     HStack {
       Button {
         dismiss()
       } label: {
-        Image("backArrow")
-          .padding(16)
-          .background(.customWhite.opacity(0.5))
-          .clipShape(Circle())
+        ZStack {
+          Circle()
+            .fill(.customWhite.opacity(0.5))
+            .frame(width: 40, height: 40)
+          
+          Image("backArrow")
+            .renderingMode(.template)
+            .foregroundStyle(.white)
+        }
       }
       
       Spacer()
       
       Button {
-        print("test")
+        isBookMarked.toggle()
+        bookmarkManager
+          .savePlaceInBookmark(
+            placeId: placeID,
+            isBookmarked: !isBookMarked
+          )
       } label: {
-        Image("bookmark")
-          .renderingMode(.template)
-          .resizable()
-          .foregroundStyle(.white)
-          .frame(width: 24, height: 24)
-          .padding(6)
-          .background(.customWhite.opacity(0.5))
-          .clipShape(Circle())
+        ZStack {
+          Circle()
+            .fill(.customWhite.opacity(0.5))
+            .frame(width: 40, height: 40)
+          
+          Image(systemName: isBookMarked ? "bookmark.fill" : "bookmark")
+            .renderingMode(.template)
+            .foregroundStyle(.white)
+        }
       }
     }
     .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
@@ -41,7 +55,7 @@ struct NavigationBarReusable: View {
     .zIndex(2)
   }
 }
-
-#Preview {
-  NavigationBarReusable()
-}
+//
+//#Preview {
+//  NavigationBarReusable()
+//}

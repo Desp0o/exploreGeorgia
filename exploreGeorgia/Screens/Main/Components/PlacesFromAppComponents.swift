@@ -42,13 +42,7 @@ struct PlacesFromAppComponents: View {
           } else {
             ForEach(vm.placesFromApp) { place in
               NavigationLink(destination: PlaceDetailsView(elementID: place.id ?? "").navigationBarHidden(true)) {
-                SightSeenReusableView(
-                  cover: place.cover,
-                  name: place.name,
-                  locationRegion: place.adress,
-                  rating: place.rating,
-                  price: place.price
-                )
+                SightSeenReusableView(place: place)
               }
             }
           }

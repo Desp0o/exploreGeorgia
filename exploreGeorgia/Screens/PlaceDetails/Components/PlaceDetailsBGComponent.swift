@@ -12,7 +12,7 @@ struct PlaceDetailsBGComponent: View {
   
   var body: some View {
     ZStack(alignment: .top) {
-      NavigationBarReusable()
+      NavigationBarReusable(placeID: vm.currentPlace?.id ?? "", isBookMarked: $vm.isBookMarked)
       
       AsyncImage(url: URL(string: vm.currentPlace?.cover ?? "")) { image in
         image

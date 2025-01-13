@@ -13,13 +13,14 @@ struct PlaceDetailsView: View {
   @State var selectedImage = ""
   @State var isLightBoxVisible = false
   @State var isPresented = false
+  @State var isBookmarked = false
   let elementID: String
 
   var body: some View {
     VStack(spacing: 0) {
       if vm.currentPlace == nil {
         VStack {
-          NavigationBarReusable()
+          NavigationBarReusable(placeID: "", isBookMarked: $isBookmarked)
           Spacer()
           ProgressView()
             .foregroundStyle(.customBlue)

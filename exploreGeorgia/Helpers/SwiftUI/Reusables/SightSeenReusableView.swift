@@ -8,16 +8,13 @@
 import SwiftUI
 
 struct SightSeenReusableView: View {
+  @StateObject var bookmarkManager = BookMarkManager()
   @State private var isSaved = false
-  let cover: String
-  let name: String
-  let locationRegion: String
-  let rating: String
-  let price: Int
+  let place: SightSeenModel
   
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
-      AsyncImage(url: URL(string: cover)) { image in
+      AsyncImage(url: URL(string: place.cover)) { image in
         image
           .defaultOptions()
           .frame(width: 240, height: 250)
@@ -25,6 +22,11 @@ struct SightSeenReusableView: View {
           .overlay(alignment: .topTrailing) {
             Button {
               isSaved.toggle()
+              bookmarkManager
+                .savePlaceInBookmark(
+                  placeId: place.id ?? "",
+                  isBookmarked: !isSaved
+                )
             } label: {
               ZStack {
                 Circle()
@@ -46,7 +48,7 @@ struct SightSeenReusableView: View {
       }
       
       HStack(spacing: 2) {
-        Text(name)
+        Text(place.name)
           .styledText(
             .customBlack,
             18,
@@ -61,7 +63,7 @@ struct SightSeenReusableView: View {
           .foregroundStyle(.yellow)
           .frame(width: 12, height: 12)
         
-        Text(rating)
+        Text(place.rating)
           .styledText(
             .customBlack,
             13,
@@ -75,7 +77,7 @@ struct SightSeenReusableView: View {
           .foregroundStyle(.customGray)
           .frame(width: 16, height: 16)
         
-        Text(locationRegion)
+        Text(place.region)
           .styledText(
             .customGray,
             14
@@ -83,7 +85,7 @@ struct SightSeenReusableView: View {
         
         Spacer()
         
-        Text(price == 0 ? "Free" : "₾\(price)")
+        Text(place.price == 0 ? "Free" : "₾\(place.price)")
           .styledText(
             .customVine,
             14,
@@ -99,12 +101,3 @@ struct SightSeenReusableView: View {
   }
 }
 
-#Preview {
-  SightSeenReusableView(
-    cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdTpiRtSARf284eAa-H61EUwtXktXw-XvILA&s",
-    name: "Tbilisi, Old City",
-    locationRegion: "Tbilisi",
-    rating: "4.7",
-    price: 0
-  )
-}
