@@ -10,7 +10,7 @@ import SwiftUI
 struct SightSeenReusableView: View {
   @StateObject var bookmarkManager = BookMarkManager()
   @State private var isSaved = false
-  let place: SightSeenModel
+  @State var place: SightSeenModel
   
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
@@ -21,18 +21,18 @@ struct SightSeenReusableView: View {
           .roundedCorners(12)
           .overlay(alignment: .topTrailing) {
             Button {
-              isSaved.toggle()
+              place.isBookmarked?.toggle()
               bookmarkManager
                 .savePlaceInBookmark(
                   placeId: place.id ?? "",
-                  isBookmarked: !isSaved
+                  isBookmarked: !(place.isBookmarked ?? false)
                 )
             } label: {
               ZStack {
                 Circle()
                   .fill(.customWhite.opacity(0.7))
                 
-                Image(systemName: isSaved ? "bookmark.fill" : "bookmark")
+                Image(systemName: place.isBookmarked ?? false ? "bookmark.fill" : "bookmark")
                   .renderingMode(.template)
                   .foregroundStyle(.customBlue)
               }

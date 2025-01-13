@@ -20,10 +20,13 @@ struct PlaceDetailsView: View {
     VStack(spacing: 0) {
       if vm.currentPlace == nil {
         VStack {
-          NavigationBarReusable(placeID: "", isBookMarked: $isBookmarked)
+          NavigationBarReusable(
+            isBookMarked: $isBookmarked,
+            placeID: ""
+          )
           Spacer()
           ProgressView()
-            .foregroundStyle(.customBlue)
+            .tint(.customBlue)
           
           Spacer()
         }

@@ -90,6 +90,7 @@ struct PlaceDetailsInfoComponent: View {
                 .roundedCorners(12)
             } placeholder: {
               ProgressView()
+                .tint(.customBlue)
             }
             .frame(width: 50, height: 50)
             .onTapGesture {

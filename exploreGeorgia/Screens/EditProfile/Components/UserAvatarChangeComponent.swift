@@ -26,6 +26,7 @@ struct UserAvatarChangeComponent: View {
             .clipShape(Circle())
         } placeholder: {
           ProgressView()
+            .tint(.customBlue)
         }
         .frame(width: 96, height: 96)
       }

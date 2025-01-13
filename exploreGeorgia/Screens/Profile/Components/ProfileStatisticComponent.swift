@@ -20,6 +20,7 @@ struct ProfileStatisticComponent: View {
         
       } placeholder: {
         ProgressView()
+          .tint(.customBlue)
       }
       .frame(width: 96, height: 96)
       

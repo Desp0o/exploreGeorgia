@@ -20,14 +20,13 @@ struct MainView: View {
         .padding(.leading, 20)
       
       PlacesFromAppComponents(vm: vm)
-     
       
       Spacer()
-      
-      
-      
     }
     .padding(.top, 10)
+    .onAppear {
+      vm.fetchCurrentUser()
+    }
   }
 }
 

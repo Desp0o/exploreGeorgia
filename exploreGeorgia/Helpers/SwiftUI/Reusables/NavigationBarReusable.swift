@@ -10,9 +10,9 @@ import SwiftUI
 struct NavigationBarReusable: View {
   @Environment(\.dismiss) var dismiss
   @ObservedObject var bookmarkManager = BookMarkManager()
-  let placeID: String
   @Binding var isBookMarked: Bool
-  
+  let placeID: String
+
   var body: some View {
     HStack {
       Button {

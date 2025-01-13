@@ -19,7 +19,7 @@ struct MainUserComponet: View {
             .clipShape(Circle())
         } placeholder: {
           ProgressView()
-            .foregroundStyle(.customBlue)
+            .tint(.customBlue)
         }
         .frame(width: 37, height: 37)
         

@@ -19,10 +19,10 @@ final class MainViewModel: ObservableObject {
     self.userManager = userManager
     
     fetchCurrentUser()
-    getAppPLaces()
   }
   
-  private func fetchCurrentUser() {
+  func fetchCurrentUser() {
+    print("🚀")
     Task {
       do {
         let data = try await userManager.getCurrentUser()
@@ -30,16 +30,18 @@ final class MainViewModel: ObservableObject {
         await MainActor.run {
           user = data
         }
+        
+        getAppPlaces()
       } catch {
         errorMessage = error.localizedDescription
       }
     }
   }
   
-  private func getAppPLaces() {
+  private func getAppPlaces() {
     Task {
       do {
-        let data = try await fetchPlaces()
+        let data = try await fetchPlaces(userBucketList: user?.bucketList ?? [""])
         
         await MainActor.run {
           placesFromApp = data
@@ -54,20 +56,33 @@ final class MainViewModel: ObservableObject {
     }
   }
   
-  private func fetchPlaces() async throws -> [SightSeenModel] {
-    let collectionRef = db.collection("placesFromApp")
-    do {
-      let snapshot = try await collectionRef.getDocuments()
-      return try snapshot.documents.compactMap { document in
-        do {
-          let model = try document.data(as: SightSeenModel.self)
-          return model
-        } catch {
+  private func fetchPlaces(userBucketList: [String]) async throws -> [SightSeenModel] {
+      let collectionRef = db.collection("placesFromApp")
+      do {
+          let snapshot = try await collectionRef.getDocuments()
+          return try snapshot.documents.compactMap { document in
+              do {
+                  var model = try document.data(as: SightSeenModel.self)
+                  // Check if the place id is in the user's bucketList
+                  if let id = model.id {
+                    model.isBookmarked = userBucketList.contains(id) ? true : false
+                  }
+                  return model
+              } catch {
+                  throw error
+              }
+          }
+      } catch {
           throw error
-        }
       }
-    } catch {
-      throw error
-    }
   }
+  
+  func toggleBookmark(for id: String) {
+          if let index = placesFromApp.firstIndex(where: { $0.id == id }) {
+              placesFromApp[index].isBookmarked?.toggle()
+            print(placesFromApp[index])
+          } else {
+              print("Place with id \(id) not found")
+          }
+      }
 }
