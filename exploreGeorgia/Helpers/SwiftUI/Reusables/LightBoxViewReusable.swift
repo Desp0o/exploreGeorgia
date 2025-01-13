@@ -48,16 +48,24 @@ struct LightBoxViewReusable: View {
                   scale = 1.0
                 }
               },
-            DragGesture()
-              .onEnded { value in
-                withAnimation {
-                  if value.translation.width < -50 {
-                    goToNextImage()
-                  } else if value.translation.width > 50 {
-                    goToPreviousImage()
+            SimultaneousGesture(
+              DragGesture()
+                .onEnded { value in
+                  withAnimation {
+                    if value.translation.width < -50 {
+                      goToNextImage()
+                    } else if value.translation.width > 50 {
+                      goToPreviousImage()
+                    }
+                  }
+                },
+              TapGesture(count: 1)
+                .onEnded { _ in
+                  withAnimation(.spring()) {
+                    scale = 1.0
                   }
                 }
-              }
+            )
           )
         )
       }

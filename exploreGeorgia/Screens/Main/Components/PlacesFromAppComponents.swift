@@ -43,7 +43,7 @@ struct PlacesFromAppComponents: View {
                 .tint(.customBlue)
                 .frame(width: UIScreen.main.bounds.width - 20, height: 200)
             } else {
-              ForEach(vm.placesFromApp) { place in
+              ForEach(vm.placesFromApp.prefix(1)) { place in
                 NavigationLink(
                   destination: PlaceDetailsView(
                     elementID: place.id ?? ""
