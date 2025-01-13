@@ -41,13 +41,15 @@ struct PlacesFromAppComponents: View {
               .frame(width: 300, height: 200)
           } else {
             ForEach(vm.placesFromApp) { place in
-              SightSeenReusableView(
-                cover: place.cover,
-                name: place.name,
-                locationRegion: place.region,
-                rating: place.rating,
-                price: place.price
-              )
+              NavigationLink(destination: PlaceDetailsView(elementID: place.id ?? "").navigationBarHidden(true)) {
+                SightSeenReusableView(
+                  cover: place.cover,
+                  name: place.name,
+                  locationRegion: place.adress,
+                  rating: place.rating,
+                  price: place.price
+                )
+              }
             }
           }
         }

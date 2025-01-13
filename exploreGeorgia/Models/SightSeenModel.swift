@@ -17,4 +17,8 @@ struct SightSeenModel: Codable, Identifiable {
   let description: String
   let rating: String
   let price: Int
+  let adress: String
+  let ratingCount: Int
+  let latitude: Double
+  let longitude: Double
 }
