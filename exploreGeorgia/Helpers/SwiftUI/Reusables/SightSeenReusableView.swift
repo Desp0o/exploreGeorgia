@@ -19,7 +19,12 @@ struct SightSeenReusableView: View {
         .roundedCorners(12)
         .overlay(alignment: .topTrailing) {
           Button {
-            isSaved.toggle()
+            place.isBookmarked?.toggle()
+            bookmarkManager
+              .savePlaceInBookmark(
+                placeId: place.id ?? "",
+                isBookmarked: !(place.isBookmarked ?? false)
+              )
           } label: {
             ZStack {
               Circle()

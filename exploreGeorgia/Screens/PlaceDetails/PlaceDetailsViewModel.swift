@@ -24,9 +24,10 @@ final class PlaceDetailsViewModel: ObservableObject {
     GridItem(.fixed(50), spacing: 20),
   ]
   
-  init(userManager: GetCurrentUserProtocol = UserManager()) {
+  init(
+    userManager: GetCurrentUserProtocol = UserManager()
+  ) {
     self.userManager = userManager
-    
   }
   
   func fetchSinglePlaceByID(by id: String) {

@@ -10,6 +10,7 @@ import SwiftUI
 struct PlacesFromAppComponents: View {
   @ObservedObject var vm: MainViewModel
   @State private var lastSelectedID: String?
+  @State var isSomethingChanged = false
   
   var body: some View {
     VStack(spacing: 5) {
@@ -43,9 +44,10 @@ struct PlacesFromAppComponents: View {
                 .tint(.customBlue)
                 .frame(width: UIScreen.main.bounds.width - 20, height: 200)
             } else {
-              ForEach(vm.placesFromApp.prefix(1)) { place in
+              ForEach(vm.placesFromApp.prefix(4)) { place in
                 NavigationLink(
                   destination: PlaceDetailsView(
+                    isSomethingChanged: $isSomethingChanged,
                     elementID: place.id ?? ""
                   )
                   .navigationBarHidden(
@@ -63,6 +65,7 @@ struct PlacesFromAppComponents: View {
             }
           }
           .padding(.horizontal, 20)
+          .id(isSomethingChanged)
           .id(vm.placesFromApp)
         }
         .frame(height: 350)

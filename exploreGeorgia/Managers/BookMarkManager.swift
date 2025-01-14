@@ -8,7 +8,11 @@
 import Firebase
 import FirebaseAuth
 
-final class BookMarkManager: ObservableObject {
+protocol BookmarkActivityProtocol: AnyObject {
+  func toggleBookmark(placeId: String, isBookmarked: Bool) async throws
+}
+
+final class BookMarkManager: ObservableObject, BookmarkActivityProtocol {
   
   func savePlaceInBookmark(placeId: String, isBookmarked: Bool) {
     Task {

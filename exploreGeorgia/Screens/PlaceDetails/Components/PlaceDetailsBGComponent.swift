@@ -9,14 +9,8 @@ import SwiftUI
 
 struct PlaceDetailsBGComponent: View {
   @ObservedObject var vm: PlaceDetailsViewModel
-  
   var body: some View {
-    ZStack(alignment: .top) {
-      NavigationBarReusable(
-        isBookMarked: $vm.isBookMarked,
-        placeID: vm.currentPlace?.id ?? ""
-      )
-      
+    VStack {
       CachedAsyncImage(url: URL(string: vm.currentPlace?.cover ?? ""))
         .frame(maxWidth: .infinity)
         .frame(height: UIScreen.main.bounds.height < 800 ? 270 : 350)
