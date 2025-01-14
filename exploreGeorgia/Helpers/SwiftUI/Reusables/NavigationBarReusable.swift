@@ -11,7 +11,6 @@ struct NavigationBarReusable: View {
   @Environment(\.dismiss) var dismiss
   @ObservedObject var bookmarkManager = BookMarkManager()
   @Binding var isBookMarked: Bool
-  @Binding var isSomethingChanged: Bool
   let placeID: String
   
   var body: some View {
@@ -33,7 +32,6 @@ struct NavigationBarReusable: View {
       Spacer()
       
       Button {
-        isSomethingChanged.toggle()
         bookmarkManager.savePlaceInBookmark(placeId: placeID, isBookmarked: isBookMarked)
         isBookMarked.toggle()
       } label: {

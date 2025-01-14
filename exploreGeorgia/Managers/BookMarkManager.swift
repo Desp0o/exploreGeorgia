@@ -19,7 +19,7 @@ final class BookMarkManager: ObservableObject, BookmarkActivityProtocol {
       do {
         try await toggleBookmark(placeId: placeId, isBookmarked: isBookmarked)
       } catch {
-        throw error
+        print("Error: \(error.localizedDescription)")
       }
     }
   }
@@ -45,7 +45,7 @@ final class BookMarkManager: ObservableObject, BookmarkActivityProtocol {
               print("Bookmark added successfully")
           }
       } catch {
-          print("Error updating bookmark: \(error.localizedDescription)")
+        throw error
       }
   }
 

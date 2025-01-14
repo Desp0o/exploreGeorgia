@@ -11,11 +11,14 @@ struct SightSeenReusableView: View {
   @StateObject var bookmarkManager = BookMarkManager()
   @State private var isSaved = false
   @State var place: SightSeenModel
+  let maxWidth: CGFloat
+  let height: CGFloat
   
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
       CachedAsyncImage(url: URL(string: place.cover))
-        .frame(width: 240, height: 250)
+        .frame(height: height)
+        .frame(maxWidth: maxWidth - 28)
         .roundedCorners(12)
         .overlay(alignment: .topTrailing) {
           Button {
@@ -86,7 +89,7 @@ struct SightSeenReusableView: View {
       }
     }
     .padding(.all, 14)
-    .frame(maxWidth: 268)
+    .frame(width: maxWidth)
     .background(.customWhite)
     .roundedCorners(12)
     .shadow(color: .black.opacity(0.25), radius: 4, y: 2)

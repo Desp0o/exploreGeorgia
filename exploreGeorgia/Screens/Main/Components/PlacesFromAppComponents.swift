@@ -24,14 +24,14 @@ struct PlacesFromAppComponents: View {
         
         Spacer()
         
-        Button {
-          
+        NavigationLink {
+          AllBookmarkView()
+            .navigationBarHidden(
+              true
+            )
         } label: {
           Text("View all")
-            .styledText(
-              .customVine,
-              14
-            )
+            .styledText(.customVine, 14)
         }
       }
       .padding(.horizontal, 20)
@@ -44,18 +44,17 @@ struct PlacesFromAppComponents: View {
                 .tint(.customBlue)
                 .frame(width: UIScreen.main.bounds.width - 20, height: 200)
             } else {
-              ForEach(vm.placesFromApp.prefix(4)) { place in
+              ForEach(vm.placesFromApp) { place in
                 NavigationLink(
                   destination: PlaceDetailsView(
-                    isSomethingChanged: $isSomethingChanged,
                     elementID: place.id ?? ""
                   )
-                  .navigationBarHidden(
-                    true
-                  )
+                  .navigationBarHidden(true)
                 ) {
                   SightSeenReusableView(
-                    place: place
+                    place: place,
+                    maxWidth: 268,
+                    height: 250
                   )
                 }
                 .onTapGesture {
@@ -70,6 +69,7 @@ struct PlacesFromAppComponents: View {
         }
         .frame(height: 350)
         .onAppear {
+          isSomethingChanged.toggle()
           if let id = lastSelectedID {
             proxy.scrollTo(id, anchor: .leading)
           }

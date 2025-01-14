@@ -14,7 +14,6 @@ struct PlaceDetailsView: View {
   @State var isLightBoxVisible = false
   @State var isPresented = false
   @State var isBookmarked = false
-  @Binding var isSomethingChanged: Bool
   let elementID: String
 
   var body: some View {
@@ -23,7 +22,6 @@ struct PlaceDetailsView: View {
         VStack {
           NavigationBarReusable(
             isBookMarked: $isBookmarked,
-            isSomethingChanged: $isSomethingChanged,
             placeID: ""
           )
           Spacer()
@@ -39,7 +37,6 @@ struct PlaceDetailsView: View {
             VStack {
               NavigationBarReusable(
                 isBookMarked: $vm.isBookMarked,
-                isSomethingChanged: $isSomethingChanged,
                 placeID: vm.currentPlace?.id ?? ""
               )
               

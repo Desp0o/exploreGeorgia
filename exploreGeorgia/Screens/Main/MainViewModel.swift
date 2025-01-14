@@ -20,7 +20,7 @@ final class MainViewModel: ObservableObject {
   }
   
   func fetchCurrentUser() {
-    print("✅")
+    print("🌠")
     isLoading = true
     Task {
       do {
@@ -37,8 +37,10 @@ final class MainViewModel: ObservableObject {
           isLoading = false
         }
       } catch {
-        errorMessage = error.localizedDescription
-        isLoading = false
+        await MainActor.run {
+          errorMessage = error.localizedDescription
+          isLoading = false
+        }
       }
     }
   }
@@ -79,15 +81,6 @@ final class MainViewModel: ObservableObject {
       }
     } catch {
       throw error
-    }
-  }
-  
-  func toggleBookmark(for id: String) {
-    if let index = placesFromApp.firstIndex(where: { $0.id == id }) {
-      placesFromApp[index].isBookmarked?.toggle()
-      print(placesFromApp[index])
-    } else {
-      print("Place with id \(id) not found")
     }
   }
 }

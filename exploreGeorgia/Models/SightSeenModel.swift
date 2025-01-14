@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseFirestore
 
 struct SightSeenModel: Codable, Identifiable, Hashable {
-  @DocumentID var id: String?
+  var id: String?
   let cover: String
   let name: String
   let region: String
