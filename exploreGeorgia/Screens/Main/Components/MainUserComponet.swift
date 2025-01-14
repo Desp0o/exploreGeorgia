@@ -13,14 +13,8 @@ struct MainUserComponet: View {
   var body: some View {
     HStack {
       HStack {
-        AsyncImage(url: URL(string: vm.user?.avatar ?? "")) { image in
-          image
-            .defaultOptions()
-            .clipShape(Circle())
-        } placeholder: {
-          ProgressView()
-            .foregroundStyle(.customBlue)
-        }
+        CachedAsyncImage(url: URL(string: vm.user?.avatar ?? ""))
+          .clipShape(Circle())
         .frame(width: 37, height: 37)
         
         Text(vm.user?.firstName ?? "")

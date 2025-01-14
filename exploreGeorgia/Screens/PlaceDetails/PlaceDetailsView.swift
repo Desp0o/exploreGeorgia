@@ -13,22 +13,36 @@ struct PlaceDetailsView: View {
   @State var selectedImage = ""
   @State var isLightBoxVisible = false
   @State var isPresented = false
+  @State var isBookmarked = false
   let elementID: String
 
   var body: some View {
     VStack(spacing: 0) {
       if vm.currentPlace == nil {
         VStack {
-          NavigationBarReusable()
+          NavigationBarReusable(
+            isBookMarked: $isBookmarked,
+            placeID: ""
+          )
           Spacer()
           ProgressView()
-            .foregroundStyle(.customBlue)
+            .tint(.customBlue)
           
           Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else {
         PlaceDetailsBGComponent(vm: vm)
+          .overlay {
+            VStack {
+              NavigationBarReusable(
+                isBookMarked: $vm.isBookMarked,
+                placeID: vm.currentPlace?.id ?? ""
+              )
+              
+              Spacer()
+            }
+          }
         
         PlaceDetailsInfoComponent(
           vm: vm,

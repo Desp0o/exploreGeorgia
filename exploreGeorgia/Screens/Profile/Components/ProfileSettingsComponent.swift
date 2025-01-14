@@ -30,9 +30,7 @@ struct ProfileSettingsComponent: View {
         }
         
         //bookmarked
-        Button(action: {
-          
-        }) {
+        NavigationLink(destination: AllBookmarkView().navigationBarHidden(true)) {
           HStack(spacing: 14) {
             Image("bookmark")
               .defaultOptions()

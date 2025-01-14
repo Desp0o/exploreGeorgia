@@ -13,33 +13,42 @@ final class MainViewModel: ObservableObject {
   @Published var user: UserModel? = nil
   @Published var errorMessage = ""
   @Published var placesFromApp: [SightSeenModel] = []
-  
+  @Published var isLoading = false
   
   init(userManager: GetCurrentUserProtocol = UserManager()) {
     self.userManager = userManager
-    
-    fetchCurrentUser()
-    getAppPLaces()
   }
   
-  private func fetchCurrentUser() {
+  func fetchCurrentUser() {
+    print("🌠")
+    isLoading = true
     Task {
       do {
         let data = try await userManager.getCurrentUser()
         
         await MainActor.run {
           user = data
+          isLoading = false
+        }
+        
+        getAppPlaces()
+        
+        await MainActor.run {
+          isLoading = false
         }
       } catch {
-        errorMessage = error.localizedDescription
+        await MainActor.run {
+          errorMessage = error.localizedDescription
+          isLoading = false
+        }
       }
     }
   }
   
-  private func getAppPLaces() {
+  private func getAppPlaces() {
     Task {
       do {
-        let data = try await fetchPlaces()
+        let data = try await fetchPlaces(userBucketList: user?.bucketList ?? [""])
         
         await MainActor.run {
           placesFromApp = data
@@ -54,13 +63,17 @@ final class MainViewModel: ObservableObject {
     }
   }
   
-  private func fetchPlaces() async throws -> [SightSeenModel] {
+  private func fetchPlaces(userBucketList: [String]) async throws -> [SightSeenModel] {
     let collectionRef = db.collection("placesFromApp")
     do {
       let snapshot = try await collectionRef.getDocuments()
       return try snapshot.documents.compactMap { document in
         do {
-          let model = try document.data(as: SightSeenModel.self)
+          var model = try document.data(as: SightSeenModel.self)
+          // Check if the place id is in the user's bucketList
+          if let id = model.id {
+            model.isBookmarked = userBucketList.contains(id) ? true : false
+          }
           return model
         } catch {
           throw error
