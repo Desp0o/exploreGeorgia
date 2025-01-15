@@ -25,7 +25,7 @@ struct PlacesFromAppComponents: View {
         Spacer()
         
         NavigationLink {
-          AllBookmarkView()
+          AllPopularPlaces()
             .navigationBarHidden(
               true
             )
@@ -64,7 +64,6 @@ struct PlacesFromAppComponents: View {
             }
           }
           .padding(.horizontal, 20)
-          .id(isSomethingChanged)
           .id(vm.placesFromApp)
         }
         .frame(height: 350)
