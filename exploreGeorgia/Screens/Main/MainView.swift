@@ -30,30 +30,15 @@ struct MainView: View {
         
         PlacesFromAppComponents(vm: vm)
         
-        VStack(alignment: .leading) {
-          HStack {
-            Text("Did you know")
-              .styledText(
-                .customBlue,
-                20,
-                .semibold
-              )
-            Image(systemName: "lightbulb.max.fill")
-              .foregroundStyle(.yellow)
-          }
-          Text("The longest hiking rouad is in Svaneti")
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.all, 12)
-        .background(.customWhite)
-        .roundedCorners(12)
-        .padding(.horizontal, 20)
-        
+        IntrestingFacts(vm: vm)
+          .padding(.horizontal, 20)
+
         Spacer()
       }
       .padding(.top, 10)
       .onAppear {
         vm.getPopularPlaces()
+        vm.fetchSingleFact()
       }
     }
     .scrollIndicators(.hidden)

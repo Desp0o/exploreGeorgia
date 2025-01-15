@@ -11,19 +11,24 @@ final class MainViewModel: ObservableObject {
   private let db = Firestore.firestore()
   private let userManager: GetCurrentUserProtocol
   private let firebaseManager: FirebaseFetchingServicePorotocol
+  private let singleElementFetcherManager: FirebaseSingleElementFetching
   @Published var user: UserModel? = nil
   @Published var errorMessage = ""
+  @Published var randomFact = ""
   @Published var placesFromApp: [SightSeenModel] = []
   @Published var isLoading = false
   
   init(
     userManager: GetCurrentUserProtocol = UserManager(),
-    firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService()
+    firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService(),
+    singleElementFetcherManager: FirebaseSingleElementFetching = FirebaseFetchingService()
   ) {
     self.userManager = userManager
     self.firebaseManager = firebaseManager
+    self.singleElementFetcherManager = singleElementFetcherManager
+    
+    fetchSingleFact()
   }
-  
   
   func getPopularPlaces() {
     isLoading = true
@@ -51,6 +56,25 @@ final class MainViewModel: ObservableObject {
           errorMessage = error.localizedDescription
           isLoading = false
         }
+      }
+    }
+  }
+  
+  func fetchSingleFact() {
+    Task {
+      do {
+        let fact = try await singleElementFetcherManager.fetchRandomDocument(collectionName: "facts")
+        guard let fetchedFact = fact else { return }
+        
+        if let factData = fetchedFact.data(), let factText = factData["fact"] as? String {
+          await MainActor.run {
+            randomFact = factText
+          }
+        } else {
+          print("No fact text found.")
+        }
+      } catch {
+        print(error.localizedDescription, "❌")
       }
     }
   }
