@@ -14,6 +14,8 @@ struct AllBookmarkView: View {
   @State private var currentPlace: SightSeenModel? = nil
   @State private var alertBoxMessage = ""
   @State private var pageSize = 5
+  @State private var startTransition = false
+  @State private var offsetContent: CGFloat = -UIScreen.main.bounds.width
   
   var body: some View {
     ZStack {
@@ -86,6 +88,12 @@ struct AllBookmarkView: View {
                     .onAppear {
                       pageSize += 5
                     }
+                }
+              }
+              .offset(x: offsetContent)
+              .onAppear {
+                withAnimation(.bouncy(duration: 0.5)) {
+                  offsetContent = 0
                 }
               }
               .buttonStyle(PlainButtonStyle())

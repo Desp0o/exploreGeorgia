@@ -20,7 +20,7 @@ struct PlaceDetailsView: View {
     VStack(spacing: 0) {
       if vm.currentPlace == nil {
         VStack {
-          NavigationBarReusable(
+          PlaceDetailsNavigationBar(
             isBookMarked: $isBookmarked,
             placeID: ""
           )
@@ -35,7 +35,7 @@ struct PlaceDetailsView: View {
         PlaceDetailsBGComponent(vm: vm)
           .overlay {
             VStack {
-              NavigationBarReusable(
+              PlaceDetailsNavigationBar(
                 isBookMarked: $vm.isBookMarked,
                 placeID: vm.currentPlace?.id ?? ""
               )

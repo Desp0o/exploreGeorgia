@@ -9,7 +9,7 @@ import FirebaseFirestore
 
 final class AllPopularViewModel: ObservableObject {
   @Published var fetchedData: [SightSeenModel] = []
-  @Published var isLoading = false
+  @Published var isLoading = true
   private let userManager: GetCurrentUserProtocol
   private let firebaseManager: FirebaseFetchingServicePorotocol
   private var user: UserModel? = nil
@@ -24,8 +24,6 @@ final class AllPopularViewModel: ObservableObject {
   }
   
   func fetchData(pageSize: Int) {
-    isLoading = true
-    
     Task {
       do {
         let data = try await userManager.getCurrentUser()

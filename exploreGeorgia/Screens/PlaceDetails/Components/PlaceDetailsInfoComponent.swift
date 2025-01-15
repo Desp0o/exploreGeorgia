@@ -124,6 +124,7 @@ struct PlaceDetailsInfoComponent: View {
       }
     }
     .scrollIndicators(.hidden)
+    .scrollBounceBehavior(.basedOnSize)
     .padding(.top, 20)
     .padding(.horizontal, 20)
     .frame(maxWidth: .infinity, maxHeight: .infinity)

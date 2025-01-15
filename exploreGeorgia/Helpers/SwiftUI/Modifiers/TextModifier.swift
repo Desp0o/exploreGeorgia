@@ -13,7 +13,7 @@ extension Text {
     _ fontSize: CGFloat = 16,
     _ fontWeight: Font.Weight = .regular,
     _ alignmentText: TextAlignment = .leading,
-      linesCount: Int = 0,
+      linesCount: Int? = nil,
     _ design: Font.Design = .rounded
   ) -> some View {
     self

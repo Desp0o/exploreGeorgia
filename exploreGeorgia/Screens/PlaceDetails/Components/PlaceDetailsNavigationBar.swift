@@ -1,5 +1,5 @@
 //
-//  NavigationBarReusable.swift
+//  PlaceDetailsNavigationBar.swift
 //  exploreGeorgia
 //
 //  Created by Despo on 13.01.25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NavigationBarReusable: View {
+struct PlaceDetailsNavigationBar: View {
   @Environment(\.dismiss) var dismiss
   @ObservedObject var bookmarkManager = BookMarkManager()
   @Binding var isBookMarked: Bool
