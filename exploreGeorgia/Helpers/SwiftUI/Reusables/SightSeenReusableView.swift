@@ -47,7 +47,9 @@ struct SightSeenReusableView: View {
           .styledText(
             .customBlack,
             18,
-            .semibold
+            .semibold,
+            .leading,
+            linesCount: 2
           )
         
         Spacer()

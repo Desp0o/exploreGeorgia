@@ -53,7 +53,7 @@ struct MainView: View {
       }
       .padding(.top, 10)
       .onAppear {
-        vm.fetchCurrentUser()
+        vm.getPopularPlaces()
       }
     }
     .scrollIndicators(.hidden)

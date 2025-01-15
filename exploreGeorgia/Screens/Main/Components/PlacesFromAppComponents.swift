@@ -10,7 +10,7 @@ import SwiftUI
 struct PlacesFromAppComponents: View {
   @ObservedObject var vm: MainViewModel
   @State private var lastSelectedID: String?
-  @State var isSomethingChanged = false
+  @State private var isSomethingChanged = false
   
   var body: some View {
     VStack(spacing: 5) {
@@ -25,7 +25,7 @@ struct PlacesFromAppComponents: View {
         Spacer()
         
         NavigationLink {
-          AllBookmarkView()
+          AllPopularPlaces()
             .navigationBarHidden(
               true
             )
@@ -64,8 +64,8 @@ struct PlacesFromAppComponents: View {
             }
           }
           .padding(.horizontal, 20)
-          .id(isSomethingChanged)
           .id(vm.placesFromApp)
+          .id(isSomethingChanged)
         }
         .frame(height: 350)
         .onAppear {
