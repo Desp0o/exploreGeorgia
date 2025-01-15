@@ -101,6 +101,17 @@ struct AllPopularPlaces: View {
       
     }
     .frame(maxWidth: .infinity)
+    .overlay {
+      if vm.isLoading {
+        ZStack {
+          Color.primaryWhite.ignoresSafeArea()
+          
+          ProgressView()
+            .scaleEffect(1.5)
+            .tint(.customBlue)
+        }
+      }
+    }
     .onAppear {
       isSomethingChanged.toggle()
       vm.fetchData(pageSize: pageSize)

@@ -13,11 +13,7 @@ final class MainViewModel: ObservableObject {
   private let firebaseManager: FirebaseFetchingServicePorotocol
   @Published var user: UserModel? = nil
   @Published var errorMessage = ""
-  @Published var placesFromApp: [SightSeenModel] = []  {
-    didSet {
-      print("main fetche ")
-    }
-  }
+  @Published var placesFromApp: [SightSeenModel] = []
   @Published var isLoading = false
   
   init(

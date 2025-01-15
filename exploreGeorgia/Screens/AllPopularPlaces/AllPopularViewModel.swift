@@ -8,20 +8,12 @@
 import FirebaseFirestore
 
 final class AllPopularViewModel: ObservableObject {
+  @Published var fetchedData: [SightSeenModel] = []
+  @Published var isLoading = false
   private let userManager: GetCurrentUserProtocol
   private let firebaseManager: FirebaseFetchingServicePorotocol
   private var user: UserModel? = nil
   private let collectionName = "placesFromApp"
-  private var lastDocument: DocumentSnapshot?
-  var isFetching = false
-  @Published var isLoading = false
-  @Published var hasMoreData = true
-
-  @Published var fetchedData: [SightSeenModel] = [] {
-    didSet {
-      print("fetchedData updated with \(fetchedData.count) items.  ❌")}
-}
-  
   
   init(
     userManager: GetCurrentUserProtocol = UserManager(),
@@ -60,7 +52,5 @@ final class AllPopularViewModel: ObservableObject {
         }
       }
     }
-    
-    
-    }
+  }
 }
