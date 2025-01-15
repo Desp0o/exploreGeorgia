@@ -13,7 +13,6 @@ struct AllBookmarkView: View {
   @ObservedObject private var alertManager = CustomAlertManager()
   @State private var currentPlace: SightSeenModel? = nil
   @State private var alertBoxMessage = ""
-  
   @State private var pageSize = 5
   
   var body: some View {

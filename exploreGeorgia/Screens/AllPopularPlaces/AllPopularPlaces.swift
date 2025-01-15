@@ -10,7 +10,7 @@ import SwiftUI
 struct AllPopularPlaces: View {
   @Environment(\.presentationMode) var dismiss
   @ObservedObject var vm = AllPopularViewModel()
-  @State var isSomethingChanged: Bool? = false
+  @State private var isSomethingChanged = false
   @State private var scale: CGFloat = 0.0
   @State private var lastSelectedID: String?
   @State private var pageSize = 10
@@ -77,24 +77,24 @@ struct AllPopularPlaces: View {
                   lastSelectedID = place.id
                 }
                 if place == vm.fetchedData.last {
-                                    Color.clear // Placeholder for layout
-                                        .onAppear {
-                                            print("Reached the end of the list")
-                                            // Trigger logic to fetch more data
-                                          pageSize += 10
-                                        }
-                                }
+                  Color.clear // Placeholder for layout
+                    .onAppear {
+                      print("Reached the end of the list")
+                      // Trigger logic to fetch more data
+                      pageSize += 10
+                    }
+                }
               }
             }
             .padding(.horizontal, 20)
-            .id(isSomethingChanged)
             .id(vm.fetchedData)
+            .id(isSomethingChanged)
           }
           .scrollIndicators(.hidden)
           .onAppear {
-//            if let id = lastSelectedID {
-//              proxy.scrollTo(id, anchor: .leading)
-//            }
+            if let id = lastSelectedID {
+              proxy.scrollTo(id, anchor: .leading)
+            }
           }
         }
       }
@@ -102,12 +102,10 @@ struct AllPopularPlaces: View {
     }
     .frame(maxWidth: .infinity)
     .onAppear {
-      
+      isSomethingChanged.toggle()
       vm.fetchData(pageSize: pageSize)
     }
     .onChange(of: pageSize) { _ in
-      print("🚀")
-      print(pageSize)
       vm.fetchData(pageSize: pageSize)
     }
   }
