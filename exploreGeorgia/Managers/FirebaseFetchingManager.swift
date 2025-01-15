@@ -54,35 +54,15 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
 
 extension FirebaseFetchingService: FirebaseSingleElementFetching {
   func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot? {
-    // 1. Get the total document count
     let querySnapshot = try await db.collection(collectionName).getDocuments()
     let documentCount = querySnapshot.documents.count
     
-    // 2. Generate a random index
     let randomIndex = Int.random(in: 0..<documentCount)
     
-    // 3. Fetch the document at the random index
     let query = db.collection(collectionName).limit(to: randomIndex + 1)
     let snapshot = try await query.getDocuments()
     
-    // Return the document at the random index
     return snapshot.documents[randomIndex]
   }
 }
-
-  // Usage Example
-//  let fetcher = RandomDocumentFetcher()
-//
-//  Task {
-//      do {
-//          if let randomDocument = try await fetcher.fetchRandomDocument() {
-//              print("Random Document Data: \(randomDocument.data())")
-//          } else {
-//              print("No documents found in the collection.")
-//          }
-//      } catch {
-//          print("Error fetching random document: \(error)")
-//      }
-//  }
-
 
