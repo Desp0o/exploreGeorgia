@@ -8,106 +8,86 @@
 import FirebaseFirestore
 import FirebaseAuth
 
-class AllBookmarkViewModel: ObservableObject {
+final class AllBookmarkViewModel: ObservableObject {
   @Published var bookmarkedPlaces: [SightSeenModel] = []
   @Published var isFetching = false
   @Published var isLoaded = true
-  private let bookmarkManager = BookMarkManager()
-  private var lastDocument: DocumentSnapshot?
-  private var hasMoreData = true
-  private let pageSize = 4
+  @Published var errorMessages = ""
+  private let bookmarkManager: BookmarkActivityProtocol
   private let db = Firestore.firestore()
+  private var user: UserModel? = nil
   
-  init() {
-    Task {
-      await fetchNextPage()
-    }
+  init(
+    bookmarkManager: BookmarkActivityProtocol = BookMarkManager()
+  ) {
+    self.bookmarkManager = bookmarkManager
   }
   
-  func loadMoreIfNeeded() {
-    guard !isFetching && hasMoreData else { return }
-    
+  func fetchData(pageLimit: Int) {
     Task {
-      await fetchNextPage()
-    }
-  }
-  
-  func fetchNextPage() async {
-    guard !isFetching, hasMoreData else { return }
-    
-    await MainActor.run {
-      isFetching = true
-    }
-    
-    do {
-      let bucketList = try await fetchBucketList()
-      
-      guard !bucketList.isEmpty else {
+      do {
+        let userID = Auth.auth().currentUser?.uid
+        guard let id = userID else { return }
+        
+        let result = try await getPlacesFromBucketList(userId: id, pageLimit: pageLimit)
         await MainActor.run {
-          self.hasMoreData = false
-          self.isFetching = false
-          self.isLoaded = false
+          bookmarkedPlaces = result
+          isLoaded = false
         }
-        return
-      }
-      
-      var query = db.collection("placesFromApp")
-        .whereField(FieldPath.documentID(), in: bucketList)
-        .limit(to: pageSize)
-      
-      if let lastDocument {
-        query = query.start(afterDocument: lastDocument)
-      }
-      
-      let snapshot = try await query.getDocuments()
-      
-      let newPlaces = try snapshot.documents.compactMap { doc -> SightSeenModel? in
-        var model = try Firestore.Decoder().decode(SightSeenModel.self, from: doc.data())
-        if let id = model.id {
-          model.isBookmarked = bucketList.contains(id)
+      } catch {
+        await MainActor.run {
+          isLoaded = false
+          errorMessages = error.localizedDescription
         }
-        return model
       }
-      
-      await MainActor.run {
-        self.bookmarkedPlaces.append(contentsOf: newPlaces)        
-        self.lastDocument = snapshot.documents.last
-        self.hasMoreData = snapshot.documents.count == self.pageSize
-      }
-    } catch {
-      print("Error fetching places: \(error.localizedDescription)")
-    }
-    
-    await MainActor.run {
-      isFetching = false
-      isLoaded = false
     }
   }
   
-  func fetchBucketList() async throws -> [String] {
-    guard let user = Auth.auth().currentUser else {
+  func getPlacesFromBucketList(userId: String, pageLimit: Int) async throws -> [SightSeenModel] {
+    let userDocRef = db.collection("users").document(userId)
+    let userDoc = try await userDocRef.getDocument()
+    
+    guard let bucketList = userDoc.data()?["bucketList"] as? [String], !bucketList.isEmpty else {
       return []
     }
     
-    let snapshot = try await db.collection("users")
-      .document(user.uid)
-      .getDocument()
+    let placesQuery = db.collection("placesFromApp").whereField("id", in: bucketList).limit(to: pageLimit)
+    let placesSnapshot = try await placesQuery.getDocuments()
     
-    return snapshot.get("bucketList") as? [String] ?? []
+    let places = placesSnapshot.documents.compactMap { document -> SightSeenModel? in
+      let data = document.data()
+      
+      return SightSeenModel(
+        id: document.documentID,
+        cover: data["cover"] as? String ?? "",
+        name: data["name"] as? String ?? "",
+        region: data["region"] as? String ?? "",
+        album: data["album"] as? [String] ?? [],
+        description: data["description"] as? String ?? "",
+        rating: data["rating"] as? String ?? "0.0",
+        price: data["price"] as? Int ?? 0,
+        adress: data["adress"] as? String ?? "",
+        ratingCount: data["ratingCount"] as? Int ?? 0,
+        latitude: data["latitude"] as? Double ?? 0.0,
+        longitude: data["longitude"] as? Double ?? 0.0,
+        isBookmarked: true
+      )
+    }
+    return places
   }
   
   func removeBookmark(index: IndexSet) {
     guard let firstIndex = index.first else { return }
-    
     let place = bookmarkedPlaces[firstIndex]
-    
     bookmarkedPlaces.remove(atOffsets: index)
     
     Task {
       do {
         try await bookmarkManager.toggleBookmark(placeId: place.id ?? "", isBookmarked: place.isBookmarked ?? true)
       } catch {
-        print("Failed to toggle bookmark: \(error.localizedDescription)")
+        await MainActor.run {
+          errorMessages = error.localizedDescription
+        }
       }
     }
   }

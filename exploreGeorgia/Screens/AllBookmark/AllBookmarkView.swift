@@ -9,9 +9,12 @@ import SwiftUI
 
 struct AllBookmarkView: View {
   @Environment(\.presentationMode) var dismiss
-  @StateObject private var viewModel = AllBookmarkViewModel()
-  @State private var isSomethingChanged = false
+  @StateObject private var vm = AllBookmarkViewModel()
+  @ObservedObject private var alertManager = CustomAlertManager()
   @State private var currentPlace: SightSeenModel? = nil
+  @State private var alertBoxMessage = ""
+  
+  @State private var pageSize = 5
   
   var body: some View {
     ZStack {
@@ -33,15 +36,13 @@ struct AllBookmarkView: View {
                 .renderingMode(.template)
                 .foregroundStyle(.white)
             }
-            
-            
           }
           
           Spacer()
         }
         .padding(.horizontal, 20)
         
-        if viewModel.bookmarkedPlaces.isEmpty {
+        if vm.bookmarkedPlaces.isEmpty {
           Text("Your Bucket List Awaits...")
             .styledText(.customBlue, 16, .semibold)
             .padding(.bottom, 40)
@@ -53,7 +54,7 @@ struct AllBookmarkView: View {
             .padding(.top, 10)
           
           List {
-            ForEach(Array(viewModel.bookmarkedPlaces.enumerated()), id: \.element) { index, place in
+            ForEach(Array(vm.bookmarkedPlaces.enumerated()), id: \.element) { index, place in
               ZStack {
                 NavigationLink(destination: PlaceDetailsView(
                   elementID: place.id ?? ""
@@ -68,7 +69,7 @@ struct AllBookmarkView: View {
                       Button {
                         let indexSet = IndexSet(integer: index)
                         withAnimation {
-                          viewModel.removeBookmark(index: indexSet)
+                          vm.removeBookmark(index: indexSet)
                         }
                       } label: {
                         Circle()
@@ -79,10 +80,13 @@ struct AllBookmarkView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
                   }
-              }
-              .onAppear {
-                if index == viewModel.bookmarkedPlaces.count - 1 {
-                  viewModel.loadMoreIfNeeded()
+                
+                if index == vm.bookmarkedPlaces.count - 1 {
+                  Color.white.opacity(0)
+                    .frame(width: 1, height: 0)
+                    .onAppear {
+                      pageSize += 5
+                    }
                 }
               }
               .buttonStyle(PlainButtonStyle())
@@ -90,9 +94,8 @@ struct AllBookmarkView: View {
               .listRowSeparator(.hidden)
               .listRowBackground(Color.clear)
             }
-            .onDelete(perform: viewModel.removeBookmark)
-            .id(isSomethingChanged)
-            .id(viewModel.bookmarkedPlaces)
+            .onDelete(perform: vm.removeBookmark)
+            .id(vm.bookmarkedPlaces)
           }
           .listStyle(PlainListStyle())
           .scrollContentBackground(.hidden)
@@ -102,7 +105,7 @@ struct AllBookmarkView: View {
       }
     }
     .overlay{
-      if viewModel.isLoaded {
+      if vm.isLoaded {
         ZStack {
           Color.primaryWhite.ignoresSafeArea()
           
@@ -112,12 +115,24 @@ struct AllBookmarkView: View {
         }
       }
       
-      if viewModel.isFetching && !viewModel.isLoaded{
-        ZStack(alignment: .bottom) {
-          ProgressView()
-            .tint(.customBlue)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+      if alertManager.isShown {
+        CustomAlert(
+          alertManager: alertManager,
+          alertMessage: alertBoxMessage,
+          errorType: .error
+        )
+      }
+    }
+    .onAppear {
+      vm.fetchData(pageLimit: pageSize)
+    }
+    .onChange(of: pageSize) { _ in
+      vm.fetchData(pageLimit: pageSize)
+    }
+    .onReceive(vm.$errorMessages) { message in
+      if !message.isEmpty {
+        alertBoxMessage = message
+        alertManager.showAlert()
       }
     }
   }
