@@ -68,8 +68,6 @@ final class PlaceDetailsViewModel: ObservableObject {
       
       await MainActor.run {
         isBookMarked = currentUser.bucketList.contains(placeId)
-        print(currentUser.bucketList)
-        print(isBookMarked)
       }
     } catch {
       print("Error checking bookmark status: \(error.localizedDescription)")

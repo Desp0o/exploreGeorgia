@@ -28,10 +28,12 @@ struct MainView: View {
         MainViewTitleComponent()
           .padding(.leading, 20)
         
-        PlacesFromAppComponents(vm: vm)
+        PlacesFromAppComponents(data: vm.placesFromApp, collectionName: "placesFromApp")
         
         IntrestingFacts(vm: vm)
           .padding(.horizontal, 20)
+        
+        PlacesFromAppComponents(data: vm.usersAddedPlacesData, collectionName: "usersPlaces")
 
         Spacer()
       }
@@ -39,6 +41,7 @@ struct MainView: View {
       .onAppear {
         vm.getPopularPlaces()
         vm.fetchSingleFact()
+        vm.fetchUsersAddedPlaces()
       }
     }
     .scrollIndicators(.hidden)

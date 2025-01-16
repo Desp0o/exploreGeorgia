@@ -9,34 +9,49 @@ import SwiftUI
 
 struct ExploreView: View {
   @StateObject var vm = ExploreViewModel()
+  @State var isPresented = false
+  @State var addButtonScale: CGFloat = 0
   
   var body: some View {
-    ZStack {
+    ZStack(alignment: .bottomTrailing) {
       Color.primaryWhite.ignoresSafeArea()
       
-      ScrollView {
-        LazyVStack {
-          ForEach(vm.fetchedPlaces, id: \.id) { place in
-            
-            NavigationLink(
-              destination: PlaceDetailsView(
-                elementID: place.id ?? "",
-                collectionName: "usersPlaces"
-              ).navigationBarHidden(true)
-            ) {
-              SightSeenReusableView(
-                place: place,
-                maxWidth: 268,
-                height: 250
-              )
+      ScrollViewReader { proxy in
+        ScrollView {
+          LazyVStack {
+            ForEach(vm.fetchedPlaces, id: \.id) { place in
+              
+              NavigationLink(
+                destination: PlaceDetailsView(
+                  elementID: place.id ?? "",
+                  collectionName: "usersPlaces"
+                ).navigationBarHidden(true)
+              ) {
+                SightSeenReusableView(
+                  place: place,
+                  maxWidth: 268,
+                  height: 250
+                )
+              }
             }
+            .id(vm.fetchedPlaces)
           }
         }
       }
+      
+      
+      AddButtonComponent(
+        addButtonScale: $addButtonScale,
+        isPresented: $isPresented
+      )
+      
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+    .onAppear {
+      vm.fetchData()
+    }
+    .sheet(isPresented: $isPresented) {
+      Text("Hello world")
     }
   }
-}
-
-#Preview {
-  ExploreView()
 }

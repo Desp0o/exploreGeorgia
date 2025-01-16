@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct PlacesFromAppComponents: View {
-  @ObservedObject var vm: MainViewModel
+  let data: [SightSeenModel]
   @State private var lastSelectedID: String?
   @State private var isSomethingChanged = false
+  let collectionName: String
   
   var body: some View {
     VStack(spacing: 5) {
@@ -39,16 +40,16 @@ struct PlacesFromAppComponents: View {
       ScrollViewReader { proxy in
         ScrollView(.horizontal, showsIndicators: false) {
           LazyHStack(spacing: 20) {
-            if vm.placesFromApp.isEmpty {
+            if data.isEmpty {
               ProgressView()
                 .tint(.customBlue)
                 .frame(width: UIScreen.main.bounds.width - 20, height: 200)
             } else {
-              ForEach(vm.placesFromApp) { place in
+              ForEach(data) { place in
                 NavigationLink(
                   destination: PlaceDetailsView(
                     elementID: place.id ?? "",
-                    collectionName: "placesFromApp"
+                    collectionName: collectionName
                   )
                   .navigationBarHidden(true)
                 ) {
@@ -65,7 +66,7 @@ struct PlacesFromAppComponents: View {
             }
           }
           .padding(.horizontal, 20)
-          .id(vm.placesFromApp)
+          .id(data)
           .id(isSomethingChanged)
         }
         .frame(height: 350)
@@ -80,7 +81,7 @@ struct PlacesFromAppComponents: View {
   }
 }
 
-#Preview {
-  let vm = MainViewModel()
-  PlacesFromAppComponents(vm: vm)
-}
+//#Preview {
+//  let vm = MainViewModel()
+//  PlacesFromAppComponents(vm: vm)
+//}

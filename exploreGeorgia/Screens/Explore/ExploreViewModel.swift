@@ -20,8 +20,6 @@ final class ExploreViewModel: ObservableObject {
   ) {
     self.firebaseManager = firebaseManager
     self.userManager = userManager
-    
-    fetchData()
   }
   
   func fetchData() {
