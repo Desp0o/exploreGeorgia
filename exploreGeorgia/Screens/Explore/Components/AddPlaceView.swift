@@ -133,6 +133,32 @@ struct AddPlaceView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .customStyledButton()
+        
+        
+        //album
+        VStack {
+          PhotosPicker(selection: $vm.selectedAlbum, maxSelectionCount: 5) {
+            Text("Tap to upload profile photo")
+              .styledText(
+                .customVine,
+                18,
+                .bold
+              )
+          }
+          
+          HStack {
+            ForEach(Array(vm.choosenAlbum.enumerated()), id: \.offset) { index, image in
+              Image(uiImage: image)
+                          .resizable()
+                          .scaledToFit()
+                          .clipShape(RoundedRectangle(cornerRadius: 12))
+                          .frame(width: 40, height: 40)
+            }
+          }
+        }
+        
+        
+        
       }
     }
     .scrollBounceBehavior(.basedOnSize)

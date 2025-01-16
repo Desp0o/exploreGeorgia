@@ -25,7 +25,7 @@ struct AddButtonComponent: View {
     .zIndex(3)
     .scaleEffect(addButtonScale)
     .onAppear {
-      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
         withAnimation(.bouncy) {
           addButtonScale = 1
         }

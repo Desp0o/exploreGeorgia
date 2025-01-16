@@ -23,6 +23,14 @@ final class AddPlaceViewModel: ObservableObject {
       addCover(from: selectedCoverFromPicker)
     }
   }
+  @Published var selectedAlbum: [PhotosPickerItem] = [] {
+    didSet {
+      choosenAlbum.removeAll()
+      addAlbum(from: selectedAlbum)
+    }
+  }
+  
+  @Published var choosenAlbum: [UIImage] = []
   
   init(firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol = FirebaseFetchingService()) {
     self.firebasePhotoManager = firebasePhotoManager
@@ -84,6 +92,26 @@ final class AddPlaceViewModel: ObservableObject {
           }
         }
       }
+    }
+  }
+  
+  func addAlbum(from selection: [PhotosPickerItem]?) {
+    guard let selection else {
+      return
+    }
+    
+    Task {
+      for image in selection {
+        if let data = try await image.loadTransferable(type: Data.self) {
+          if let uiImage = UIImage(data: data) {
+            await MainActor.run {
+              choosenAlbum.append(uiImage)
+            }
+          }
+          
+        }
+      }
+      
     }
   }
 }
