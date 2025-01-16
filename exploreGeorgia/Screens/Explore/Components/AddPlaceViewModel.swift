@@ -27,7 +27,7 @@ final class AddPlaceViewModel: ObservableObject {
   init(firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol = FirebaseFetchingService()) {
     self.firebasePhotoManager = firebasePhotoManager
   }
-
+  
   var placeType = ["Sightseen", "Food place"]
   
   func addPlace() {
@@ -54,22 +54,21 @@ final class AddPlaceViewModel: ObservableObject {
     }
   }
   
-
   func addSightSeenToFirestore(sightSeen: SightSeenModel) async throws {
-      let collectionRef = db.collection("usersPlaces")
-
-      var sightSeenWithID = sightSeen
-      sightSeenWithID.id = sightSeen.id ?? collectionRef.document().documentID
+    let collectionRef = db.collection("usersPlaces")
+    
+    var sightSeenWithID = sightSeen
+    sightSeenWithID.id = sightSeen.id ?? collectionRef.document().documentID
+    
+    if let image = choosenCover {
+      let placeCover = try await firebasePhotoManager.generateFirebasePhotoURL(image: image, dbName: "covers", Id: collectionRef.document().documentID)
       
-      if let image = choosenCover {
-          let placeCover = try await firebasePhotoManager.generateFirebasePhotoURL(image: image, dbName: "covers", Id: collectionRef.document().documentID)
-          
-          sightSeenWithID.cover = placeCover
-      }
-      
-      let data = try Firestore.Encoder().encode(sightSeenWithID)
-      
-      try await collectionRef.document(sightSeenWithID.id!).setData(data)
+      sightSeenWithID.cover = placeCover
+    }
+    
+    let data = try Firestore.Encoder().encode(sightSeenWithID)
+    
+    try await collectionRef.document(sightSeenWithID.id!).setData(data)
   }
   
   func addCover(from selection: PhotosPickerItem?) {
@@ -78,13 +77,11 @@ final class AddPlaceViewModel: ObservableObject {
     }
     
     Task {
-      
       if let data = try await selection.loadTransferable(type: Data.self) {
         if let uiImage = UIImage(data: data) {
           await MainActor.run {
             choosenCover = uiImage
           }
-          
         }
       }
     }
