@@ -18,6 +18,8 @@ final class AddPlaceViewModel: ObservableObject {
   @Published var placeAdress = ""
   @Published var placePrice = ""
   @Published var placeDescription = ""
+  @Published var latitude: Double = 0
+  @Published var longitude: Double = 0
   @Published var selectedPlace: AddPlaceTypes = .sightSeen
   @Published var choosenCover: UIImage? = nil
   @Published var selectedCoverFromPicker: PhotosPickerItem? = nil {
@@ -33,8 +35,11 @@ final class AddPlaceViewModel: ObservableObject {
   }
   @Published var choosenAlbum: [UIImage] = []
 
-  init(firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol = FirebaseFetchingService()) {
-    self.firebasePhotoManager = firebasePhotoManager
+  init(
+    firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol = FirebaseFetchingService(),
+    locationManager: LocationManager = LocationManager()
+  ) {
+    self.firebasePhotoManager = firebasePhotoManager    
   }
     
   func addPlace() {
@@ -50,8 +55,8 @@ final class AddPlaceViewModel: ObservableObject {
       price: Int(placePrice) ?? 0,
       adress: placeAdress,
       ratingCount: 0,
-      latitude: 0.0,
-      longitude: 0.0,
+      latitude: latitude,
+      longitude: longitude,
       user: userID,
       isSightseen: selectedPlace == .sightSeen ? true : false,
       isFood: selectedPlace == .food ? true : false

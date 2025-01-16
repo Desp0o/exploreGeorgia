@@ -9,13 +9,16 @@ import SwiftUI
 import _PhotosUI_SwiftUI
 
 struct AddPlaceView: View {
+  @StateObject private var locationManager = LocationManager()
   @ObservedObject var vm = AddPlaceViewModel()
   @State var isPresented = false
   @Binding var isAppeared: Bool
+  @State var currentLocationForUse: Location?
   
   var body: some View {
     ScrollView {
       VStack(spacing: 20) {
+        
         Text("Add Favorite Page")
           .styledText(.customBlue, 16, .semibold)
         
@@ -133,6 +136,8 @@ struct AddPlaceView: View {
         .frame(height: 110, alignment: .top)
         // Add Place Button
         Button {
+          vm.latitude = currentLocationForUse?.coordinate.latitude ?? 0
+          vm.longitude = currentLocationForUse?.coordinate.longitude ?? 0
           vm.addPlace()
         } label: {
           Text("Add Place")
@@ -154,7 +159,15 @@ struct AddPlaceView: View {
       isAppeared.toggle()
     }
     .sheet(isPresented: $isPresented) {
-      Text("Hello World")
+      if let coordinate = locationManager.lastKnownLocation {
+        MapViewReusable(
+          latitudeProp: coordinate.latitude,
+          longitudeProp: coordinate.longitude,
+          locationName: vm.placeName,
+          isEditable: true,
+          currentLocationForUse: $currentLocationForUse
+        )
+      }
     }
   }
 }

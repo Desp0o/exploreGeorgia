@@ -299,6 +299,8 @@
 				INFOPLIST_FILE = exploreGeorgia/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Explore Georgia";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "The app needs your permission to access location services in order to use the built-in map";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app needs your permission to access location services in order to use the built-in map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -337,6 +339,8 @@
 				INFOPLIST_FILE = exploreGeorgia/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Explore Georgia";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "The app needs your permission to access location services in order to use the built-in map";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "The app needs your permission to access location services in order to use the built-in map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
