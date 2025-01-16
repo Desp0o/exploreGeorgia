@@ -13,7 +13,7 @@ struct SightSeenModel: Codable, Identifiable, Hashable {
   var cover: String
   let name: String
   let region: String
-  let album: [String]
+  var album: [String]
   let description: String
   let rating: String
   let price: Int
@@ -24,4 +24,6 @@ struct SightSeenModel: Codable, Identifiable, Hashable {
   var isBookmarked: Bool?
   var user: String?
   var userDetails: UserModel?
+  var isSightseen: Bool?
+  var isFood: Bool?
 }

@@ -9,14 +9,19 @@ import Combine
 import FirebaseFirestore
 import _PhotosUI_SwiftUI
 
+enum AddPlaceTypes: String {
+  case sightSeen = "Sightseen"
+  case food = "Food place"
+}
+
 final class AddPlaceViewModel: ObservableObject {
   private let firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol
-  let db = Firestore.firestore()
+  private  let db = Firestore.firestore()
   @Published var placeName = ""
   @Published var placeAdress = ""
   @Published var placePrice = ""
   @Published var placeDescription = ""
-  @Published var selectedPlace = "Sightseen"
+  @Published var selectedPlace: AddPlaceTypes = .sightSeen
   @Published var choosenCover: UIImage? = nil
   @Published var selectedCoverFromPicker: PhotosPickerItem? = nil {
     didSet {
@@ -29,15 +34,13 @@ final class AddPlaceViewModel: ObservableObject {
       addAlbum(from: selectedAlbum)
     }
   }
-  
   @Published var choosenAlbum: [UIImage] = []
-  
+  var placeType: [AddPlaceTypes] = [.sightSeen, .food]
+
   init(firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol = FirebaseFetchingService()) {
     self.firebasePhotoManager = firebasePhotoManager
   }
-  
-  var placeType = ["Sightseen", "Food place"]
-  
+    
   func addPlace() {
     let place = SightSeenModel(
       cover: "",
@@ -50,7 +53,9 @@ final class AddPlaceViewModel: ObservableObject {
       adress: placeAdress,
       ratingCount: 0,
       latitude: 0.0,
-      longitude: 0.0
+      longitude: 0.0,
+      isSightseen: selectedPlace == .sightSeen ? true : false,
+      isFood: selectedPlace == .food ? true : false
     )
     
     Task {
@@ -63,20 +68,33 @@ final class AddPlaceViewModel: ObservableObject {
   }
   
   func addSightSeenToFirestore(sightSeen: SightSeenModel) async throws {
-    let collectionRef = db.collection("usersPlaces")
-    
-    var sightSeenWithID = sightSeen
-    sightSeenWithID.id = sightSeen.id ?? collectionRef.document().documentID
-    
-    if let image = choosenCover {
-      let placeCover = try await firebasePhotoManager.generateFirebasePhotoURL(image: image, dbName: "covers", Id: collectionRef.document().documentID)
+      let collectionRef = db.collection("usersPlaces")
       
-      sightSeenWithID.cover = placeCover
-    }
-    
-    let data = try Firestore.Encoder().encode(sightSeenWithID)
-    
-    try await collectionRef.document(sightSeenWithID.id!).setData(data)
+      var sightSeenWithID = sightSeen
+      sightSeenWithID.id = sightSeen.id ?? collectionRef.document().documentID
+      
+      if let image = choosenCover {
+          let placeCover = try await firebasePhotoManager.generateFirebasePhotoURL(
+              image: image,
+              dbName: "covers",
+              Id: collectionRef.document().documentID
+          )
+          sightSeenWithID.cover = placeCover
+      }
+      
+      var albumUrls: [String] = []
+      for (index, image) in choosenAlbum.enumerated() {
+          let albumPhotoURL = try await firebasePhotoManager.generateFirebasePhotoURL(
+              image: image,
+              dbName: "albums",
+              Id: "\(collectionRef.document().documentID)-album-\(index)"
+          )
+          albumUrls.append(albumPhotoURL)
+      }
+      sightSeenWithID.album = albumUrls
+      
+      let data = try Firestore.Encoder().encode(sightSeenWithID)
+      try await collectionRef.document(sightSeenWithID.id!).setData(data)
   }
   
   func addCover(from selection: PhotosPickerItem?) {
@@ -108,10 +126,8 @@ final class AddPlaceViewModel: ObservableObject {
               choosenAlbum.append(uiImage)
             }
           }
-          
         }
       }
-      
     }
   }
 }

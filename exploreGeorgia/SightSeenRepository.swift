@@ -55,7 +55,9 @@ class YourViewModel: ObservableObject {
             ratingCount: 1000,
             latitude: 48.8584,
             longitude: 2.2945,
-            isBookmarked: nil
+            isBookmarked: nil,
+            isSightseen: false,
+            isFood: false
         )
         
         Task {

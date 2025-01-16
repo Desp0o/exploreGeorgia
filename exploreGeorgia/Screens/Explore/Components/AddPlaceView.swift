@@ -15,46 +15,44 @@ struct AddPlaceView: View {
   
   var body: some View {
     ScrollView {
-      VStack {
-        Text("add favorite page")
-          .styledText(
-            .customBlue,
-            16,
-            .semibold
-          )
+      VStack(spacing: 20) {
+        Text("Add Favorite Page")
+          .styledText(.customBlue, 16, .semibold)
         
-        HStack {
-          
+        // Avatar and Upload Button
+        HStack(spacing: 20) {
           if let image = vm.choosenCover {
             Image(uiImage: image)
               .defaultOptions()
-              .clipShape(RoundedRectangle(cornerRadius: 12))
               .frame(width: 40, height: 40)
+              .clipShape(RoundedRectangle(cornerRadius: 12))
           } else {
             Image("imagePlaceholder")
               .defaultOptions()
-              .clipShape(RoundedRectangle(cornerRadius: 12))
               .frame(width: 40, height: 40)
+              .clipShape(RoundedRectangle(cornerRadius: 12))
           }
           
+          Spacer()
+          
           PhotosPicker(selection: $vm.selectedCoverFromPicker) {
-            Text("Tap to upload profile photo")
-              .styledText(
-                .customVine,
-                18,
-                .bold
+            Text("Upload Cover")
+              .styledText(.customBlue, 16, .semibold)
+              .frame(maxWidth: .infinity)
+              .frame(height: 40)
+              .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                  .stroke(.customBlue, lineWidth: 1)
               )
           }
         }
         
-        
-        
-        // inputs
+        // Text Inputs
         VStack(spacing: 20) {
           TextField("Place Title", text: $vm.placeName)
             .styledTextField()
           
-          TextField("Place adress", text: $vm.placeAdress)
+          TextField("Place Address", text: $vm.placeAdress)
             .styledTextField()
           
           TextField("Price or leave it blank", text: $vm.placePrice)
@@ -62,113 +60,100 @@ struct AddPlaceView: View {
             .keyboardType(.numberPad)
           
           VStack(alignment: .leading) {
-            Text("Add place description")
-              .styledText(
-                .customBlack,
-                15
-              )
+            Text("Add Place Description")
+              .styledText(.customBlack, 15)
             
             ZStack {
               Color.customWhite
               
               TextEditor(text: $vm.placeDescription)
                 .scrollContentBackground(.hidden)
-                .frame(maxWidth: .infinity)
-                .frame(height: 100).roundedCorners(12)
-                .padding(.leading, 10)
+                .frame(height: 200)
+                .frame(maxWidth: .infinity, maxHeight: 300)
+                .roundedCorners(12)
                 .overlay(
                   RoundedRectangle(cornerRadius: 12)
-                    .stroke(.customBlue, lineWidth: 1)
+                    .stroke(Color.customBlue, lineWidth: 1)
                 )
             }
           }
-          
-          
         }
         
-        //მაპზე დამატება
+        // Map Button
         Button {
           isPresented.toggle()
         } label: {
-          Text("Add place on map")
-            .styledText(
-              .customBlack,
-              16
-            )
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(.customWhite)
+          Text("Add Place on Map")
+            .styledText(.customBlue, 16, .semibold)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.customWhite)
             .roundedCorners(12)
         }
-        .customBorderedButton(borderColor: .customBlue)
+        .customBorderedButton(height: 40, borderColor: .customBlue)
         
-        //ტიპი
-        Picker("placeType", selection: $vm.selectedPlace) {
-          ForEach(vm.placeType, id: \.self) { gender in
-            Text(gender)
+        // Place Type Picker
+        Picker("Place Type", selection: $vm.selectedPlace) {
+          ForEach(vm.placeType, id: \.self) { type in
+            Text(type.rawValue)
           }
         }
-        .pickerStyle(.segmented)
+        .pickerStyle(SegmentedPickerStyle())
         .onAppear {
           UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customBlue)
-          let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white
-          ]
-          UISegmentedControl.appearance().setTitleTextAttributes(attributes, for: .selected)
-          UISegmentedControl.appearance().isSpringLoaded = true
-          
-          UISegmentedControl.appearance().backgroundColor = .customWhite
+          UISegmentedControl.appearance().setTitleTextAttributes(
+            [.foregroundColor: UIColor.white],
+            for: .selected
+          )
         }
         
-        
-        //დამატების ღილაკი
-        Button {
-          vm.addPlace()
-        } label: {
-          Text("Add place")
-            .styledText(
-              .buttonPrimary,
-              16,
-              .bold
-            )
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .customStyledButton()
-        
-        
-        //album
-        VStack {
+        // Album Picker
+        VStack(spacing: 10) {
           PhotosPicker(selection: $vm.selectedAlbum, maxSelectionCount: 5) {
-            Text("Tap to upload profile photo")
-              .styledText(
-                .customVine,
-                18,
-                .bold
+            Text("Tap to Upload Photos")
+              .styledText(.customBlue, 16, .semibold)
+              .frame(maxWidth: .infinity)
+              .frame(height: 40)
+              .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                  .stroke(.customBlue, lineWidth: 1)
               )
           }
           
-          HStack {
-            ForEach(Array(vm.choosenAlbum.enumerated()), id: \.offset) { index, image in
+          HStack(spacing: 10) {
+            ForEach(Array(vm.choosenAlbum.enumerated()), id: \.offset) { _, image in
               Image(uiImage: image)
-                          .resizable()
-                          .scaledToFit()
-                          .clipShape(RoundedRectangle(cornerRadius: 12))
-                          .frame(width: 40, height: 40)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 40, height: 40)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
             }
           }
         }
-        
-        
-        
+        .frame(height: 110, alignment: .top)
+        // Add Place Button
+        Button {
+          vm.addPlace()
+        } label: {
+          Text("Add Place")
+            .styledText(.buttonPrimary, 18, .bold)
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.customBlue)
+            .roundedCorners(12)
+        }
+        .customStyledButton()
       }
+      .frame(maxWidth: .infinity)
+      .padding(.horizontal, 20)
+      .padding(.vertical, 50)
     }
     .scrollBounceBehavior(.basedOnSize)
-    .padding(.horizontal, 20)
-    .padding(.vertical, 30)
     .onDisappear {
       isAppeared.toggle()
     }
     .sheet(isPresented: $isPresented) {
-      Text("hello world")
+      Text("Hello World")
     }
   }
 }
