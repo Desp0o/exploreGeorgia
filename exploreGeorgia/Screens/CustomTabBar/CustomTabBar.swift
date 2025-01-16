@@ -31,10 +31,7 @@ struct CustomTabBar: View {
           case 2:
             VocabularyViewControllerWrapper()
           case 3:
-            VStack {
-              Text("Messages")
-                .background(.yellow)
-            }
+            Text("hello")
           case 4:
             ProfileView()
           default:

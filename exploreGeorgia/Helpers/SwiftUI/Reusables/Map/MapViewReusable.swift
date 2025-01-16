@@ -7,6 +7,7 @@ struct MapViewReusable: View {
   let latitudeProp: Double
   let longitudeProp: Double
   let isEditable: Bool
+  @Binding var currentLocationForUse: Location?
   @State private var isActionSheetOpen: Bool = false
   @State private var myLocation: Location
   @State private var region: MKCoordinateRegion
@@ -17,13 +18,15 @@ struct MapViewReusable: View {
     latitudeProp: Double,
     longitudeProp: Double,
     locationName: String,
-    isEditable: Bool
+    isEditable: Bool,
+    currentLocationForUse: Binding<Location?> = .constant(nil) 
   ) {
     self.latitudeProp = latitudeProp
     self.longitudeProp = longitudeProp
     self.locationName = locationName
     self.isEditable = isEditable
-    
+    _currentLocationForUse = currentLocationForUse
+
     _myLocation = State(initialValue: Location(coordinate: CLLocationCoordinate2D(latitude: latitudeProp, longitude: longitudeProp)))
     _region = State(initialValue: MKCoordinateRegion(
       center: CLLocationCoordinate2D(latitude: latitudeProp, longitude: longitudeProp),
@@ -109,6 +112,9 @@ struct MapViewReusable: View {
         )
       }
     )
+    .onDisappear {
+      currentLocationForUse = myLocation
+    }
   }
 }
 
