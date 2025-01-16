@@ -149,6 +149,7 @@ struct AddPlaceView: View {
       .padding(.vertical, 50)
     }
     .scrollBounceBehavior(.basedOnSize)
+    .scrollIndicators(.hidden)
     .onDisappear {
       isAppeared.toggle()
     }

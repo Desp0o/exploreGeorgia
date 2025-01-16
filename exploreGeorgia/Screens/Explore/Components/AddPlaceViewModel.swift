@@ -8,15 +8,12 @@
 import Combine
 import FirebaseFirestore
 import _PhotosUI_SwiftUI
-
-enum AddPlaceTypes: String {
-  case sightSeen = "Sightseen"
-  case food = "Food place"
-}
+import FirebaseAuth
 
 final class AddPlaceViewModel: ObservableObject {
   private let firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol
-  private  let db = Firestore.firestore()
+  private let db = Firestore.firestore()
+  let placeType: [AddPlaceTypes] = [.sightSeen, .food]
   @Published var placeName = ""
   @Published var placeAdress = ""
   @Published var placePrice = ""
@@ -35,13 +32,14 @@ final class AddPlaceViewModel: ObservableObject {
     }
   }
   @Published var choosenAlbum: [UIImage] = []
-  var placeType: [AddPlaceTypes] = [.sightSeen, .food]
 
   init(firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol = FirebaseFetchingService()) {
     self.firebasePhotoManager = firebasePhotoManager
   }
     
   func addPlace() {
+    let userID = Auth.auth().currentUser?.uid
+    
     let place = SightSeenModel(
       cover: "",
       name: placeName,
@@ -54,6 +52,7 @@ final class AddPlaceViewModel: ObservableObject {
       ratingCount: 0,
       latitude: 0.0,
       longitude: 0.0,
+      user: userID,
       isSightseen: selectedPlace == .sightSeen ? true : false,
       isFood: selectedPlace == .food ? true : false
     )
@@ -67,7 +66,7 @@ final class AddPlaceViewModel: ObservableObject {
     }
   }
   
-  func addSightSeenToFirestore(sightSeen: SightSeenModel) async throws {
+  private func addSightSeenToFirestore(sightSeen: SightSeenModel) async throws {
       let collectionRef = db.collection("usersPlaces")
       
       var sightSeenWithID = sightSeen
@@ -97,7 +96,7 @@ final class AddPlaceViewModel: ObservableObject {
       try await collectionRef.document(sightSeenWithID.id!).setData(data)
   }
   
-  func addCover(from selection: PhotosPickerItem?) {
+  private func addCover(from selection: PhotosPickerItem?) {
     guard let selection else {
       return
     }
@@ -113,7 +112,7 @@ final class AddPlaceViewModel: ObservableObject {
     }
   }
   
-  func addAlbum(from selection: [PhotosPickerItem]?) {
+  private func addAlbum(from selection: [PhotosPickerItem]?) {
     guard let selection else {
       return
     }
