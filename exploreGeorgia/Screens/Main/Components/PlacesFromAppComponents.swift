@@ -47,7 +47,8 @@ struct PlacesFromAppComponents: View {
               ForEach(vm.placesFromApp) { place in
                 NavigationLink(
                   destination: PlaceDetailsView(
-                    elementID: place.id ?? ""
+                    elementID: place.id ?? "",
+                    collectionName: "placesFromApp"
                   )
                   .navigationBarHidden(true)
                 ) {

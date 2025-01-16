@@ -22,4 +22,6 @@ struct SightSeenModel: Codable, Identifiable, Hashable {
   let latitude: Double
   let longitude: Double
   var isBookmarked: Bool?
+  var user: String?
+  var userDetails: UserModel?
 }

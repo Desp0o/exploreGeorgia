@@ -57,9 +57,12 @@ struct AllBookmarkView: View {
           List {
             ForEach(Array(vm.bookmarkedPlaces.enumerated()), id: \.element) { index, place in
               ZStack {
-                NavigationLink(destination: PlaceDetailsView(
-                  elementID: place.id ?? ""
-                ).navigationBarHidden(true))
+                NavigationLink(
+                  destination: PlaceDetailsView(
+                    elementID: place.id ?? "",
+                    collectionName: "placesFromApp"
+                  ).navigationBarHidden(true)
+                )
                 {
                   EmptyView()
                 }.opacity(0.0)

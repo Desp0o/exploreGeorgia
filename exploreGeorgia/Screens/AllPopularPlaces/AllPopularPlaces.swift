@@ -60,7 +60,14 @@ struct AllPopularPlaces: View {
             
             LazyVGrid(columns:[GridItem(), GridItem()]) {
               ForEach(vm.fetchedData) { place in
-                NavigationLink(destination: PlaceDetailsView(elementID: place.id ?? "").navigationBarHidden(true)) {
+                NavigationLink(
+                  destination: PlaceDetailsView(
+                    elementID: place.id ?? "",
+                    collectionName: "placesFromApp"
+                  ).navigationBarHidden(
+                    true
+                  )
+                ) {
                   SightSeenReusableView(
                     place: place,
                     maxWidth: UIScreen.main.bounds.width / 2 - 30,

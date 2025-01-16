@@ -27,10 +27,7 @@ struct CustomTabBar: View {
           case 0:
             MainView()
           case 1:
-            VStack {
-              Text("Explore")
-                .background(.blue)
-            }
+            ExploreView()
           case 2:
             VocabularyViewControllerWrapper()
           case 3:
