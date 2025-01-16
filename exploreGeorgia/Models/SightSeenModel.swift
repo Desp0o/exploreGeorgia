@@ -10,7 +10,7 @@ import FirebaseFirestore
 
 struct SightSeenModel: Codable, Identifiable, Hashable {
   var id: String?
-  let cover: String
+  var cover: String
   let name: String
   let region: String
   let album: [String]

@@ -11,6 +11,7 @@ struct ExploreView: View {
   @StateObject var vm = ExploreViewModel()
   @State var isPresented = false
   @State var addButtonScale: CGFloat = 0
+  @State var isAppeared = false
   
   var body: some View {
     ZStack(alignment: .bottomTrailing) {
@@ -50,8 +51,11 @@ struct ExploreView: View {
     .onAppear {
       vm.fetchData()
     }
+    .onChange(of: isAppeared) { _ in
+      vm.fetchData()
+    }
     .sheet(isPresented: $isPresented) {
-      Text("Hello world")
+      AddPlaceView(isAppeared: $isAppeared)
     }
   }
 }

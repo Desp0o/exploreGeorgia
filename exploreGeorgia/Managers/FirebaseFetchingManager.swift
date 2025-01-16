@@ -6,6 +6,7 @@
 //
 
 import FirebaseFirestore
+import FirebaseStorage
 
 protocol FirebaseFetchingServicePorotocol {
   func fetchPlaces(
@@ -26,6 +27,10 @@ protocol FirebaseSingleElementFetching {
 
 protocol FirebaseSingleUserFetchProtocol {
   func getUser(with userID: String) async throws -> UserModel?
+}
+
+protocol FirebasePhotoUrlGeneratorProtocol {
+  func generateFirebasePhotoURL(image: UIImage, dbName: String, Id: String) async throws -> String
 }
 
 final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
@@ -121,5 +126,29 @@ extension FirebaseFetchingService: FirebaseSingleUserFetchProtocol {
       } else {
           throw FetchedUserErrors.userDoesntExist(message: "User document does not exist.")
       }
+  }
+}
+
+extension FirebaseFetchingService: FirebasePhotoUrlGeneratorProtocol {
+  func generateFirebasePhotoURL(image: UIImage, dbName: String, Id: String) async throws -> String {
+    guard let imageData = image.jpegData(compressionQuality: 0.2) else {
+      throw NSError(domain: "Image Conversion Error", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert image to JPEG data"])
+    }
+    
+    let storageRef = Storage.storage().reference().child("dbName/\(Id).jpg")
+    
+    do {
+      let _ = try await storageRef.putDataAsync(imageData)
+    } catch {
+      throw error
+    }
+    
+    do {
+      let downloadURL = try await storageRef.downloadURL()
+
+      return downloadURL.absoluteString
+    } catch {
+      throw error
+    }
   }
 }
