@@ -6,6 +6,7 @@
 //
 
 import FirebaseFirestore
+import FirebaseAuth
 
 protocol MyExploresDelegate: AnyObject {
   func didDataLoaded()
@@ -20,8 +21,8 @@ protocol MyExploresErrorDelegate: AnyObject {
 }
 
 final class MyExploresViewModel {
-  private let firebaseManager: FirebaseFetchingServicePorotocol
   private var lastDocument: DocumentSnapshot?
+  private let db = Firestore.firestore()
   private var hasMoreData = true
   weak var exploresDelegate: MyExploresDelegate?
   weak var loadingDelegate: MyExploresLoadingDelegate?
@@ -29,11 +30,9 @@ final class MyExploresViewModel {
   var fetchedPlaces: [SightSeenModel] = []
   var isLoading = true
   var errorMessage = ""
+  private var userID = ""
   
-  
-  init(firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService()) {
-    self.firebaseManager = firebaseManager
-    
+  init() {
     fetchData(pageSize: 10)
   }
   
@@ -42,24 +41,18 @@ final class MyExploresViewModel {
     
     Task {
       do {
-        await MainActor.run {
-          loadingDelegate?.didLoadingStopped()
-        }
+        let userId = Auth.auth().currentUser?.uid
         
-        let result = try await firebaseManager.fetchPlaces(
-          collectionName: "usersPlaces",
-          pageSize: pageSize,
-          lastDocument: nil,
-          userBucketList: [""]
-        )
+        let result = try await fetchUserPlaces(userId: userId ?? "", pageSize: pageSize)
         
         await MainActor.run {
+          userID = userId ?? ""
           lastDocument = result.lastDocument
           hasMoreData = result.hasMoreData
           
-          fetchedPlaces = result.places
-          exploresDelegate?.didDataLoaded()
+          fetchedPlaces.append(contentsOf: result.places)
           
+          exploresDelegate?.didDataLoaded()
           isLoading = false
           loadingDelegate?.didLoadingStopped()
         }
@@ -68,6 +61,99 @@ final class MyExploresViewModel {
           isLoading = false
           loadingDelegate?.didLoadingStopped()
           
+          errorMessage = error.localizedDescription
+          errorDeleage?.didErrorOccurred()
+        }
+      }
+    }
+  }
+  
+  func fetchUserPlaces(
+    userId: String,
+    pageSize: Int
+  ) async throws -> (
+    places: [SightSeenModel],
+    lastDocument: DocumentSnapshot?,
+    hasMoreData: Bool
+  ) {
+    var query = db.collection(
+      "usersPlaces"
+    )
+      .whereField(
+        "user",
+        isEqualTo: userId
+      )
+      .limit(
+        to: pageSize
+      )
+    
+    if let lastDocument = lastDocument {
+      query = query
+        .start(
+          afterDocument: lastDocument
+        )
+    }
+    
+    let snapshot = try await query.getDocuments()
+    
+    let places = snapshot.documents.compactMap { document in
+      try? document
+        .data(
+          as: SightSeenModel.self
+        )
+    }
+    
+    let hasMoreData = snapshot.documents.count == pageSize
+    
+    return (
+      places,
+      snapshot.documents.last,
+      hasMoreData
+    )
+  }
+  
+  func deletePlaceFromDataBase(placeId: String) async throws {
+    let db = Firestore.firestore()
+    let placesFromUserRef = db.collection("usersPlaces").document(placeId)
+    let userRef = db.collection("users").document(userID)
+    
+    do {
+      _ = try await db.runTransaction { (transaction, errorPointer) -> Any? in
+        let userSnapshot: DocumentSnapshot
+        do {
+          userSnapshot = try transaction.getDocument(userRef)
+        } catch let fetchError as NSError {
+          errorPointer?.pointee = fetchError
+          return nil
+        }
+        
+        guard var explored = userSnapshot.data()?["explored"] as? [String] else {
+          let error = NSError(domain: "MissingExploredArray", code: 404, userInfo: nil)
+          errorPointer?.pointee = error
+          return nil
+        }
+        
+        if let index = explored.firstIndex(of: placeId) {
+          explored.remove(at: index)
+          transaction.updateData(["explored": explored], forDocument: userRef)
+          transaction.deleteDocument(placesFromUserRef)
+        }
+        
+        return nil
+      }
+    } catch {
+      throw error
+    }
+  }
+  
+  func removePlace(index: Int) {
+    let currentItem = fetchedPlaces[index]
+    
+    Task {
+      do {
+        try await deletePlaceFromDataBase(placeId: currentItem.id ?? "")
+      } catch {
+        await MainActor.run {
           errorMessage = error.localizedDescription
           errorDeleage?.didErrorOccurred()
         }

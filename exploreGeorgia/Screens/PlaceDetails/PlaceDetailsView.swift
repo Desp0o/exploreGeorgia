@@ -55,6 +55,7 @@ struct PlaceDetailsView: View {
         .offset(y: -20)
       }
     }
+    .background(.customWhite)
     .padding(.bottom, 30)
     .background(.customWhite)
     .ignoresSafeArea(.all)

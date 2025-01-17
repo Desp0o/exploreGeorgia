@@ -117,6 +117,7 @@ extension MyExploresViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
     let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completion) in
+      self?.vm.removePlace(index: indexPath.row)
       self?.vm.fetchedPlaces.remove(at: indexPath.row)
       tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .fade)
       completion(true)
@@ -133,7 +134,7 @@ extension MyExploresViewController: UITableViewDelegate, UITableViewDataSource {
     if let cell = tableView.cellForRow(at: indexPath) {
       cell.superview?.subviews.forEach { view in
         if NSStringFromClass(type(of: view)).contains("SwipeActionPullView") {
-          view.frame = CGRect(x: view.frame.minX, y: view.frame.minY, width: view.frame.width, height: view.frame.height - 8)
+          view.frame = CGRect(x: view.frame.minX, y: view.frame.minY + 8, width: view.frame.width, height: view.frame.height - 16)
           view.clipsToBounds = true
           view.layer.cornerRadius = 12
           view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
