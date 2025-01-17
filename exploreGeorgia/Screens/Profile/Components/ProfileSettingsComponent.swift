@@ -47,9 +47,11 @@ struct ProfileSettingsComponent: View {
         }
         
         //trip
-        Button(action: {
-          
-        }) {
+        NavigationLink(
+          destination: MyExploresViewControllerWrapper()
+            .navigationBarHidden(true)
+            .ignoresSafeArea()
+        ) {
           HStack(spacing: 14) {
             Image("trip")
               .defaultOptions()
@@ -64,6 +66,7 @@ struct ProfileSettingsComponent: View {
           }
           .frame(height: 56)
         }
+        
         
         //contact
         Button(action: {
