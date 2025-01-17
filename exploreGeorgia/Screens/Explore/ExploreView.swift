@@ -9,9 +9,10 @@ import SwiftUI
 
 struct ExploreView: View {
   @StateObject var vm = ExploreViewModel()
-  @State var isPresented = false
-  @State var addButtonScale: CGFloat = 0
-  @State var isAppeared = false
+  @State private var isPresented = false
+  @State private var addButtonScale: CGFloat = 0
+  @State private var isAppeared = false
+  @State private var isSomethingChanged = false
   
   var body: some View {
     ZStack(alignment: .bottomTrailing) {
@@ -36,6 +37,7 @@ struct ExploreView: View {
               }
             }
             .id(vm.fetchedPlaces)
+            .id(isSomethingChanged)
           }
         }
       }
@@ -50,6 +52,7 @@ struct ExploreView: View {
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
     .onAppear {
       vm.fetchData()
+      isSomethingChanged.toggle()
     }
     .onChange(of: isAppeared) { _ in
       vm.fetchData()

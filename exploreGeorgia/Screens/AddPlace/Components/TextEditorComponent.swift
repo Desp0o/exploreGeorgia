@@ -22,7 +22,7 @@ struct TextEditorComponent: View {
         .padding(10)
         .background(
           ZStack {
-            Text(!textForEditor.isEmpty ? "" : "Add place description...")
+            Text(!textForEditor.isEmpty ? "" : "Add description...")
               .foregroundStyle(.gray.opacity(0.6))
           }
             .padding(.horizontal, 15)

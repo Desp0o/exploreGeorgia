@@ -15,6 +15,7 @@ final class AddPlaceViewModel: ObservableObject {
   private let db = Firestore.firestore()
   let placeType: [AddPlaceTypes] = [.sightSeen, .food]
   @Published var placeName = ""
+  @Published var placeCity = ""
   @Published var placeAdress = ""
   @Published var placePrice = ""
   @Published var placeDescription = ""
@@ -50,8 +51,8 @@ final class AddPlaceViewModel: ObservableObject {
     
     let place = SightSeenModel(
       cover: "",
-      name: placeName,
-      region: "",
+      name: placeName.capitalized,
+      region: placeCity.capitalized,
       album: [""],
       description: placeDescription,
       rating: "",
@@ -107,6 +108,13 @@ final class AddPlaceViewModel: ObservableObject {
         await MainActor.run {
           isLoading = false
           isSuccessfullyAdded = true
+          placeName = ""
+          placeDescription = ""
+          placeAdress = ""
+          placeCity = ""
+          choosenCover = nil
+          choosenAlbum = []
+          placePrice = ""
         }
       } catch {
         await MainActor.run {

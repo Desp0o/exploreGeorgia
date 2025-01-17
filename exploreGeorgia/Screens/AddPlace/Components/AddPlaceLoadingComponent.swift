@@ -16,11 +16,11 @@ struct AddPlaceLoadingComponent: View {
           
           ProgressView()
             .scaleEffect(2)
-            .tint(.customBlue)
+            .tint(.customVine)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .background(.black.opacity(0.5))
+      .background(.black.opacity(0.7))
       .zIndex(3)
     }
 }

@@ -69,13 +69,16 @@ struct AddPlaceView: View {
           )
           
           VStack(spacing: 20) {
-            TextField("Place Title", text: $vm.placeName)
+            TextField("Place name", text: $vm.placeName)
               .styledTextField()
             
-            TextField("Place Address", text: $vm.placeAdress)
+            TextField("City", text: $vm.placeCity)
               .styledTextField()
             
-            TextField("Price or leave it blank", text: $vm.placePrice)
+            TextField("Address", text: $vm.placeAdress)
+              .styledTextField()
+            
+            TextField("Price (optional)", text: $vm.placePrice)
               .styledTextField()
               .keyboardType(.numberPad)
             
@@ -142,10 +145,12 @@ struct AddPlaceView: View {
         MapViewReusable(
           latitudeProp: coordinate.latitude,
           longitudeProp: coordinate.longitude,
-          locationName: vm.placeName,
+          locationName: "",
           isEditable: true,
           currentLocationForUse: $currentLocationForUse
         )
+      } else {
+        Text("Turn on location to continue")
       }
     }
   }
