@@ -10,17 +10,11 @@ import FirebaseAuth
 
 struct MainView: View {
   @StateObject var vm = MainViewModel()
-  @StateObject private var viewModel = YourViewModel()
+  @Binding var tabIndex: Int
 
   var body: some View {
     ScrollView {
       VStack(spacing: 30) {
-        
-        VStack {
-                    Button("Add Example Sight") {
-                        viewModel.addNewSight()
-                    }
-                }
         
         MainUserComponet(vm: vm)
           .padding(.leading, 20)
@@ -28,12 +22,13 @@ struct MainView: View {
         MainViewTitleComponent()
           .padding(.leading, 20)
         
-        PlacesFromAppComponents(data: vm.placesFromApp, collectionName: "placesFromApp")
+        PlacesFromAppComponents(vm: vm)
         
         IntrestingFacts(vm: vm)
           .padding(.horizontal, 20)
         
-        PlacesFromAppComponents(data: vm.usersAddedPlacesData, collectionName: "usersPlaces")
+        PlacesFromUserComponent(vm: vm, tabIndex: $tabIndex)
+          .padding(.horizontal, 20)
 
         Spacer()
       }
@@ -46,8 +41,4 @@ struct MainView: View {
     }
     .scrollIndicators(.hidden)
   }
-}
-
-#Preview {
-  MainView()
 }

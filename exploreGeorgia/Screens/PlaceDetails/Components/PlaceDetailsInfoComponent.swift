@@ -69,23 +69,25 @@ struct PlaceDetailsInfoComponent: View {
           
           Spacer()
           
-          HStack {
-            Image(systemName: "star.fill")
-              .renderingMode(.template)
-              .foregroundStyle(.yellow)
-              .frame(width: 12, height: 12)
-            
-            Text(vm.currentPlace?.rating ?? "")
-              .styledText(
-                .customBlack,
-                15
-              )
-            
-            Text("(2389)")
-              .styledText(
-                .customGray,
-                15
-              )
+          if vm.currentPlace?.user == nil {
+            HStack {
+              Image(systemName: "star.fill")
+                .renderingMode(.template)
+                .foregroundStyle(.yellow)
+                .frame(width: 12, height: 12)
+              
+              Text(vm.currentPlace?.rating ?? "")
+                .styledText(
+                  .customBlack,
+                  15
+                )
+              
+              Text(String("(\(vm.currentPlace?.ratingCount ?? 0))"))
+                .styledText(
+                  .customGray,
+                  14
+                )
+            }
           }
           
           Spacer()

@@ -25,7 +25,7 @@ struct CustomTabBar: View {
         ZStack {
           switch currentIdenx {
           case 0:
-            MainView()
+            MainView(tabIndex: $currentIdenx)
           case 1:
             ExploreView()
           case 2:
