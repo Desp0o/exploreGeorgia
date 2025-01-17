@@ -12,7 +12,7 @@ final class ExploreViewModel: ObservableObject {
   @Published var fetchedPlaces: [SightSeenModel] = []
   @Published var isLoading = true
   @Published var isFetching = false
-
+  
   init(
     firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService()
   ) {
@@ -20,7 +20,6 @@ final class ExploreViewModel: ObservableObject {
   }
   
   func fetchData(pageSize: Int) {
-    isFetching = true
     Task {
       do {
         let result = try await firebaseManager.fetchPlaces(

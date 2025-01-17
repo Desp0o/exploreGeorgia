@@ -56,6 +56,7 @@ struct ExploreView: View {
                 }
             }
           }
+          .id(vm.fetchedPlaces)
           
           if vm.isFetching {
             ProgressView()
@@ -99,6 +100,9 @@ struct ExploreView: View {
     .fullScreenCover(isPresented: $isPresented) {
       AddPlaceView(isAppeared: $isAppeared)
         .background(.primaryWhite)
+        .onDisappear {
+          vm.fetchData(pageSize: pageSize)
+        }
     }
   }
 }
