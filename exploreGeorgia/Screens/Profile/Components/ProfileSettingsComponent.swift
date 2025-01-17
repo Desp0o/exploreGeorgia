@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileSettingsComponent: View {
   @Binding var isPresented: Bool
   @ObservedObject var vm = ProfileViewModel()
+  
   var body: some View {
     ZStack {
       RoundedRectangle(cornerRadius: 12)
@@ -47,9 +48,11 @@ struct ProfileSettingsComponent: View {
         }
         
         //trip
-        Button(action: {
-          
-        }) {
+        NavigationLink(
+          destination: MyExploresViewControllerWrapper()
+            .navigationBarHidden(true)
+            .ignoresSafeArea()
+        ) {
           HStack(spacing: 14) {
             Image("trip")
               .defaultOptions()
@@ -64,6 +67,7 @@ struct ProfileSettingsComponent: View {
           }
           .frame(height: 56)
         }
+        
         
         //contact
         Button(action: {

@@ -43,7 +43,7 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     lastDocument: DocumentSnapshot?,
     userBucketList: [String]
   ) async throws -> (places: [SightSeenModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
-    let collectionRef = db.collection(collectionName).limit(to: pageSize)
+    let collectionRef = db.collection(collectionName).limit(to: pageSize + 1)
     let query: Query
     
     if let lastDocument = lastDocument {
@@ -53,7 +53,13 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     }
     
     let snapshot = try await query.getDocuments()
-    let newPlaces = try snapshot.documents.compactMap { document -> SightSeenModel? in
+    let documents = snapshot.documents
+    
+    let hasMoreData = documents.count > pageSize
+    
+    let documentsToProcess = hasMoreData ? Array(documents.prefix(pageSize)) : documents
+    
+    let newPlaces = try documentsToProcess.compactMap { document -> SightSeenModel? in
       var model = try document.data(as: SightSeenModel.self)
       if let id = model.id {
         model.isBookmarked = userBucketList.contains(id)
@@ -61,10 +67,8 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
       return model
     }
     
-    let hasMoreData = !snapshot.documents.isEmpty && snapshot.documents.count == pageSize
-    return (places: newPlaces, lastDocument: snapshot.documents.last, hasMoreData: hasMoreData)
-  }
-  }
+    return (places: newPlaces, lastDocument: documentsToProcess.last, hasMoreData: hasMoreData)
+  }  }
 
 extension FirebaseFetchingService: FirebaseSinglePlaceFetchProtocol {
   func fetchPlace(with id: String, and collection: String) async throws -> SightSeenModel {
@@ -98,35 +102,35 @@ extension FirebaseFetchingService: FirebaseSingleElementFetching {
 
 extension FirebaseFetchingService: FirebaseSingleUserFetchProtocol {
   func getUser(with userID: String) async throws -> UserModel? {
-      let document = try await db.collection("users").document(userID).getDocument()
-
-      if document.exists, let data = document.data() {
-          let avatar = data["photoURL"] as? String ?? ""
-          let firstName = data["firstName"] as? String ?? ""
-          let lastName = data["lastName"] as? String ?? ""
-          let email = data["email"] as? String ?? ""
-          let gender = data["gender"] as? String ?? ""
-          let points = data["points"] as? Int ?? 0
-          let explored = data["explored"] as? [String] ?? []
-          let bucketList = data["bucketList"] as? [String] ?? []
-          let achievement = data["achievement"] as? [String] ?? []
-          let createdAt = data["createdAt"] as? Timestamp ?? Timestamp()
-
-          return UserModel(
-              avatar: avatar,
-              firstName: firstName,
-              lastName: lastName,
-              email: email,
-              gender: gender,
-              points: points,
-              explored: explored,
-              bucketList: bucketList,
-              achievement: achievement,
-              createdAt: createdAt
-          )
-      } else {
-          throw FetchedUserErrors.userDoesntExist(message: "User document does not exist.")
-      }
+    let document = try await db.collection("users").document(userID).getDocument()
+    
+    if document.exists, let data = document.data() {
+      let avatar = data["photoURL"] as? String ?? ""
+      let firstName = data["firstName"] as? String ?? ""
+      let lastName = data["lastName"] as? String ?? ""
+      let email = data["email"] as? String ?? ""
+      let gender = data["gender"] as? String ?? ""
+      let points = data["points"] as? Int ?? 0
+      let explored = data["explored"] as? [String] ?? []
+      let bucketList = data["bucketList"] as? [String] ?? []
+      let achievement = data["achievement"] as? [String] ?? []
+      let createdAt = data["createdAt"] as? Timestamp ?? Timestamp()
+      
+      return UserModel(
+        avatar: avatar,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        gender: gender,
+        points: points,
+        explored: explored,
+        bucketList: bucketList,
+        achievement: achievement,
+        createdAt: createdAt
+      )
+    } else {
+      throw FetchedUserErrors.userDoesntExist(message: "User document does not exist.")
+    }
   }
 }
 
@@ -146,7 +150,7 @@ extension FirebaseFetchingService: FirebasePhotoUrlGeneratorProtocol {
     
     do {
       let downloadURL = try await storageRef.downloadURL()
-
+      
       return downloadURL.absoluteString
     } catch {
       throw error

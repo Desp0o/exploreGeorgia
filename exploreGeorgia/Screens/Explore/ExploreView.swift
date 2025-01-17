@@ -38,6 +38,7 @@ struct ExploreView: View {
               ).navigationBarHidden(true)
             ) {
               PlaceFromUserReusable(place: place)
+                .frame(width: UIScreen.main.bounds.width - 40)
                 .opacity(startingOpacity)
                 .onAppear {
                   withAnimation(.easeOut(duration: 0.5)) {
@@ -55,6 +56,7 @@ struct ExploreView: View {
                 }
             }
           }
+          .id(vm.fetchedPlaces)
           
           if vm.isFetching {
             ProgressView()
@@ -78,7 +80,6 @@ struct ExploreView: View {
         }
       }
     }
-    .padding(.horizontal, 20)
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
     .overlay {
       if vm.isLoading {
@@ -99,6 +100,9 @@ struct ExploreView: View {
     .fullScreenCover(isPresented: $isPresented) {
       AddPlaceView(isAppeared: $isAppeared)
         .background(.primaryWhite)
+        .onDisappear {
+          vm.fetchData(pageSize: pageSize)
+        }
     }
   }
 }

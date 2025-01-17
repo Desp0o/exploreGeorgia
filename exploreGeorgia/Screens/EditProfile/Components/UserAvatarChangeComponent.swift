@@ -13,7 +13,6 @@ struct UserAvatarChangeComponent: View {
   
   var body: some View {
     VStack(spacing: 20) {
-      
       if let image = vm.choosenAvatar {
         Image(uiImage: image)
           .defaultOptions()
@@ -28,13 +27,12 @@ struct UserAvatarChangeComponent: View {
       PhotosPicker(selection: $vm.selectedAvatarFromPicker) {
         Text("Tap to upload profile photo")
           .styledText(
-            .customVine,
+            .customBlue,
             18,
             .bold
           )
       }
     }
-    
   }
 }
 

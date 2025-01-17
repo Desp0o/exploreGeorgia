@@ -23,7 +23,6 @@ struct AllBookmarkView: View {
         .ignoresSafeArea()
       
       VStack {
-        
         HStack {
           Button {
             dismiss.wrappedValue.dismiss()

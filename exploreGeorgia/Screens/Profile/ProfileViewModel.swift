@@ -23,12 +23,9 @@ final class ProfileViewModel: ObservableObject {
   ) {
     self.fetchUser = fetchUser
     self.authManager = authManager
-    
-    fetchProfile()
   }
   
   func fetchProfile() {
-    isLoading = true
     Task {
       do {
         if let fetchedUser = try await fetchUser.getCurrentUser() {
