@@ -52,6 +52,40 @@ final class MyExploresViewController: UIViewController {
     return table
   }()
   
+  private lazy var noDataStackView: UIStackView = {
+    let stack = UIStackView()
+    stack
+      .createCustomStack(
+        axis: .vertical,
+        alignment: .center,
+        distribution: .equalSpacing,
+        spacing: 8
+      )
+    stack.isHidden = true
+    return stack
+  }()
+  
+  private lazy var noDataImage: UIImageView = {
+    let image = UIImageView()
+    image.translatesAutoresizingMaskIntoConstraints = false
+    image.image = UIImage(systemName: "figure.walk.triangle")
+    image.tintColor = .customBlue
+    image.contentMode = .scaleAspectFit
+    
+    return image
+  }()
+  
+  private lazy var noDataText: UILabel = {
+    let label = UILabel()
+    label.createLabel(
+      text: "No explored places yet. Start your adventure!",
+      fontSize: 16,
+      fontWeight: .semibold,
+      textColor: .customBlue
+    )
+    return label
+  }()
+  
   init(vm: MyExploresViewModel = MyExploresViewModel()) {
     self.vm = vm
     super.init(nibName: nil, bundle: nil)
@@ -76,6 +110,9 @@ final class MyExploresViewController: UIViewController {
     
     view.addSubview(backButton)
     view.addSubview(screenTitle)
+    view.addSubview(noDataStackView)
+    noDataStackView.addArrangedSubview(noDataImage)
+    noDataStackView.addArrangedSubview(noDataText)
     view.addSubview(table)
     
     setupCOnstraints()
@@ -88,6 +125,13 @@ final class MyExploresViewController: UIViewController {
       
       screenTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
       screenTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      
+      noDataStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+      noDataStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+      noDataStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+      
+      noDataImage.widthAnchor.constraint(equalToConstant: 80),
+      noDataImage.heightAnchor.constraint(equalToConstant: 80),
       
       table.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 20),
       table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
@@ -120,6 +164,11 @@ extension MyExploresViewController: UITableViewDelegate, UITableViewDataSource {
       self?.vm.removePlace(index: indexPath.row)
       self?.vm.fetchedPlaces.remove(at: indexPath.row)
       tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .fade)
+      if self?.vm.fetchedPlaces.isEmpty ?? false {
+        self?.noDataStackView.isHidden = false
+      } else {
+        self?.noDataStackView.isHidden = true
+      }
       completion(true)
     }
     
@@ -165,6 +214,12 @@ extension MyExploresViewController: MyExploresLoadingDelegate {
 extension MyExploresViewController: MyExploresDelegate {
   func didDataLoaded() {
     table.reloadData()
+    
+    if vm.fetchedPlaces.isEmpty {
+      noDataStackView.isHidden = false
+    } else {
+      noDataStackView.isHidden = true
+    }
   }
 }
 

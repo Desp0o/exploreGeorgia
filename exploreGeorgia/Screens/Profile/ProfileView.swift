@@ -10,7 +10,8 @@ import SwiftUI
 struct ProfileView: View {
   @StateObject var vm = ProfileViewModel()
   @State var isPresented = false
-  
+  @State var isSomethingChanged = false
+
   var body: some View {
     ZStack {
       Color.primaryWhite.ignoresSafeArea()
@@ -59,9 +60,13 @@ struct ProfileView: View {
         }
       }
     }
+    .onAppear {
+      isSomethingChanged.toggle()
+      vm.fetchProfile()
+    }
   }
 }
 
-#Preview {
-  ProfileView()
-}
+//#Preview {
+//  ProfileView()
+//}

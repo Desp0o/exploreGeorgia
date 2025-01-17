@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileSettingsComponent: View {
   @Binding var isPresented: Bool
   @ObservedObject var vm = ProfileViewModel()
+  
   var body: some View {
     ZStack {
       RoundedRectangle(cornerRadius: 12)
