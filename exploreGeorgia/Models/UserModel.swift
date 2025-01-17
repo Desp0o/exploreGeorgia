@@ -7,7 +7,8 @@
 
 import FirebaseCore
 
-struct UserModel {
+struct UserModel: Codable, Identifiable, Hashable {
+  var id: String?
   let avatar: String
   let firstName: String
   let lastName: String
@@ -18,4 +19,5 @@ struct UserModel {
   let bucketList: [String]
   let achievement: [String]
   let createdAt: Timestamp?
+  var dateField: String?
 }

@@ -16,6 +16,7 @@ final class MainViewModel: ObservableObject {
   @Published var errorMessage = ""
   @Published var randomFact = ""
   @Published var placesFromApp: [SightSeenModel] = []
+  @Published var usersAddedPlacesData: [SightSeenModel] = []
   @Published var isLoading = false
   
   init(
@@ -75,6 +76,31 @@ final class MainViewModel: ObservableObject {
         }
       } catch {
         print(error.localizedDescription, "❌")
+      }
+    }
+  }
+  
+  func fetchUsersAddedPlaces() {
+    Task {
+      do {
+        let userData = try await userManager.getCurrentUser()
+        
+        await MainActor.run {
+          user = userData
+        }
+        
+        let result = try await firebaseManager.fetchPlaces(
+          collectionName: "usersPlaces",
+          pageSize: 3,
+          lastDocument: nil,
+          userBucketList: user?.bucketList ?? [""]
+        )
+        
+        await MainActor.run {
+          usersAddedPlacesData = result.places
+        }
+      } catch {
+        print(error.localizedDescription)
       }
     }
   }

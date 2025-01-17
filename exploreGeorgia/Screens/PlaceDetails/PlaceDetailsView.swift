@@ -15,6 +15,7 @@ struct PlaceDetailsView: View {
   @State var isPresented = false
   @State var isBookmarked = false
   let elementID: String
+  var collectionName: String
 
   var body: some View {
     VStack(spacing: 0) {
@@ -48,7 +49,8 @@ struct PlaceDetailsView: View {
           vm: vm,
           selectedImage: $selectedImage,
           isLightBoxVisible: $isLightBoxVisible,
-          isPresented: $isPresented
+          isPresented: $isPresented,
+          author: vm.author
         )
         .offset(y: -20)
       }
@@ -75,7 +77,7 @@ struct PlaceDetailsView: View {
       )
     }
     .onAppear {
-      vm.fetchSinglePlaceByID(by: elementID)
+      vm.fetchSinglePlaceByID(with: elementID, and: collectionName)
     }
   }
 }

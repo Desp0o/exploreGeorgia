@@ -65,8 +65,6 @@ class Coordinator: NSObject, MKMapViewDelegate {
       withAnimation(.easeIn) {
         self.parent.location = Location(coordinate: coordinate)
         self.parent.region.center = coordinate
-        
-        print(coordinate)
       }
     }
   }

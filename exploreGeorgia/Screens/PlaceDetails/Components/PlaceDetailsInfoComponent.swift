@@ -12,25 +12,44 @@ struct PlaceDetailsInfoComponent: View {
   @Binding var selectedImage: String
   @Binding var isLightBoxVisible: Bool
   @Binding var isPresented: Bool
+  let author: UserModel?
   
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 20) {
-        VStack(alignment: .leading, spacing: 0) {
-          Text(vm.currentPlace?.name ?? "")
-            .styledText(
-              .customBlack,
-              24,
-              .semibold
-            )
+        HStack {
+          VStack(alignment: .leading, spacing: 0) {
+            Text(vm.currentPlace?.name ?? "")
+              .styledText(
+                .customBlack,
+                24,
+                .semibold
+              )
+            
+            Text(vm.currentPlace?.adress ?? "")
+              .styledText(
+                .customGray,
+                15
+              )
+          }
+          .frame(maxWidth: .infinity, alignment: .leading)
           
-          Text(vm.currentPlace?.adress ?? "")
-            .styledText(
-              .customGray,
-              15
-            )
+          Spacer()
+          
+          if author != nil {
+            VStack {
+              CachedAsyncImage(url: URL(string: author?.avatar ?? ""))
+                .frame(width: 30, height: 30)
+                .clipShape(Circle())
+              
+              Text(author?.firstName ?? "")
+                .styledText(
+                  .customBlack,
+                  12
+                )
+            }
+          }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         
         HStack {
           HStack {
@@ -50,23 +69,25 @@ struct PlaceDetailsInfoComponent: View {
           
           Spacer()
           
-          HStack {
-            Image(systemName: "star.fill")
-              .renderingMode(.template)
-              .foregroundStyle(.yellow)
-              .frame(width: 12, height: 12)
-            
-            Text(vm.currentPlace?.rating ?? "")
-              .styledText(
-                .customBlack,
-                15
-              )
-            
-            Text("(2389)")
-              .styledText(
-                .customGray,
-                15
-              )
+          if vm.currentPlace?.user == nil {
+            HStack {
+              Image(systemName: "star.fill")
+                .renderingMode(.template)
+                .foregroundStyle(.yellow)
+                .frame(width: 12, height: 12)
+              
+              Text(vm.currentPlace?.rating ?? "")
+                .styledText(
+                  .customBlack,
+                  15
+                )
+              
+              Text(String("(\(vm.currentPlace?.ratingCount ?? 0))"))
+                .styledText(
+                  .customGray,
+                  14
+                )
+            }
           }
           
           Spacer()

@@ -29,7 +29,7 @@ extension Button {
     borderWidth: CGFloat = 1
   ) -> some View {
     self.frame(maxWidth: .infinity)
-      .frame(minHeight: height)
+      .frame(height: height)
       .background(.clear)
       .overlay(
         RoundedRectangle(cornerRadius: corners)

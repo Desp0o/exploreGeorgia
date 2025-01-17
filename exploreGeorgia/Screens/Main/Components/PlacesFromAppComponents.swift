@@ -44,10 +44,11 @@ struct PlacesFromAppComponents: View {
                 .tint(.customBlue)
                 .frame(width: UIScreen.main.bounds.width - 20, height: 200)
             } else {
-              ForEach(vm.placesFromApp) { place in
+              ForEach(vm.placesFromApp, id: \.id) { place in
                 NavigationLink(
                   destination: PlaceDetailsView(
-                    elementID: place.id ?? ""
+                    elementID: place.id ?? "",
+                    collectionName: "placesFromApp"
                   )
                   .navigationBarHidden(true)
                 ) {
@@ -79,7 +80,7 @@ struct PlacesFromAppComponents: View {
   }
 }
 
-#Preview {
-  let vm = MainViewModel()
-  PlacesFromAppComponents(vm: vm)
-}
+//#Preview {
+//  let vm = MainViewModel()
+//  PlacesFromAppComponents(vm: vm)
+//}

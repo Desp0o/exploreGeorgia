@@ -41,26 +41,25 @@ struct AllPopularPlaces: View {
         
         ScrollViewReader { proxy in
           ScrollView {
-            VStack {
-              Text("Popular Destinations")
-                .styledText(
-                  .customBlue,
-                  24,
-                  .semibold
-                )
-              
-              Text("Ready for travel?")
-                .styledText(
-                  .customBlue,
-                  16
-                )
-            }
+            ScreenMainTitle(
+              mainTitle: "Popular Destinations",
+              subTitle: "Ready for travel?"
+            )
             .padding(.top, 10)
             .padding(.bottom, 20)
             
             LazyVGrid(columns:[GridItem(), GridItem()]) {
-              ForEach(vm.fetchedData) { place in
-                NavigationLink(destination: PlaceDetailsView(elementID: place.id ?? "").navigationBarHidden(true)) {
+              ForEach(vm.fetchedData.indices, id: \.self) { index in
+                let place = vm.fetchedData[index]
+                
+                NavigationLink(
+                  destination: PlaceDetailsView(
+                    elementID: place.id ?? "",
+                    collectionName: "placesFromApp"
+                  ).navigationBarHidden(
+                    true
+                  )
+                ) {
                   SightSeenReusableView(
                     place: place,
                     maxWidth: UIScreen.main.bounds.width / 2 - 30,
@@ -68,7 +67,7 @@ struct AllPopularPlaces: View {
                   )
                   .scaleEffect(scale)
                   .onAppear {
-                    withAnimation(.bouncy) {
+                    withAnimation(.easeOut(duration: 0.3)) {
                       scale = 1
                     }
                   }
@@ -76,11 +75,9 @@ struct AllPopularPlaces: View {
                 .onTapGesture {
                   lastSelectedID = place.id
                 }
-                if place == vm.fetchedData.last {
-                  Color.clear // Placeholder for layout
+                if index == vm.fetchedData.count {
+                  Color.clear
                     .onAppear {
-                      print("Reached the end of the list")
-                      // Trigger logic to fetch more data
                       pageSize += 10
                     }
                 }
@@ -98,7 +95,6 @@ struct AllPopularPlaces: View {
           }
         }
       }
-      
     }
     .frame(maxWidth: .infinity)
     .overlay {
