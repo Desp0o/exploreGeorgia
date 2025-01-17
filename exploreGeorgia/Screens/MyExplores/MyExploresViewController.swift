@@ -65,7 +65,7 @@ final class MyExploresViewController: UIViewController {
     super.viewDidLoad()
     
     vm.exploresDelegate = self
-    //    vm.errorDeleage = self
+    vm.errorDeleage = self
     vm.loadingDelegate = self
     
     setupUI()
@@ -108,10 +108,9 @@ extension MyExploresViewController: UITableViewDelegate, UITableViewDataSource {
     cell?.setupCell(with: place)
     
     if indexPath.row == vm.fetchedPlaces.count - 1 {
-            PageSize += 10
-            vm.fetchData(pageSize: PageSize)
-            print("Fetching new data...")
-        }
+      PageSize += 10
+      vm.fetchData(pageSize: PageSize)
+    }
     
     return cell ?? MyExploresCell()
   }
@@ -147,7 +146,7 @@ extension MyExploresViewController: UITableViewDelegate, UITableViewDataSource {
     let place = vm.fetchedPlaces[indexPath.row]
     let swiftUIView = PlaceDetailsView(elementID: place.id ?? "", collectionName: "usersPlaces").navigationBarHidden(true)
     let hostingController = UIHostingController(rootView: swiftUIView)
-
+    
     navigationController?.pushViewController(hostingController, animated: true)
   }
 }
@@ -165,6 +164,13 @@ extension MyExploresViewController: MyExploresLoadingDelegate {
 extension MyExploresViewController: MyExploresDelegate {
   func didDataLoaded() {
     table.reloadData()
+  }
+}
+
+extension MyExploresViewController: MyExploresErrorDelegate {
+  func didErrorOccurred() {
+    let overlay = UIKitCustomAlert()
+    overlay.appear(sender: self, message: vm.errorMessage, messageType: .error)
   }
 }
 
