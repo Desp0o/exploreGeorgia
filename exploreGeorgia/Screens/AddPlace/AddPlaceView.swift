@@ -9,154 +9,133 @@ import SwiftUI
 import _PhotosUI_SwiftUI
 
 struct AddPlaceView: View {
+  @Environment(\.dismiss) var dismiss
   @StateObject private var locationManager = LocationManager()
   @ObservedObject var vm = AddPlaceViewModel()
+  @ObservedObject var alertManager = CustomAlertManager()
+  @ObservedObject private var toastManager = ToastManager()
   @State var isPresented = false
   @Binding var isAppeared: Bool
   @State var currentLocationForUse: Location?
+  @State private var alertBoxMessage = ""
   
   var body: some View {
-    ScrollView {
-      VStack(spacing: 20) {
-        
-        Text("Add Favorite Page")
-          .styledText(.customBlue, 16, .semibold)
-        
-        // Avatar and Upload Button
-        HStack(spacing: 20) {
-          if let image = vm.choosenCover {
-            Image(uiImage: image)
-              .defaultOptions()
+    ZStack(alignment: .top) {
+      if toastManager.isShown {
+        ToastView(
+          message: "Your travel memory has been successfully added!",
+          bgColor: .green
+        )
+      }
+      
+      if vm.isLoading {
+        AddPlaceLoadingComponent()
+      }
+      
+      if alertManager.isShown {
+        CustomAlert(
+          alertManager: alertManager,
+          alertMessage: alertBoxMessage,
+          errorType: .error
+        )
+        .zIndex(999)
+      }
+      
+      ScrollView {
+        HStack {
+          Button {
+            dismiss()
+          } label: {
+            Image(systemName: "xmark.circle.fill")
+              .resizable()
+              .scaledToFill()
+              .foregroundStyle(.customBlue)
               .frame(width: 40, height: 40)
-              .clipShape(RoundedRectangle(cornerRadius: 12))
-          } else {
-            Image("imagePlaceholder")
-              .defaultOptions()
-              .frame(width: 40, height: 40)
-              .clipShape(RoundedRectangle(cornerRadius: 12))
           }
+          .padding(.horizontal, 20)
           
           Spacer()
-          
-          PhotosPicker(selection: $vm.selectedCoverFromPicker) {
-            Text("Upload Cover")
-              .styledText(.customBlue, 16, .semibold)
-              .frame(maxWidth: .infinity)
-              .frame(height: 40)
-              .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                  .stroke(.customBlue, lineWidth: 1)
-              )
-          }
         }
         
-        // Text Inputs
         VStack(spacing: 20) {
-          TextField("Place Title", text: $vm.placeName)
-            .styledTextField()
+          Text("Map Your Adventures")
+            .styledText(.customBlue, 22, .bold)
           
-          TextField("Place Address", text: $vm.placeAdress)
-            .styledTextField()
+          Spacer().frame(height: 10)
           
-          TextField("Price or leave it blank", text: $vm.placePrice)
-            .styledTextField()
-            .keyboardType(.numberPad)
-          
-          VStack(alignment: .leading) {
-            Text("Add Place Description")
-              .styledText(.customBlack, 15)
-            
-            ZStack {
-              Color.customWhite
-              
-              TextEditor(text: $vm.placeDescription)
-                .scrollContentBackground(.hidden)
-                .frame(height: 200)
-                .frame(maxWidth: .infinity, maxHeight: 300)
-                .roundedCorners(12)
-                .overlay(
-                  RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.customBlue, lineWidth: 1)
-                )
-            }
-          }
-        }
-        
-        // Map Button
-        Button {
-          isPresented.toggle()
-        } label: {
-          Text("Add Place on Map")
-            .styledText(.customBlue, 16, .semibold)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.customWhite)
-            .roundedCorners(12)
-        }
-        .customBorderedButton(height: 40, borderColor: .customBlue)
-        
-        // Place Type Picker
-        Picker("Place Type", selection: $vm.selectedPlace) {
-          ForEach(vm.placeType, id: \.self) { type in
-            Text(type.rawValue)
-          }
-        }
-        .pickerStyle(SegmentedPickerStyle())
-        .onAppear {
-          UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customBlue)
-          UISegmentedControl.appearance().setTitleTextAttributes(
-            [.foregroundColor: UIColor.white],
-            for: .selected
+          CoverUploadComponent(
+            choosenCover: vm.choosenCover,
+            selectedCoverFromPicker: $vm.selectedCoverFromPicker
           )
-        }
-        
-        // Album Picker
-        VStack(spacing: 10) {
-          PhotosPicker(selection: $vm.selectedAlbum, maxSelectionCount: 5) {
-            Text("Tap to Upload Photos")
+          
+          VStack(spacing: 20) {
+            TextField("Place Title", text: $vm.placeName)
+              .styledTextField()
+            
+            TextField("Place Address", text: $vm.placeAdress)
+              .styledTextField()
+            
+            TextField("Price or leave it blank", text: $vm.placePrice)
+              .styledTextField()
+              .keyboardType(.numberPad)
+            
+            TextEditorComponent(textForEditor: $vm.placeDescription)
+          }
+          
+          Button {
+            isPresented.toggle()
+          } label: {
+            Text("Add Place on Map")
               .styledText(.customBlue, 16, .semibold)
               .frame(maxWidth: .infinity)
               .frame(height: 40)
-              .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                  .stroke(.customBlue, lineWidth: 1)
-              )
+              .background(.customWhite)
+              .roundedCorners(12)
           }
+          .customBorderedButton(height: 40, borderColor: .customBlue)
           
-          HStack(spacing: 10) {
-            ForEach(Array(vm.choosenAlbum.enumerated()), id: \.offset) { _, image in
-              Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 40, height: 40)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
+          PlaceTypePicker(selectedPlace: $vm.selectedPlace, placeTypes: vm.placeType)
+          
+          AlbumAddComponent(
+            selectedAlbum: $vm.selectedAlbum,
+            choosenAlbum: vm.choosenAlbum
+          )
+          
+          Button {
+            vm.latitude = currentLocationForUse?.coordinate.latitude ?? 0
+            vm.longitude = currentLocationForUse?.coordinate.longitude ?? 0
+            vm.addPlace()
+          } label: {
+            Text("Add Place")
+              .styledText(.buttonPrimary, 18, .bold)
+              .frame(maxWidth: .infinity)
+              .padding()
+              .background(Color.customBlue)
+              .roundedCorners(12)
           }
+          .customStyledButton()
         }
-        .frame(height: 110, alignment: .top)
-        // Add Place Button
-        Button {
-          vm.latitude = currentLocationForUse?.coordinate.latitude ?? 0
-          vm.longitude = currentLocationForUse?.coordinate.longitude ?? 0
-          vm.addPlace()
-        } label: {
-          Text("Add Place")
-            .styledText(.buttonPrimary, 18, .bold)
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background(Color.customBlue)
-            .roundedCorners(12)
-        }
-        .customStyledButton()
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
+        .padding(.bottom, 50)
       }
-      .frame(maxWidth: .infinity)
-      .padding(.horizontal, 20)
-      .padding(.vertical, 50)
+      .scrollBounceBehavior(.basedOnSize)
+      .scrollIndicators(.hidden)
+      .onDisappear {
+        isAppeared.toggle()
+      }
     }
-    .scrollBounceBehavior(.basedOnSize)
-    .scrollIndicators(.hidden)
-    .onDisappear {
-      isAppeared.toggle()
+    .onReceive(vm.$errorMessage) { error in
+      if !error.isEmpty {
+        alertBoxMessage = error
+        alertManager.showAlert()
+      }
+    }
+    .onReceive(vm.$isSuccessfullyAdded) { isSuccessed in
+      if isSuccessed {
+        toastManager.showToast()
+      }
     }
     .sheet(isPresented: $isPresented) {
       if let coordinate = locationManager.lastKnownLocation {

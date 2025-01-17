@@ -84,22 +84,24 @@ struct MapViewReusable: View {
       }
       .ignoresSafeArea()
       
-      VStack {
-        Spacer()
-        Button {
-          isActionSheetOpen.toggle()
-        } label: {
-          Text("Open in maps")
-            .styledText(
-              .buttonPrimary,
-              16,
-              .bold
-            )
-            .frame(maxWidth: .infinity)
-            .frame(height: 50)
-            .background(.customBlue)
-            .roundedCorners(12)
-            .padding(.horizontal, 20)
+      if !isEditable {
+        VStack {
+          Spacer()
+          Button {
+            isActionSheetOpen.toggle()
+          } label: {
+            Text("Open in maps")
+              .styledText(
+                .buttonPrimary,
+                16,
+                .bold
+              )
+              .frame(maxWidth: .infinity)
+              .frame(height: 50)
+              .background(.customBlue)
+              .roundedCorners(12)
+              .padding(.horizontal, 20)
+          }
         }
       }
     }

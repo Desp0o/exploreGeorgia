@@ -54,8 +54,9 @@ struct ExploreView: View {
     .onChange(of: isAppeared) { _ in
       vm.fetchData()
     }
-    .sheet(isPresented: $isPresented) {
+    .fullScreenCover(isPresented: $isPresented) {
       AddPlaceView(isAppeared: $isAppeared)
+        .background(.primaryWhite)
     }
   }
 }

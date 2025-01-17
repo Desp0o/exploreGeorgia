@@ -34,14 +34,17 @@ final class AddPlaceViewModel: ObservableObject {
     }
   }
   @Published var choosenAlbum: [UIImage] = []
-
+  @Published var isLoading = false
+  @Published var errorMessage = ""
+  @Published var isSuccessfullyAdded = false
+  
   init(
     firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol = FirebaseFetchingService(),
     locationManager: LocationManager = LocationManager()
   ) {
-    self.firebasePhotoManager = firebasePhotoManager    
+    self.firebasePhotoManager = firebasePhotoManager
   }
-    
+  
   func addPlace() {
     let userID = Auth.auth().currentUser?.uid
     
@@ -62,43 +65,101 @@ final class AddPlaceViewModel: ObservableObject {
       isFood: selectedPlace == .food ? true : false
     )
     
+    guard choosenCover != nil else {
+      errorMessage = SightseenAddErrors.noCover.rawValue
+      return
+    }
+    
+    guard !placeName.isEmpty else {
+      errorMessage = SightseenAddErrors.noName.rawValue
+      return
+    }
+    
+    guard !placeAdress.isEmpty else {
+      errorMessage = SightseenAddErrors.noAdress.rawValue
+      return
+    }
+    
+    guard !placeDescription.isEmpty else {
+      errorMessage = SightseenAddErrors.noDexcription.rawValue
+      return
+    }
+    
+    guard longitude != 0 || latitude != 0 else {
+      errorMessage = SightseenAddErrors.noMap.rawValue
+      return
+    }
+    
+    guard choosenAlbum.count != 0 else {
+      errorMessage = SightseenAddErrors.noAlbum.rawValue
+      return
+    }
+    
     Task {
+      await MainActor.run {
+        isSuccessfullyAdded = false
+        isLoading = true
+      }
+      
       do {
         try await addSightSeenToFirestore(sightSeen: place)
+        
+        await MainActor.run {
+          isLoading = false
+          isSuccessfullyAdded = true
+        }
       } catch {
-        print(error.localizedDescription)
+        await MainActor.run {
+          isLoading = false
+          isSuccessfullyAdded = false
+        }
+        errorMessage = error.localizedDescription
       }
     }
   }
   
   private func addSightSeenToFirestore(sightSeen: SightSeenModel) async throws {
-      let collectionRef = db.collection("usersPlaces")
-      
-      var sightSeenWithID = sightSeen
-      sightSeenWithID.id = sightSeen.id ?? collectionRef.document().documentID
-      
-      if let image = choosenCover {
-          let placeCover = try await firebasePhotoManager.generateFirebasePhotoURL(
-              image: image,
-              dbName: "covers",
-              Id: collectionRef.document().documentID
-          )
-          sightSeenWithID.cover = placeCover
-      }
-      
-      var albumUrls: [String] = []
-      for (index, image) in choosenAlbum.enumerated() {
-          let albumPhotoURL = try await firebasePhotoManager.generateFirebasePhotoURL(
-              image: image,
-              dbName: "albums",
-              Id: "\(collectionRef.document().documentID)-album-\(index)"
-          )
-          albumUrls.append(albumPhotoURL)
-      }
-      sightSeenWithID.album = albumUrls
-      
-      let data = try Firestore.Encoder().encode(sightSeenWithID)
-      try await collectionRef.document(sightSeenWithID.id!).setData(data)
+    let collectionRef = db.collection("usersPlaces")
+    let usersRef = db.collection("users")
+    
+    var sightSeenWithID = sightSeen
+    sightSeenWithID.id = sightSeen.id ?? collectionRef.document().documentID
+    
+    if let image = choosenCover {
+      let placeCover = try await firebasePhotoManager.generateFirebasePhotoURL(
+        image: image,
+        dbName: "covers",
+        Id: collectionRef.document().documentID
+      )
+      sightSeenWithID.cover = placeCover
+    }
+    
+    var albumUrls: [String] = []
+    for (index, image) in choosenAlbum.enumerated() {
+      let albumPhotoURL = try await firebasePhotoManager.generateFirebasePhotoURL(
+        image: image,
+        dbName: "albums",
+        Id: "\(collectionRef.document().documentID)-album-\(index)"
+      )
+      albumUrls.append(albumPhotoURL)
+    }
+    sightSeenWithID.album = albumUrls
+    
+    let data = try Firestore.Encoder().encode(sightSeenWithID)
+    
+    let batch = db.batch()
+    
+    let sightSeenRef = collectionRef.document(sightSeenWithID.id!)
+    batch.setData(data, forDocument: sightSeenRef)
+    
+    if let currentUserID = Auth.auth().currentUser?.uid {
+      let userRef = usersRef.document(currentUserID)
+      batch.updateData([
+        "explored": FieldValue.arrayUnion([sightSeenWithID.id!])
+      ], forDocument: userRef)
+    }
+    
+    try await batch.commit()
   }
   
   private func addCover(from selection: PhotosPickerItem?) {
