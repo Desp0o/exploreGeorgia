@@ -9,40 +9,38 @@ import Combine
 
 final class ExploreViewModel: ObservableObject {
   private let firebaseManager: FirebaseFetchingServicePorotocol
-  private let userManager: GetCurrentUserProtocol
-  
   @Published var fetchedPlaces: [SightSeenModel] = []
-  private var user: UserModel? = nil
-  
+  @Published var isLoading = true
+  @Published var isFetching = false
+
   init(
-    firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService(),
-    userManager: GetCurrentUserProtocol = UserManager()
+    firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService()
   ) {
     self.firebaseManager = firebaseManager
-    self.userManager = userManager
   }
   
-  func fetchData() {
+  func fetchData(pageSize: Int) {
+    isFetching = true
     Task {
       do {
-        let userData = try await userManager.getCurrentUser()
-        
-        await MainActor.run {
-          user = userData
-        }
-        
         let result = try await firebaseManager.fetchPlaces(
           collectionName: "usersPlaces",
-          pageSize: 10,
+          pageSize: pageSize,
           lastDocument: nil,
-          userBucketList: user?.bucketList ?? [""]
+          userBucketList: [""]
         )
         
         await MainActor.run {
           fetchedPlaces = result.places
+          isLoading = false
+          isFetching = false
         }
       } catch {
         print(error.localizedDescription)
+        await MainActor.run {
+          isLoading = false
+          isFetching = false
+        }
       }
     }
   }

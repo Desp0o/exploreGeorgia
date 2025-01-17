@@ -91,7 +91,7 @@ final class MainViewModel: ObservableObject {
         
         let result = try await firebaseManager.fetchPlaces(
           collectionName: "usersPlaces",
-          pageSize: 10,
+          pageSize: 3,
           lastDocument: nil,
           userBucketList: user?.bucketList ?? [""]
         )
