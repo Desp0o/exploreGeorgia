@@ -178,7 +178,7 @@ extension VocabularyVC: VocabularyFetchDelegate {
 extension VocabularyVC: VocabularyLoadingDelegate {
   func didVocabularyLoaded() {
     if vm.isLoading {
-      showLoading()
+      showLoading(backgroundOpacity: 0)
     } else {
       hideLoading()
     }
