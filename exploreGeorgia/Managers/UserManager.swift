@@ -37,6 +37,11 @@ protocol AvatarUpdateProtocol {
 
 
 final class UserManager: GetCurrentUserProtocol {
+  let firebasePhotoUrlGenerator: FirebasePhotoUrlGeneratorProtocol
+  
+  init(firebasePhotoUrlGenerator: FirebasePhotoUrlGeneratorProtocol = FirebaseFetchingService()) {
+    self.firebasePhotoUrlGenerator = firebasePhotoUrlGenerator
+  }
   
   func getCurrentUser() async throws -> UserModel? {
     let db = Firestore.firestore()
@@ -179,29 +184,7 @@ extension UserManager: DeleteUserWithEmail {
   }
 }
 
-extension UserManager: AvatarUpdateProtocol {
-  func generateAvatarURL(image: UIImage, userId: String) async throws -> String {
-    guard let imageData = image.jpegData(compressionQuality: 0.2) else {
-      throw NSError(domain: "Image Conversion Error", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert image to JPEG data"])
-    }
-    
-    let storageRef = Storage.storage().reference().child("profile_pictures/\(userId).jpg")
-    
-    do {
-      let _ = try await storageRef.putDataAsync(imageData)
-    } catch {
-      throw error
-    }
-    
-    do {
-      let downloadURL = try await storageRef.downloadURL()
-
-      return downloadURL.absoluteString
-    } catch {
-      throw error
-    }
-  }
-  
+extension UserManager: AvatarUpdateProtocol {  
   func updateUserProfileImage(image: UIImage) async throws {
     guard let user = Auth.auth().currentUser else {
       return
@@ -209,7 +192,12 @@ extension UserManager: AvatarUpdateProtocol {
     
     let generatedAvatarURL: String
     do {
-      generatedAvatarURL = try await generateAvatarURL(image: image, userId: user.uid)
+      generatedAvatarURL = try await firebasePhotoUrlGenerator
+        .generateFirebasePhotoURL(
+          image: image,
+          dbName: "profile_pictures",
+          Id: user.uid
+        )
     } catch {
       throw error
     }

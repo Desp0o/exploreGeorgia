@@ -28,9 +28,9 @@ struct CustomAlert: View {
           .styledText(
             .customBlack,
             16,
-            .bold
+            .bold,
+            .center
           )
-          .multilineTextAlignment(.center)
         
         Button {
           alertManager.hideAlert()

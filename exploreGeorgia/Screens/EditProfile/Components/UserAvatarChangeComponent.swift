@@ -20,14 +20,9 @@ struct UserAvatarChangeComponent: View {
           .clipShape(Circle())
           .frame(width: 96, height: 96)
       } else {
-        AsyncImage(url: URL(string: vm.currentAvatar)) { image in
-          image
-            .defaultOptions()
-            .clipShape(Circle())
-        } placeholder: {
-          ProgressView()
-        }
-        .frame(width: 96, height: 96)
+        CachedAsyncImage(url: URL(string: vm.currentAvatar))
+          .clipShape(Circle())
+          .frame(width: 96, height: 96)
       }
       
       PhotosPicker(selection: $vm.selectedAvatarFromPicker) {

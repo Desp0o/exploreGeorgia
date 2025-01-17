@@ -8,49 +8,48 @@
 import SwiftUI
 
 struct SightSeenReusableView: View {
+  @StateObject var bookmarkManager = BookMarkManager()
   @State private var isSaved = false
-  let cover: String
-  let name: String
-  let locationRegion: String
-  let rating: String
-  let price: Int
+  @State var place: SightSeenModel
+  let maxWidth: CGFloat
+  let height: CGFloat
   
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
-      AsyncImage(url: URL(string: cover)) { image in
-        image
-          .defaultOptions()
-          .frame(width: 240, height: 250)
-          .roundedCorners(12)
-          .overlay(alignment: .topTrailing) {
-            Button {
-              isSaved.toggle()
-            } label: {
-              ZStack {
-                Circle()
-                  .fill(.customWhite.opacity(0.7))
-                
-                Image(systemName: isSaved ? "bookmark.fill" : "bookmark")
-                  .renderingMode(.template)
-                  .foregroundStyle(.customBlue)
-              }
+      CachedAsyncImage(url: URL(string: place.cover))
+        .frame(height: height)
+        .frame(maxWidth: maxWidth - 28)
+        .roundedCorners(12)
+        .overlay(alignment: .topTrailing) {
+          Button {
+            place.isBookmarked?.toggle()
+            bookmarkManager
+              .savePlaceInBookmark(
+                placeId: place.id ?? "",
+                isBookmarked: !(place.isBookmarked ?? false)
+              )
+          } label: {
+            ZStack {
+              Circle()
+                .fill(.customWhite.opacity(0.7))
+              
+              Image(systemName: place.isBookmarked ?? false ? "bookmark.fill" : "bookmark")
+                .renderingMode(.template)
+                .foregroundStyle(.customBlue)
             }
-            .offset(x: -10, y: 10)
-            .frame(width: 34, height: 34)
           }
-      } placeholder: {
-        Image("imagePlaceholder")
-          .defaultOptions()
-          .frame(width: 240, height: 250)
-          .roundedCorners(12)
-      }
+          .offset(x: -10, y: 10)
+          .frame(width: 34, height: 34)
+        }
       
       HStack(spacing: 2) {
-        Text(name)
+        Text(place.name)
           .styledText(
             .customBlack,
             18,
-            .semibold
+            .semibold,
+            .leading,
+            linesCount: 2
           )
         
         Spacer()
@@ -61,7 +60,7 @@ struct SightSeenReusableView: View {
           .foregroundStyle(.yellow)
           .frame(width: 12, height: 12)
         
-        Text(rating)
+        Text(place.rating)
           .styledText(
             .customBlack,
             13,
@@ -75,7 +74,7 @@ struct SightSeenReusableView: View {
           .foregroundStyle(.customGray)
           .frame(width: 16, height: 16)
         
-        Text(locationRegion)
+        Text(place.region)
           .styledText(
             .customGray,
             14
@@ -83,7 +82,7 @@ struct SightSeenReusableView: View {
         
         Spacer()
         
-        Text(price == 0 ? "Free" : "₾\(price)")
+        Text(place.price == 0 ? "Free" : "₾\(place.price)")
           .styledText(
             .customVine,
             14,
@@ -92,19 +91,10 @@ struct SightSeenReusableView: View {
       }
     }
     .padding(.all, 14)
-    .frame(maxWidth: 268)
+    .frame(width: maxWidth)
     .background(.customWhite)
     .roundedCorners(12)
     .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
   }
 }
 
-#Preview {
-  SightSeenReusableView(
-    cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdTpiRtSARf284eAa-H61EUwtXktXw-XvILA&s",
-    name: "Tbilisi, Old City",
-    locationRegion: "Tbilisi",
-    rating: "4.7",
-    price: 0
-  )
-}

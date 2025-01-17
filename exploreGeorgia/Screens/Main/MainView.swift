@@ -10,27 +10,35 @@ import FirebaseAuth
 
 struct MainView: View {
   @StateObject var vm = MainViewModel()
-  
-  var body: some View {
-    VStack(spacing: 30) {
-      MainUserComponet(vm: vm)
-        .padding(.leading, 20)
-      
-      MainViewTitleComponent()
-        .padding(.leading, 20)
-      
-      PlacesFromAppComponents(vm: vm)
-     
-      
-      Spacer()
-      
-      
-      
-    }
-    .padding(.top, 10)
-  }
-}
+  @Binding var tabIndex: Int
 
-#Preview {
-  MainView()
+  var body: some View {
+    ScrollView {
+      VStack(spacing: 30) {
+        
+        MainUserComponet(vm: vm)
+          .padding(.leading, 20)
+        
+        MainViewTitleComponent()
+          .padding(.leading, 20)
+        
+        PlacesFromAppComponents(vm: vm)
+        
+        IntrestingFacts(vm: vm)
+          .padding(.horizontal, 20)
+        
+        PlacesFromUserComponent(vm: vm, tabIndex: $tabIndex)
+          .padding(.horizontal, 20)
+
+        Spacer()
+      }
+      .padding(.top, 10)
+      .onAppear {
+        vm.getPopularPlaces()
+        vm.fetchSingleFact()
+        vm.fetchUsersAddedPlaces()
+      }
+    }
+    .scrollIndicators(.hidden)
+  }
 }

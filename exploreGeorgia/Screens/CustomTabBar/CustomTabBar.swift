@@ -25,19 +25,13 @@ struct CustomTabBar: View {
         ZStack {
           switch currentIdenx {
           case 0:
-            MainView()
+            MainView(tabIndex: $currentIdenx)
           case 1:
-            VStack {
-              Text("Explore")
-                .background(.blue)
-            }
+            ExploreView()
           case 2:
             VocabularyViewControllerWrapper()
           case 3:
-            VStack {
-              Text("Messages")
-                .background(.yellow)
-            }
+            Text("hello")
           case 4:
             ProfileView()
           default:

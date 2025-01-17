@@ -11,8 +11,12 @@ import FirebaseFirestore
 import SwiftUI
 
 final class PlaceDetailsViewModel: ObservableObject {
-  private let db = Firestore.firestore()
   @Published var currentPlace: SightSeenModel? = nil
+  @Published var isBookMarked = false
+  @Published var author: UserModel? = nil
+  private let userManager: GetCurrentUserProtocol
+  private let firebaseUserFetcher: FirebaseSingleUserFetchProtocol
+  private let firebaseSinglePlaceFetcher: FirebaseSinglePlaceFetchProtocol
   
   let gridItems = [
     GridItem(.fixed(50), spacing: 20),
@@ -22,34 +26,51 @@ final class PlaceDetailsViewModel: ObservableObject {
     GridItem(.fixed(50), spacing: 20),
   ]
   
-  func fetchSinglePlaceByID(by id: String) {
+  init(
+    userManager: GetCurrentUserProtocol = UserManager(),
+    firebaseUserFetcher: FirebaseSingleUserFetchProtocol = FirebaseFetchingService(),
+    firebaseSinglePlaceFetcher: FirebaseSinglePlaceFetchProtocol = FirebaseFetchingService()
+  ) {
+    self.userManager = userManager
+    self.firebaseUserFetcher = firebaseUserFetcher
+    self.firebaseSinglePlaceFetcher = firebaseSinglePlaceFetcher
+  }
+  
+  func fetchSinglePlaceByID(with id: String, and collection: String) {
     Task {
       do {
-        let data = try await fetchPlace(by: id)
-        print("🚀")
+        let data = try await firebaseSinglePlaceFetcher.fetchPlace(with: id, and: collection)
         
         await MainActor.run {
           currentPlace = data
         }
         
+        await checkIfBookmarked(placeId: id)
+
+        guard let userID = currentPlace?.user else { return }
+        let currentAuthor = try await firebaseUserFetcher.getUser(with: userID)
+        
+        await MainActor.run {
+          author = currentAuthor
+        }
       } catch {
-        print(error.localizedDescription)
+        print("Error fetching place: \(error.localizedDescription)")
       }
     }
   }
-  
-  
-  private func fetchPlace(by id: String) async throws -> SightSeenModel {
-    let documentRef = db.collection("placesFromApp").document(id)
+    
+  private func checkIfBookmarked(placeId: String) async {
     do {
-      let documentSnapshot = try await documentRef.getDocument()
-      guard documentSnapshot.data() != nil else {
-        throw NSError(domain: "fetchPlace", code: 404, userInfo: [NSLocalizedDescriptionKey: "Document not found"])
+      guard let currentUser = try await userManager.getCurrentUser() else {
+        print("No user data available")
+        return
       }
-      return try documentSnapshot.data(as: SightSeenModel.self)
+      
+      await MainActor.run {
+        isBookMarked = currentUser.bucketList.contains(placeId)
+      }
     } catch {
-      throw error
+      print("Error checking bookmark status: \(error.localizedDescription)")
     }
   }
-  
 }

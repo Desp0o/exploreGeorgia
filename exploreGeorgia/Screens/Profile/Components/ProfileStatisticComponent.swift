@@ -13,15 +13,9 @@ struct ProfileStatisticComponent: View {
   
   var body: some View {
     VStack() {
-      AsyncImage(url: URL(string: user?.avatar ?? "")) { image in
-        image
-          .defaultOptions()
-          .clipShape(Circle())
-        
-      } placeholder: {
-        ProgressView()
-      }
-      .frame(width: 96, height: 96)
+      CachedAsyncImage(url: URL(string: user?.avatar ?? ""))
+        .clipShape(Circle())
+        .frame(width: 96, height: 96)
       
       VStack {
         Text(user?.firstName ?? "")
