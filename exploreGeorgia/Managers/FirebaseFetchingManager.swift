@@ -17,10 +17,6 @@ protocol FirebaseFetchingServicePorotocol {
   ) async throws -> (places: [SightSeenModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool)
 }
 
-protocol FirebaseSinglePlaceFetchProtocol {
-  func fetchPlace(with id: String, and collection: String) async throws -> SightSeenModel
-}
-
 protocol FirebaseSingleElementFetching {
   func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot?
 }
@@ -31,6 +27,10 @@ protocol FirebaseSingleUserFetchProtocol {
 
 protocol FirebasePhotoUrlGeneratorProtocol {
   func generateFirebasePhotoURL(image: UIImage, dbName: String, Id: String) async throws -> String
+}
+
+protocol FirebaseSinglePlaceGenericProtocol {
+  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: String) async throws -> T
 }
 
 
@@ -69,22 +69,6 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     
     return (places: newPlaces, lastDocument: documentsToProcess.last, hasMoreData: hasMoreData)
   }  }
-
-extension FirebaseFetchingService: FirebaseSinglePlaceFetchProtocol {
-  func fetchPlace(with id: String, and collection: String) async throws -> SightSeenModel {
-    let documentRef = db.collection(collection).document(id)
-    
-    do {
-      let documentSnapshot = try await documentRef.getDocument()
-      guard documentSnapshot.exists else {
-        throw NSError(domain: "fetchPlace", code: 404, userInfo: [NSLocalizedDescriptionKey: "Document not found"])
-      }
-      return try documentSnapshot.data(as: SightSeenModel.self)
-    } catch {
-      throw error
-    }
-  }
-}
 
 extension FirebaseFetchingService: FirebaseSingleElementFetching {
   func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot? {
@@ -152,6 +136,22 @@ extension FirebaseFetchingService: FirebasePhotoUrlGeneratorProtocol {
       let downloadURL = try await storageRef.downloadURL()
       
       return downloadURL.absoluteString
+    } catch {
+      throw error
+    }
+  }
+}
+
+extension FirebaseFetchingService: FirebaseSinglePlaceGenericProtocol {
+  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: String) async throws -> T {
+    let documentRef = db.collection(collection).document(id)
+    
+    do {
+      let documentSnapshot = try await documentRef.getDocument()
+      guard documentSnapshot.exists else {
+        throw NSError(domain: "fetchPlace", code: 404, userInfo: [NSLocalizedDescriptionKey: "Document not found"])
+      }
+      return try documentSnapshot.data(as: T.self)
     } catch {
       throw error
     }

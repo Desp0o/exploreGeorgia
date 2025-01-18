@@ -37,7 +37,7 @@ struct YourApp: App {
       
       if vm.isUserAuthenticated {
         NavigationStack {
-          ToutView()
+          TourView()
             .preferredColorScheme(isDarkTheme ? .dark : .light)
             .ignoresSafeArea(edges: .all)
         }
