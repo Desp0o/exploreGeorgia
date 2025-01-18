@@ -29,7 +29,7 @@ struct AllBookmarkView: View {
           } label: {
             ZStack {
               Circle()
-                .fill(.customWhite.opacity(0.5))
+                .fill(.customBlue)
                 .frame(width: 40, height: 40)
               
               Image("backArrow")

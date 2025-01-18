@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlaceDetailsNavigationBar: View {
-  @Environment(\.dismiss) var dismiss
+  @Environment(\.presentationMode) var presentationMode
   @ObservedObject var bookmarkManager = BookMarkManager()
   @Binding var isBookMarked: Bool
   let placeID: String
@@ -16,7 +16,7 @@ struct PlaceDetailsNavigationBar: View {
   var body: some View {
     HStack {
       Button {
-        dismiss()
+        presentationMode.wrappedValue.dismiss()
       } label: {
         ZStack {
           Circle()
