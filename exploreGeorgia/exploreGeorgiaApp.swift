@@ -37,7 +37,7 @@ struct YourApp: App {
       
       if vm.isUserAuthenticated {
         NavigationStack {
-          CustomTabBar()
+          ToutView()
             .preferredColorScheme(isDarkTheme ? .dark : .light)
             .ignoresSafeArea(edges: .all)
         }
