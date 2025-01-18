@@ -6,6 +6,7 @@
 //
 
 import Combine
+import SwiftUI
 
 final class TourViewModel: ObservableObject {
   private let firebaseManager: FirebaseSinglePlaceGenericProtocol
@@ -18,6 +19,20 @@ final class TourViewModel: ObservableObject {
     TourStatistic(icon: "clock", title: "Duration", titleValie: ""),
     TourStatistic(icon: "routing", title: "Distance", titleValie: ""),
     TourStatistic(icon: "ranking", title: "Rating", titleValie: ""),
+  ]
+  let GridColumns = [
+    GridItem(),
+    GridItem(),
+    GridItem(),
+    GridItem(),
+    GridItem(),
+    GridItem(),
+    GridItem(),
+    GridItem(),
+    GridItem(),
+    GridItem(),
+    GridItem(),
+    GridItem()
   ]
   
   init(

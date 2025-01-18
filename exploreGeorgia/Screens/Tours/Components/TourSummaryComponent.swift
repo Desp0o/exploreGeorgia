@@ -19,7 +19,7 @@ struct TourSummaryComponent: View {
         Spacer()
       }
       
-      HStack(spacing: 30) {
+      HStack(spacing: 25) {
         ForEach(vm.tourDetailArray.indices, id: \.self) { index in
           let element = vm.tourDetailArray[index]
           
