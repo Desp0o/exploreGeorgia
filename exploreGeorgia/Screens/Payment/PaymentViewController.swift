@@ -55,7 +55,9 @@ final class PaymentViewController: UIViewController {
     table.backgroundColor = .clear
     table.register(CreditCardCell.self, forCellReuseIdentifier: "CreditCardCell")
     table.showsVerticalScrollIndicator = false
-    
+    table.alwaysBounceVertical = false
+    table.backgroundColor = .customVine
+
     return table
   }()
   
@@ -63,7 +65,7 @@ final class PaymentViewController: UIViewController {
     let button = UIButton()
     button.createCustomButton(
       title: "Add payment",
-      backgroundColor: .customBlue
+      titleColor: .customBlue
     )
     button.addTapAnimation()
     button.addAction(UIAction(handler: {[weak self] _ in
@@ -113,12 +115,11 @@ final class PaymentViewController: UIViewController {
       table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
       table.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 50),
       table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-      table.bottomAnchor.constraint(equalTo: addPaymentButton.topAnchor, constant: -10),
-
-      addPaymentButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-      addPaymentButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-      addPaymentButton.heightAnchor.constraint(equalToConstant: 42),
-      addPaymentButton.widthAnchor.constraint(equalToConstant: 140)
+      table.heightAnchor.constraint(lessThanOrEqualToConstant: 400), // Maximum height
+      table.heightAnchor.constraint(greaterThanOrEqualTo: table.contentLayoutGuide.heightAnchor),
+      
+      addPaymentButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+      addPaymentButton.topAnchor.constraint(equalTo: table.bottomAnchor, constant: 20)
     ])
   }
   
@@ -153,6 +154,23 @@ extension PaymentViewController: UITableViewDataSource, UITableViewDelegate{
     cell?.selectionStyle = .none
     
     return cell ?? CreditCardCell()
+  }
+  
+  func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completion) in
+      let currentCardId = self?.vm.creditCards[indexPath.row].id ?? ""
+      self?.vm.deleteCreditCard(with: currentCardId)
+      self?.vm.creditCards.remove(at: indexPath.row)
+      tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .fade)
+      
+      completion(true)
+    }
+    
+    deleteAction.backgroundColor = .systemRed
+    
+    let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+    configuration.performsFirstActionWithFullSwipe = true
+    return configuration
   }
 }
 

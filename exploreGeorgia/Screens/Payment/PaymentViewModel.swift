@@ -181,7 +181,6 @@ final class PaymentViewModel {
   
   
   func fetchAllUserPayments() {
-    print("❌")
     Task {
       do {
         let user = Auth.auth().currentUser?.uid
@@ -196,6 +195,37 @@ final class PaymentViewModel {
       } catch {
         print(error.localizedDescription)
       }
+    }
+  }
+  
+  func deleteCreditCard(with id: String) {
+    Task {
+      do {
+        try await removeElementFromPaymentsAndUsers(paymentId: id)
+      } catch {
+        print(error)
+      }
+    }
+  }
+  
+  func removeElementFromPaymentsAndUsers(paymentId: String) async throws{
+    do {
+      try await db.collection("payments").document(paymentId).delete()
+      print("Deleted payment document with ID \(paymentId).")
+      
+      let usersRef = db.collection("users")
+      
+      let snapshot = try await usersRef.whereField("creditCards", arrayContains: paymentId).getDocuments()
+      
+      for document in snapshot.documents {
+        let userId = document.documentID
+        try await usersRef.document(userId).updateData([
+          "creditCards": FieldValue.arrayRemove([paymentId])
+        ])
+        print("Removed payment ID \(paymentId) from user \(userId)'s creditCards.")
+      }
+    } catch {
+      throw error
     }
   }
 }
