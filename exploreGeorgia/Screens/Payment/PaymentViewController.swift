@@ -70,6 +70,7 @@ final class PaymentViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    
     setupUI()
   }
   
@@ -112,4 +113,3 @@ final class PaymentViewController: UIViewController {
 //  PaymentViewWrapper()
 //    .preferredColorScheme(.light)
 //}
-

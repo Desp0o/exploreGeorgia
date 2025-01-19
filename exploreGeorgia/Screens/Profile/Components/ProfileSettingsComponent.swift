@@ -31,14 +31,16 @@ struct ProfileSettingsComponent: View {
         }
         
         //payment
-        NavigationLink(destination: PaymentViewWrapper().navigationBarHidden(true)) {
+        NavigationLink(destination: PaymentViewWrapper()
+          .ignoresSafeArea()
+          .navigationBarHidden(true)) {
           HStack(spacing: 14) {
             Image(systemName: "creditcard")
               .defaultOptions()
               .frame(width: 24, height: 16)
               .tint(.customGray)
             
-            Text("Bookmarked")
+            Text("Payment methods")
               .styledText(.customBlack, 16, .semibold)
             
             Spacer()

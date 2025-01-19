@@ -75,6 +75,19 @@ final class CardInputsViewController: UIViewController {
       backgroundColor: .customBlue
     )
     button.addTapAnimation()
+    
+    button.addAction(
+      UIAction(
+        handler: {[weak self] _ in
+          self?.vm.sendCreditCardToDdataBase(
+            cardholder: self?.cardPlaceholder.value() ?? "",
+            cardNumber: self?.cardNumberTextField.value() ?? "" ,
+            cardExpireDate: self?.expiryDateTextField.value() ?? ""
+          )
+        }),
+      for: .touchUpInside
+    )
+    
     return button
   }()
   
@@ -89,6 +102,9 @@ final class CardInputsViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    vm.errorDelegate = self
+    vm.loadingDelegate = self
     
     setupUI()
   }
@@ -155,5 +171,23 @@ extension CardInputsViewController: UITextFieldDelegate {
     }
     
     return false
+  }
+}
+
+extension CardInputsViewController: PaymentErrorDelegate {
+  func didErrorOccur() {
+    let overlay = UIKitCustomAlert()
+    overlay.appear(sender: self, message: vm.errorMessage, messageType: .error)
+  }
+}
+
+extension CardInputsViewController: PaymentLoadingDelegate {
+  func didProcessFinished() {
+    if vm.isLoading {
+      showLoading(backgroundOpacity: 0.1)
+    } else {
+      hideLoading()
+      dismiss(animated: true, completion: nil)
+    }
   }
 }
