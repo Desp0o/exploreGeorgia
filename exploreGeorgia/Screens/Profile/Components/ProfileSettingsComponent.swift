@@ -117,10 +117,7 @@ struct ProfileSettingsComponent: View {
 }
 
 
-struct PaymentViewWrapper: UIViewControllerRepresentable {
-  func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
-  
-  func makeUIViewController(context: Context) -> PaymentViewController {
-    return PaymentViewController()
-  }
-}
+
+
+
+
