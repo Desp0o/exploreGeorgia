@@ -87,8 +87,9 @@ final class PaymentViewModel {
   }
   
   func attachCardToUser(card: CreditCardModel) async throws {
+    let db = Firestore.firestore()
+    
     do {
-      
       let cardData: [String: Any] = [
         "userId": card.userId,
         "number": card.number,
@@ -96,16 +97,26 @@ final class PaymentViewModel {
         "holder": card.holder
       ]
       
-      
-      db.collection("payments").addDocument(data: cardData) { error in
+      var documentRef: DocumentReference? = nil
+      documentRef = db.collection("payments").addDocument(data: cardData) { error in
         if let error = error {
           print("Error saving credit card: \(error)")
-        } else {
-          print("Credit card successfully saved")
+        } else if let documentRef = documentRef {
+          print("Credit card successfully saved with ID: \(documentRef.documentID)")
+          
+          let userRef = db.collection("users").document(card.userId)
+          userRef.updateData([
+            "creditCards": FieldValue.arrayUnion([documentRef.documentID])
+          ]) { error in
+            if let error = error {
+              print("Error updating user's creditCards array: \(error)")
+            } else {
+              print("Credit card ID added to user's creditCards array")
+            }
+          }
         }
       }
     }
-    
   }
   
   func sendCreditCardToDdataBase(cardholder: String, cardNumber: String, cardExpireDate: String) {
@@ -175,7 +186,7 @@ final class PaymentViewModel {
         let user = Auth.auth().currentUser?.uid
         
         let data = try await paymentsManager.fetchPayments(userId: user ?? "", pageSize: 10, lastDocument: nil)
-        print(data)
+        print(data, "⚠️")
       } catch {
         print(error.localizedDescription)
       }
