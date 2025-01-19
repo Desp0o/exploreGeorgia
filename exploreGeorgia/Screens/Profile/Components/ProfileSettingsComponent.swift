@@ -30,6 +30,24 @@ struct ProfileSettingsComponent: View {
           .frame(height: 56)
         }
         
+        //payment
+        NavigationLink(destination: PaymentViewWrapper().navigationBarHidden(true)) {
+          HStack(spacing: 14) {
+            Image(systemName: "creditcard")
+              .defaultOptions()
+              .frame(width: 24, height: 16)
+              .tint(.customGray)
+            
+            Text("Bookmarked")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
         //bookmarked
         NavigationLink(destination: AllBookmarkView().navigationBarHidden(true)) {
           HStack(spacing: 14) {
@@ -91,9 +109,18 @@ struct ProfileSettingsComponent: View {
         
         
       }
-      .frame(height: CGFloat(4) * 56)
+      .frame(height: CGFloat(5) * 56)
       .padding(.leading, 16)
       .padding(.trailing, 10)
     }
+  }
+}
+
+
+struct PaymentViewWrapper: UIViewControllerRepresentable {
+  func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
+  
+  func makeUIViewController(context: Context) -> PaymentViewController {
+    return PaymentViewController()
   }
 }
