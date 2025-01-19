@@ -21,11 +21,12 @@ struct UserModel: Codable, Identifiable, Hashable {
   let achievement: [String]
   let createdAt: Timestamp?
   var dateField: String?
-  var PaymentMethods: [CreditCardModel]?
+  var payments: [CreditCardModel]?
 }
 
 struct CreditCardModel: Codable, Identifiable, Hashable {
   var id: String?
+  var userId: String
   var number: String
   var expDate: String
   var holder: String

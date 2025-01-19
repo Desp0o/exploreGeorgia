@@ -9,6 +9,10 @@ import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 
+protocol PaymentDataDelegate: AnyObject {
+  func didDataFetched()
+}
+
 protocol PaymentErrorDelegate: AnyObject {
   func didErrorOccur()
 }
@@ -18,12 +22,26 @@ protocol PaymentLoadingDelegate: AnyObject {
 }
 
 final class PaymentViewModel {
+  weak var dataDelegate: PaymentDataDelegate?
   weak var errorDelegate: PaymentErrorDelegate?
   weak var loadingDelegate: PaymentLoadingDelegate?
+  private let paymentsManager: FirebasePayemntsProtocol
+  private let userManager: GetCurrentUserProtocol
   private let db = Firestore.firestore()
+  var creditCards: [CreditCardModel] = []
   var isLoading = false
   var errorMessage = ""
-
+  
+  init(
+    userManager: GetCurrentUserProtocol = UserManager(),
+    paymentsManager: FirebasePayemntsProtocol = FirebaseFetchingService()
+  ) {
+    self.userManager = userManager
+    self.paymentsManager = paymentsManager
+    
+    fetchAllUserPayments()
+  }
+  
   func formatCardPlaceholder(_ input: String) -> String {
     let cleanedString = input.filter { $0.isLetter || $0.isWhitespace }
     return cleanedString
@@ -68,27 +86,26 @@ final class PaymentViewModel {
     return formattedString
   }
   
-  func attachCardToUser(payment: CreditCardModel) async throws {
-    guard let currentUser = Auth.auth().currentUser else {
-      print("No user is logged in.")
-      return
+  func attachCardToUser(card: CreditCardModel) async throws {
+    do {
+      
+      let cardData: [String: Any] = [
+        "userId": card.userId,
+        "number": card.number,
+        "expDate": card.expDate,
+        "holder": card.holder
+      ]
+      
+      
+      db.collection("payments").addDocument(data: cardData) { error in
+        if let error = error {
+          print("Error saving credit card: \(error)")
+        } else {
+          print("Credit card successfully saved")
+        }
+      }
     }
     
-    do {
-      let encoder = JSONEncoder()
-      let paymentData = try encoder.encode(payment)
-      
-      if let paymentDictionary = try? JSONSerialization.jsonObject(with: paymentData, options: []) as? [String: Any] {
-        try await db.collection("users").document(currentUser.uid).updateData([
-          "payments": FieldValue.arrayUnion([paymentDictionary])
-        ])
-        print("Successfully updated payments field for user \(currentUser.uid)")
-      } else {
-        print("Failed to convert payment data to dictionary.")
-      }
-    } catch {
-      throw error
-    }
   }
   
   func sendCreditCardToDdataBase(cardholder: String, cardNumber: String, cardExpireDate: String) {
@@ -130,8 +147,10 @@ final class PaymentViewModel {
     
     Task {
       do {
-        let payment = CreditCardModel(number: cardNumber, expDate: cardExpireDate, holder: cardholder)
-        try await attachCardToUser(payment: payment)
+        let userID = Auth.auth().currentUser?.uid
+        
+        let payment = CreditCardModel(userId: userID ?? "", number: cardNumber, expDate: cardExpireDate, holder: cardholder)
+        try await attachCardToUser(card: payment)
         
         await MainActor.run {
           isLoading = false
@@ -145,6 +164,20 @@ final class PaymentViewModel {
           errorMessage = error.localizedDescription
           errorDelegate?.didErrorOccur()
         }
+      }
+    }
+  }
+  
+  
+  func fetchAllUserPayments() {
+    Task {
+      do {
+        let user = Auth.auth().currentUser?.uid
+        
+        let data = try await paymentsManager.fetchPayments(userId: user ?? "", pageSize: 10, lastDocument: nil)
+        print(data)
+      } catch {
+        print(error.localizedDescription)
       }
     }
   }

@@ -109,6 +109,12 @@ final class PaymentViewController: UIViewController {
   }
 }
 
+extension PaymentViewController: PaymentDataDelegate {
+  func didDataFetched() {
+    print(vm.creditCards)
+  }
+}
+
 //#Preview {
 //  PaymentViewWrapper()
 //    .preferredColorScheme(.light)
