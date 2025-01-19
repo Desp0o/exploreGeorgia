@@ -16,7 +16,7 @@ final class PlaceDetailsViewModel: ObservableObject {
   @Published var author: UserModel? = nil
   private let userManager: GetCurrentUserProtocol
   private let firebaseUserFetcher: FirebaseSingleUserFetchProtocol
-  private let firebaseSinglePlaceFetcher: FirebaseSinglePlaceFetchProtocol
+  private let firebaseSinglePlaceFetcher: FirebaseSinglePlaceGenericProtocol
   
   let gridItems = [
     GridItem(.fixed(50), spacing: 20),
@@ -29,7 +29,7 @@ final class PlaceDetailsViewModel: ObservableObject {
   init(
     userManager: GetCurrentUserProtocol = UserManager(),
     firebaseUserFetcher: FirebaseSingleUserFetchProtocol = FirebaseFetchingService(),
-    firebaseSinglePlaceFetcher: FirebaseSinglePlaceFetchProtocol = FirebaseFetchingService()
+    firebaseSinglePlaceFetcher: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService()
   ) {
     self.userManager = userManager
     self.firebaseUserFetcher = firebaseUserFetcher
@@ -39,7 +39,7 @@ final class PlaceDetailsViewModel: ObservableObject {
   func fetchSinglePlaceByID(with id: String, and collection: String) {
     Task {
       do {
-        let data = try await firebaseSinglePlaceFetcher.fetchPlace(with: id, and: collection)
+        let data: SightSeenModel = try await firebaseSinglePlaceFetcher.fetchSinglePlaceGeneric(with: id, and: collection)
         
         await MainActor.run {
           currentPlace = data

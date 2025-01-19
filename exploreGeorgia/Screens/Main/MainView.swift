@@ -40,5 +40,6 @@ struct MainView: View {
       }
     }
     .scrollIndicators(.hidden)
+    .background(.primaryWhite)
   }
 }

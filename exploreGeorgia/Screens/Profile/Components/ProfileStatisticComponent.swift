@@ -73,8 +73,3 @@ struct ProfileStatisticComponent: View {
     }
   }
 }
-
-#Preview {
-  let user = UserModel(avatar: "", firstName: "", lastName: "", email: "", gender: "Male", points: 0, explored: [""], bucketList: [""], achievement: [""], createdAt: nil)
-  ProfileStatisticComponent(user: user, statisticArray: [])
-}

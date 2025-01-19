@@ -48,7 +48,8 @@ final class MyExploresViewController: UIViewController {
     table.backgroundColor = .clear
     table.register(MyExploresCell.self, forCellReuseIdentifier: "MyExploresCell")
     table.showsVerticalScrollIndicator = false
-    
+    table.alwaysBounceVertical = false
+
     return table
   }()
   

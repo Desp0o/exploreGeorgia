@@ -30,6 +30,26 @@ struct ProfileSettingsComponent: View {
           .frame(height: 56)
         }
         
+        //payment
+        NavigationLink(destination: PaymentViewWrapper()
+          .ignoresSafeArea()
+          .navigationBarHidden(true)) {
+          HStack(spacing: 14) {
+            Image(systemName: "creditcard")
+              .defaultOptions()
+              .frame(width: 24, height: 16)
+              .tint(.customGray)
+            
+            Text("Payment methods")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
         //bookmarked
         NavigationLink(destination: AllBookmarkView().navigationBarHidden(true)) {
           HStack(spacing: 14) {
@@ -91,9 +111,15 @@ struct ProfileSettingsComponent: View {
         
         
       }
-      .frame(height: CGFloat(4) * 56)
+      .frame(height: CGFloat(5) * 56)
       .padding(.leading, 16)
       .padding(.trailing, 10)
     }
   }
 }
+
+
+
+
+
+

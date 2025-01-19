@@ -10,8 +10,11 @@ import UIKit
 final class CustomTextField: UIView, UITextFieldDelegate {
   var placeholderName: String
   private let isPassword: Bool
+  private let keyboardType: UIKeyboardType?
   private weak var parentView: UIView?
-  
+  weak var delegate: UITextFieldDelegate?
+  private let inputHeight: CGFloat?
+
   private lazy var inputField: UITextField = {
     let field = UITextField()
     field.translatesAutoresizingMaskIntoConstraints = false
@@ -24,7 +27,8 @@ final class CustomTextField: UIView, UITextFieldDelegate {
     field.layer.borderWidth = 1
     field.layer.borderColor = UIColor.customBlue.cgColor
     field.backgroundColor = .customWhite
-    field.delegate = self
+    field.delegate = delegate
+    field.keyboardType = keyboardType ?? .default
     
     let leftContainer = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 50))
     field.leftView = leftContainer
@@ -53,17 +57,24 @@ final class CustomTextField: UIView, UITextFieldDelegate {
   init(
     placeholderName: String,
     isPassword: Bool,
-    parentView: UIView? = nil
+    parentView: UIView? = nil,
+    keyboardType: UIKeyboardType = .default,
+    delegate: UITextFieldDelegate? = nil,
+    inputHeight: CGFloat = 50
   ) {
     self.placeholderName = placeholderName
     self.isPassword = isPassword
     self.parentView = parentView
+    self.keyboardType = keyboardType
+    self.delegate = delegate
+    self.inputHeight = inputHeight
     super.init(frame: .zero)
     
     self.translatesAutoresizingMaskIntoConstraints = false
     addSubview(inputField)
     setupUI()
     setupKeyboardNotifications()
+    inputField.delegate = delegate ?? self
   }
   
   required init?(coder: NSCoder) {
@@ -76,7 +87,7 @@ final class CustomTextField: UIView, UITextFieldDelegate {
       inputField.leadingAnchor.constraint(equalTo: leadingAnchor),
       inputField.trailingAnchor.constraint(equalTo: trailingAnchor),
       inputField.bottomAnchor.constraint(equalTo: bottomAnchor),
-      inputField.heightAnchor.constraint(equalToConstant: 50)
+      inputField.heightAnchor.constraint(equalToConstant: inputHeight ?? 50)
     ])
   }
   

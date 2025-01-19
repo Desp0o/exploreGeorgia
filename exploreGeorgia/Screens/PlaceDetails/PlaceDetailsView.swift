@@ -56,8 +56,6 @@ struct PlaceDetailsView: View {
       }
     }
     .background(.customWhite)
-    .padding(.bottom, 30)
-    .background(.customWhite)
     .ignoresSafeArea(.all)
     .overlay {
       if isLightBoxVisible {
