@@ -181,12 +181,18 @@ final class PaymentViewModel {
   
   
   func fetchAllUserPayments() {
+    print("❌")
     Task {
       do {
         let user = Auth.auth().currentUser?.uid
         
         let data = try await paymentsManager.fetchPayments(userId: user ?? "", pageSize: 10, lastDocument: nil)
-        print(data, "⚠️")
+        
+        await MainActor.run {
+          creditCards = data.payments
+          dataDelegate?.didDataFetched()
+        }
+        
       } catch {
         print(error.localizedDescription)
       }

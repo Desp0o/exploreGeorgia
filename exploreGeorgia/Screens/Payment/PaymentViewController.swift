@@ -45,6 +45,20 @@ final class PaymentViewController: UIViewController {
     return label
   }()
   
+  private lazy var table: UITableView = {
+    let table = UITableView()
+    table.translatesAutoresizingMaskIntoConstraints = false
+    table.dataSource = self
+    table.delegate = self
+    table.separatorStyle = .singleLine
+    table.separatorColor = .customBlue
+    table.backgroundColor = .clear
+    table.register(CreditCardCell.self, forCellReuseIdentifier: "CreditCardCell")
+    table.showsVerticalScrollIndicator = false
+    
+    return table
+  }()
+  
   private lazy var addPaymentButton: UIButton = {
     let button = UIButton()
     button.createCustomButton(
@@ -58,7 +72,9 @@ final class PaymentViewController: UIViewController {
     return button
   }()
   
-  init(vm: PaymentViewModel = PaymentViewModel()) {
+  init(
+    vm: PaymentViewModel = PaymentViewModel()
+  ) {
     self.vm = vm
     super.init(nibName: nil, bundle: nil)
   }
@@ -69,16 +85,19 @@ final class PaymentViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+        
+    vm.dataDelegate = self
     
     setupUI()
   }
+  
   
   private func setupUI() {
     view.backgroundColor = .primaryWhite
     view.addSubview(backButton)
     view.addSubview(screenTitle)
     view.addSubview(addPaymentButton)
+    view.addSubview(table)
     
     setupConstraints()
   }
@@ -91,6 +110,11 @@ final class PaymentViewController: UIViewController {
       screenTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
       screenTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       
+      table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+      table.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 50),
+      table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+      table.bottomAnchor.constraint(equalTo: addPaymentButton.topAnchor, constant: -10),
+
       addPaymentButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       addPaymentButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
       addPaymentButton.heightAnchor.constraint(equalToConstant: 42),
@@ -102,6 +126,7 @@ final class PaymentViewController: UIViewController {
     let view  = CardInputsViewController()
     view.modalPresentationStyle = .pageSheet
     view.modalTransitionStyle = .coverVertical
+    view.delegate = self
     present(view, animated: true, completion: nil)
     if let sheet = view.sheetPresentationController {
       sheet.detents = [.medium(), .large()]
@@ -111,7 +136,30 @@ final class PaymentViewController: UIViewController {
 
 extension PaymentViewController: PaymentDataDelegate {
   func didDataFetched() {
-    print(vm.creditCards)
+    table.reloadData()
+  }
+}
+
+extension PaymentViewController: UITableViewDataSource, UITableViewDelegate{
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    vm.creditCards.count
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: "CreditCardCell", for: indexPath) as? CreditCardCell
+    let currentCard = vm.creditCards[indexPath.row]
+
+    cell?.setupCell(with: currentCard)
+    cell?.selectionStyle = .none
+    
+    return cell ?? CreditCardCell()
+  }
+}
+
+extension PaymentViewController: CardAddedDelegate {
+  func cardAddedSuccessfully() {
+    vm.fetchAllUserPayments()
+    table.reloadData()
   }
 }
 

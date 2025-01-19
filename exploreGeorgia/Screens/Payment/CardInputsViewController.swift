@@ -7,8 +7,13 @@
 
 import UIKit
 
+protocol CardAddedDelegate: AnyObject {
+  func cardAddedSuccessfully()
+}
+
 final class CardInputsViewController: UIViewController {
   private let vm: PaymentViewModel
+  weak var delegate: CardAddedDelegate?
   
   private lazy var closeButton: UIButton = {
     let button = UIButton()
@@ -84,6 +89,7 @@ final class CardInputsViewController: UIViewController {
             cardNumber: self?.cardNumberTextField.value() ?? "" ,
             cardExpireDate: self?.expiryDateTextField.value() ?? ""
           )
+          
         }),
       for: .touchUpInside
     )
@@ -187,7 +193,9 @@ extension CardInputsViewController: PaymentLoadingDelegate {
       showLoading(backgroundOpacity: 0.1)
     } else {
       hideLoading()
+      delegate?.cardAddedSuccessfully()
       dismiss(animated: true, completion: nil)
     }
   }
 }
+
