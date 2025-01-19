@@ -36,17 +36,15 @@ struct YourApp: App {
     WindowGroup {
       
       if vm.isUserAuthenticated {
-        NavigationStack {
-          PaymentViewWrapper()
+          CustomTabBar()
             .preferredColorScheme(isDarkTheme ? .dark : .light)
             .ignoresSafeArea(edges: .all)
-        }
+        
       } else {
-        NavigationStack {
           LoginViewControllerWrapper()
             .preferredColorScheme(isDarkTheme ? .dark : .light)
             .ignoresSafeArea(edges: .all)
-        }
+        
       }
     }
   }
