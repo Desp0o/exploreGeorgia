@@ -73,6 +73,7 @@ struct CustomTabBar: View {
           Spacer()
         }
       }
+      .padding(.bottom, 10)
       .padding(.horizontal, 20)
       .frame(maxWidth: .infinity)
       .frame(height: 70)
@@ -87,7 +88,6 @@ struct CustomTabBar: View {
       )
       .shadow(color: .black.opacity(0.25), radius: 5, x: 0, y: -2)
     }
-    .padding(.bottom, 10)
     .ignoresSafeArea(.container, edges: .bottom)
     .background(.primaryWhite)
     .toolbar(.hidden, for: .navigationBar)
