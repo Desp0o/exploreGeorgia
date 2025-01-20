@@ -21,10 +21,6 @@ protocol FirebaseSingleElementFetching {
   func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot?
 }
 
-protocol FirebaseSingleUserFetchProtocol {
-  func getUser(with userID: String) async throws -> UserModel?
-}
-
 protocol FirebasePhotoUrlGeneratorProtocol {
   func generateFirebasePhotoURL(image: UIImage, dbName: String, Id: String) async throws -> String
 }
@@ -93,40 +89,6 @@ extension FirebaseFetchingService: FirebaseSingleElementFetching {
     let snapshot = try await query.getDocuments()
     
     return snapshot.documents[randomIndex]
-  }
-}
-
-extension FirebaseFetchingService: FirebaseSingleUserFetchProtocol {
-  func getUser(with userID: String) async throws -> UserModel? {
-    let document = try await db.collection("users").document(userID).getDocument()
-    
-    if document.exists, let data = document.data() {
-      let avatar = data["photoURL"] as? String ?? ""
-      let firstName = data["firstName"] as? String ?? ""
-      let lastName = data["lastName"] as? String ?? ""
-      let email = data["email"] as? String ?? ""
-      let gender = data["gender"] as? String ?? ""
-      let points = data["points"] as? Int ?? 0
-      let explored = data["explored"] as? [String] ?? []
-      let bucketList = data["bucketList"] as? [String] ?? []
-      let achievement = data["achievement"] as? [String] ?? []
-      let createdAt = data["createdAt"] as? Timestamp ?? Timestamp()
-      
-      return UserModel(
-        avatar: avatar,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        gender: gender,
-        points: points,
-        explored: explored,
-        bucketList: bucketList,
-        achievement: achievement,
-        createdAt: createdAt
-      )
-    } else {
-      throw FetchedUserErrors.userDoesntExist(message: "User document does not exist.")
-    }
   }
 }
 

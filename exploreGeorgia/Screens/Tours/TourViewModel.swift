@@ -5,6 +5,7 @@
 //  Created by Despo on 18.01.25.
 //
 
+import FirebaseAuth
 import Combine
 import SwiftUI
 
@@ -50,8 +51,11 @@ final class TourViewModel: ObservableObject {
   func fetchSingleTour(with placeId: String, and collection: String) {
     Task {
       do {
+        let userID = Auth.auth().currentUser?.uid
+
         let data: TourModel = try await firebaseManager.fetchSinglePlaceGeneric(with: placeId, and: collection)
-        let user = try await userManager.getCurrentUser()
+        
+        let user = try await userManager.getFirebaseUser(with: userID ?? "")
         
         if let user {
           let checkResult = try await bookmarkManager.checkIfBookmarked(placeId: data.id, currentUser: user)
