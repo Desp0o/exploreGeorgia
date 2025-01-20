@@ -36,7 +36,7 @@ struct YourApp: App {
     WindowGroup {
       
       if vm.isUserAuthenticated {
-          CustomTabBar()
+        SingleTourFeedView()
             .preferredColorScheme(isDarkTheme ? .dark : .light)
             .ignoresSafeArea(edges: .all)
         
