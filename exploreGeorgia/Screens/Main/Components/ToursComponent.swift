@@ -23,7 +23,7 @@ struct ToursComponent: View {
           Spacer()
           
           NavigationLink {
-            AllPopularPlaces()
+            AllToursView()
               .navigationBarHidden(
                 true
               )
