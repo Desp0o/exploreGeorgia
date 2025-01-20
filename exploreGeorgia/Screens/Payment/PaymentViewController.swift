@@ -17,6 +17,7 @@ struct PaymentViewWrapper: UIViewControllerRepresentable {
 
 final class PaymentViewController: UIViewController {
   private let vm: PaymentViewModel
+  private var tableHeightConstraint: NSLayoutConstraint?
   
   private lazy var backButton: UIButton = {
     let button = UIButton()
@@ -56,8 +57,7 @@ final class PaymentViewController: UIViewController {
     table.register(CreditCardCell.self, forCellReuseIdentifier: "CreditCardCell")
     table.showsVerticalScrollIndicator = false
     table.alwaysBounceVertical = false
-    table.backgroundColor = .customVine
-
+    
     return table
   }()
   
@@ -87,12 +87,10 @@ final class PaymentViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-        
-    vm.dataDelegate = self
     
+    vm.dataDelegate = self
     setupUI()
   }
-  
   
   private func setupUI() {
     view.backgroundColor = .primaryWhite
@@ -105,6 +103,8 @@ final class PaymentViewController: UIViewController {
   }
   
   private func setupConstraints() {
+    tableHeightConstraint = table.heightAnchor.constraint(equalToConstant: 100)
+    
     NSLayoutConstraint.activate([
       backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
       backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -115,16 +115,26 @@ final class PaymentViewController: UIViewController {
       table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
       table.topAnchor.constraint(equalTo: screenTitle.bottomAnchor, constant: 50),
       table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-      table.heightAnchor.constraint(lessThanOrEqualToConstant: 400), // Maximum height
-      table.heightAnchor.constraint(greaterThanOrEqualTo: table.contentLayoutGuide.heightAnchor),
+      tableHeightConstraint ?? table.heightAnchor.constraint(equalToConstant: 100), // Height Constraint
       
       addPaymentButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
       addPaymentButton.topAnchor.constraint(equalTo: table.bottomAnchor, constant: 20)
     ])
   }
   
+  func adjustTableViewHeight() {
+    let numberOfRows = vm.creditCards.count
+    let rowHeight: CGFloat = 60.0
+    let maxHeight: CGFloat = 400.0
+    
+    let newHeight = min(CGFloat(numberOfRows) * rowHeight, maxHeight)
+    
+    tableHeightConstraint?.constant = newHeight
+    view.layoutIfNeeded()
+  }
+  
   private func openSheet() {
-    let view  = CardInputsViewController()
+    let view = CardInputsViewController()
     view.modalPresentationStyle = .pageSheet
     view.modalTransitionStyle = .coverVertical
     view.delegate = self
@@ -135,13 +145,7 @@ final class PaymentViewController: UIViewController {
   }
 }
 
-extension PaymentViewController: PaymentDataDelegate {
-  func didDataFetched() {
-    table.reloadData()
-  }
-}
-
-extension PaymentViewController: UITableViewDataSource, UITableViewDelegate{
+extension PaymentViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     vm.creditCards.count
   }
@@ -149,7 +153,7 @@ extension PaymentViewController: UITableViewDataSource, UITableViewDelegate{
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "CreditCardCell", for: indexPath) as? CreditCardCell
     let currentCard = vm.creditCards[indexPath.row]
-
+    
     cell?.setupCell(with: currentCard)
     cell?.selectionStyle = .none
     
@@ -162,7 +166,7 @@ extension PaymentViewController: UITableViewDataSource, UITableViewDelegate{
       self?.vm.deleteCreditCard(with: currentCardId)
       self?.vm.creditCards.remove(at: indexPath.row)
       tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .fade)
-      
+      self?.adjustTableViewHeight()
       completion(true)
     }
     
@@ -174,14 +178,17 @@ extension PaymentViewController: UITableViewDataSource, UITableViewDelegate{
   }
 }
 
+extension PaymentViewController: PaymentDataDelegate {
+  func didDataFetched() {
+    table.reloadData()
+    adjustTableViewHeight()
+  }
+}
+
 extension PaymentViewController: CardAddedDelegate {
   func cardAddedSuccessfully() {
     vm.fetchAllUserPayments()
     table.reloadData()
+    adjustTableViewHeight()
   }
 }
-
-//#Preview {
-//  PaymentViewWrapper()
-//    .preferredColorScheme(.light)
-//}
