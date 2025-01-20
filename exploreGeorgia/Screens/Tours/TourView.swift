@@ -14,6 +14,8 @@ struct TourView: View {
   @State var isCalendarShown = false
   @State var selectedDate: Date = Date()
   @State private var pickedPlaces = 0
+  @State var totalAmount = 0
+  @State var isPaymentOpened = false
   let startingDate: Date = Date()
   let tourId: String
   
@@ -48,6 +50,7 @@ struct TourView: View {
               Spacer()
               
               Button {
+                vm.fetchCreditCards()
                 withAnimation(.easeInOut(duration: 0.2)) {
                   isCalendarShown.toggle()
                 }
@@ -75,6 +78,8 @@ struct TourView: View {
               vm: vm,
               selectedDate: $selectedDate,
               pickedPlaces: $pickedPlaces,
+              totalAmount: $totalAmount,
+              isPaymentOpened: $isPaymentOpened,
               startingDate: startingDate
             )
           }
@@ -82,7 +87,6 @@ struct TourView: View {
           Spacer()
             .frame(height: 50)
             .id("calendar")
-          
         }
         .scrollIndicators(.hidden)
         .scrollBounceBehavior(.basedOnSize)
@@ -107,6 +111,15 @@ struct TourView: View {
           album: vm.tour?.album ?? [""]
         )
         .ignoresSafeArea(.all)
+      }
+      
+      if isPaymentOpened {
+        TourPurchaseComponent(
+          vm: vm,
+          totalAmount: $totalAmount,
+          isPaymentOpened: $isPaymentOpened,
+          tourId: tourId
+        )
       }
     }
     .ignoresSafeArea()

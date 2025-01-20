@@ -11,6 +11,9 @@ struct TourBookingComponent: View {
   @ObservedObject var vm: TourViewModel
   @Binding var selectedDate: Date
   @Binding var pickedPlaces: Int
+  @Binding var totalAmount:  Int
+  @Binding var isPaymentOpened: Bool
+  @State var isBounced = false
   let startingDate: Date
   
   var body: some View {
@@ -30,31 +33,33 @@ struct TourBookingComponent: View {
       HStack {
         HStack(spacing: 0) {
           Text("Tickets: ")
-            .styledText(.customBlack, 18, .bold)
+            .styledText(isBounced ? .red : .customBlack, 18, .bold)
           
           Image(systemName: "figure.stand")
             .renderingMode(.template)
-            .foregroundStyle(.customBlack)
+            .foregroundStyle(isBounced ? .red : .customBlack)
           
           Text(" x ")
-            .styledText(.customBlack, 18, .bold)
+            .styledText(isBounced ? .red : .customBlack, 18, .bold)
           
           Text("\(pickedPlaces)")
-            .styledText(.customBlack, 18, .bold)
+            .styledText(isBounced ? .red : .customBlack, 18, .bold)
         }
-        
+        .scaleEffect(isBounced ? 1.1 : 1.0)
+        .animation(.bouncy, value: isBounced)
         
         Stepper("") {
           if pickedPlaces <= 11 {
             pickedPlaces += 1
+            totalAmount += (vm.tour?.price ?? 0) * pickedPlaces
           }
         } onDecrement: {
           if pickedPlaces > 0 {
             pickedPlaces -= 1
+            totalAmount -= (vm.tour?.price ?? 0) * pickedPlaces
           }
         }
       }
-      
       
       HStack {
         Text("Total: \((vm.tour?.price ?? 0) * pickedPlaces)")
@@ -63,7 +68,17 @@ struct TourBookingComponent: View {
         Spacer()
         
         Button {
-          
+          if totalAmount == 0 {
+            isBounced = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+              isBounced = false
+            }
+            print(isBounced)
+          } else {
+            withAnimation {
+              isPaymentOpened = true
+            }
+          }
         } label: {
           Text("Pay")
             .styledText(.buttonPrimary, 20, .semibold)
@@ -71,9 +86,7 @@ struct TourBookingComponent: View {
             .background(.customBlue)
             .roundedCorners(10)
         }
-        
       }
-      
     }
     .padding(.horizontal, 20)
   }

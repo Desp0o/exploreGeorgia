@@ -13,9 +13,11 @@ final class TourViewModel: ObservableObject {
   private let firebaseManager: FirebaseSinglePlaceGenericProtocol
   private let bookmarkManager: CheckBookmarkProtocol
   private let userManager: UserManager
+  private let paymentManager: FirebasePayemntsProtocol
   @Published var tour: TourModel? = nil
   @Published var isLoading = true
   @Published var isBookMarked = false
+  @Published var cardData: [CreditCardModel] = []
   @Published var tourDetailArray: [TourStatistic] = [
     TourStatistic(icon: "clock", title: "Duration", titleValie: ""),
     TourStatistic(icon: "routing", title: "Distance", titleValie: ""),
@@ -39,11 +41,15 @@ final class TourViewModel: ObservableObject {
   init(
     firebaseManager: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService(),
     bookmarkManager: CheckBookmarkProtocol = BookMarkManager(),
-    userManager: UserManager = UserManager()
+    userManager: UserManager = UserManager(),
+    paymentManager: FirebasePayemntsProtocol = FirebaseFetchingService()
   ) {
     self.firebaseManager = firebaseManager
     self.bookmarkManager = bookmarkManager
     self.userManager = userManager
+    self.paymentManager = paymentManager
+    
+    fetchCreditCards()
   }
   
   func fetchSingleTour(with placeId: String, and collection: String) {
@@ -76,6 +82,23 @@ final class TourViewModel: ObservableObject {
         await MainActor.run {
           isLoading = false
         }
+      }
+    }
+  }
+  
+  func fetchCreditCards() {
+    print("🟢")
+    Task {
+      do {
+        let userID = Auth.auth().currentUser?.uid
+        
+        let cards = try await paymentManager.fetchPayments(userId: userID ?? "", pageSize: 10, lastDocument: nil)
+        
+        await MainActor.run {
+          cardData = cards.payments
+        }
+      } catch {
+        print(error.localizedDescription)
       }
     }
   }
