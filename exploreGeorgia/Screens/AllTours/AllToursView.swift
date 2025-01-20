@@ -45,7 +45,7 @@ struct AllToursView: View {
         }
       }
       
-      LazyVStack {
+      LazyVStack(spacing: 20) {
         ForEach(vm.fetchedData.indices, id: \.self) { index in
           let currentTour = vm.fetchedData[index]
           
