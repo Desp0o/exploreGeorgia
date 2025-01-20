@@ -6,6 +6,7 @@
 //
 
 import FirebaseCore
+import SwiftUI
 
 struct UserModel: Codable, Identifiable, Hashable {
   var id: String?
@@ -20,4 +21,14 @@ struct UserModel: Codable, Identifiable, Hashable {
   let achievement: [String]
   let createdAt: Timestamp?
   var dateField: String?
+//  var payments: [String]?
+  var creditCards: [String]?
+}
+
+struct CreditCardModel: Codable, Identifiable, Hashable {
+  var id: String?
+  var userId: String
+  var number: String
+  var expDate: String
+  var holder: String
 }

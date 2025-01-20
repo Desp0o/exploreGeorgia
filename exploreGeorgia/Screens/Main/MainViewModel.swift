@@ -6,10 +6,11 @@
 //
 
 import FirebaseFirestore
+import FirebaseAuth
 
 final class MainViewModel: ObservableObject {
   private let db = Firestore.firestore()
-  private let userManager: GetCurrentUserProtocol
+  private let userManager: GetFirebaseUserProtocol
   private let firebaseManager: FirebaseFetchingServicePorotocol
   private let singleElementFetcherManager: FirebaseSingleElementFetching
   @Published var user: UserModel? = nil
@@ -20,7 +21,7 @@ final class MainViewModel: ObservableObject {
   @Published var isLoading = false
   
   init(
-    userManager: GetCurrentUserProtocol = UserManager(),
+    userManager: GetFirebaseUserProtocol = UserManager(),
     firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService(),
     singleElementFetcherManager: FirebaseSingleElementFetching = FirebaseFetchingService()
   ) {
@@ -35,7 +36,8 @@ final class MainViewModel: ObservableObject {
     isLoading = true
     Task {
       do {
-        let data = try await userManager.getCurrentUser()
+        let userID = Auth.auth().currentUser?.uid
+        let data = try await userManager.getFirebaseUser(with: userID ?? "")
         
         await MainActor.run {
           user = data
@@ -83,7 +85,9 @@ final class MainViewModel: ObservableObject {
   func fetchUsersAddedPlaces() {
     Task {
       do {
-        let userData = try await userManager.getCurrentUser()
+        let userID = Auth.auth().currentUser?.uid
+
+        let userData = try await userManager.getFirebaseUser(with: userID ?? "")
         
         await MainActor.run {
           user = userData

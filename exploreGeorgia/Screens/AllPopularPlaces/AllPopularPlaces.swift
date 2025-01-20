@@ -11,7 +11,7 @@ struct AllPopularPlaces: View {
   @Environment(\.presentationMode) var dismiss
   @ObservedObject var vm = AllPopularViewModel()
   @State private var isSomethingChanged = false
-  @State private var scale: CGFloat = 0.0
+  @State private var startingOpacity: CGFloat = 0
   @State private var lastSelectedID: String?
   @State private var pageSize = 10
   
@@ -65,10 +65,10 @@ struct AllPopularPlaces: View {
                   maxWidth: UIScreen.main.bounds.width / 2 - 30,
                   height: UIScreen.main.bounds.width / 2
                 )
-                .scaleEffect(scale)
+                .opacity(startingOpacity)
                 .onAppear {
                   withAnimation(.easeOut(duration: 0.3)) {
-                    scale = 1
+                    startingOpacity = 1
                   }
                 }
               }

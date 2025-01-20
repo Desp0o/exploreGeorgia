@@ -21,16 +21,24 @@ protocol FirebaseSingleElementFetching {
   func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot?
 }
 
-protocol FirebaseSingleUserFetchProtocol {
-  func getUser(with userID: String) async throws -> UserModel?
-}
-
 protocol FirebasePhotoUrlGeneratorProtocol {
   func generateFirebasePhotoURL(image: UIImage, dbName: String, Id: String) async throws -> String
 }
 
 protocol FirebaseSinglePlaceGenericProtocol {
   func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: String) async throws -> T
+}
+
+protocol FirebasePayemntsProtocol {
+  func fetchPayments(
+    userId: String,
+    pageSize: Int,
+    lastDocument: DocumentSnapshot?
+  ) async throws -> (
+    payments: [CreditCardModel],
+    lastDocument: DocumentSnapshot?,
+    hasMoreData: Bool
+  )
 }
 
 
@@ -84,40 +92,6 @@ extension FirebaseFetchingService: FirebaseSingleElementFetching {
   }
 }
 
-extension FirebaseFetchingService: FirebaseSingleUserFetchProtocol {
-  func getUser(with userID: String) async throws -> UserModel? {
-    let document = try await db.collection("users").document(userID).getDocument()
-    
-    if document.exists, let data = document.data() {
-      let avatar = data["photoURL"] as? String ?? ""
-      let firstName = data["firstName"] as? String ?? ""
-      let lastName = data["lastName"] as? String ?? ""
-      let email = data["email"] as? String ?? ""
-      let gender = data["gender"] as? String ?? ""
-      let points = data["points"] as? Int ?? 0
-      let explored = data["explored"] as? [String] ?? []
-      let bucketList = data["bucketList"] as? [String] ?? []
-      let achievement = data["achievement"] as? [String] ?? []
-      let createdAt = data["createdAt"] as? Timestamp ?? Timestamp()
-      
-      return UserModel(
-        avatar: avatar,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        gender: gender,
-        points: points,
-        explored: explored,
-        bucketList: bucketList,
-        achievement: achievement,
-        createdAt: createdAt
-      )
-    } else {
-      throw FetchedUserErrors.userDoesntExist(message: "User document does not exist.")
-    }
-  }
-}
-
 extension FirebaseFetchingService: FirebasePhotoUrlGeneratorProtocol {
   func generateFirebasePhotoURL(image: UIImage, dbName: String, Id: String) async throws -> String {
     guard let imageData = image.jpegData(compressionQuality: 0.2) else {
@@ -155,5 +129,43 @@ extension FirebaseFetchingService: FirebaseSinglePlaceGenericProtocol {
     } catch {
       throw error
     }
+  }
+}
+
+extension FirebaseFetchingService: FirebasePayemntsProtocol {
+  func fetchPayments(
+    userId: String,
+    pageSize: Int,
+    lastDocument: DocumentSnapshot?
+  ) async throws -> (payments: [CreditCardModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
+    let collectionRef = db.collection("payments")
+      .whereField("userId", isEqualTo: userId)
+      .limit(to: pageSize + 1)
+    
+    let query: Query
+    if let lastDocument = lastDocument {
+      query = collectionRef.start(afterDocument: lastDocument)
+    } else {
+      query = collectionRef
+    }
+    
+    let snapshot = try await query.getDocuments()
+    let documents = snapshot.documents
+    
+    let hasMoreData = documents.count > pageSize
+    
+    let documentsToProcess = hasMoreData ? Array(documents.prefix(pageSize)) : documents
+    
+    let payments = try documentsToProcess.compactMap { document -> CreditCardModel? in
+      var creditCard = try document.data(as: CreditCardModel.self)
+      creditCard.id = document.documentID
+      return creditCard
+    }
+    
+    return (
+      payments: payments,
+      lastDocument: documentsToProcess.last,
+      hasMoreData: hasMoreData
+    )
   }
 }
