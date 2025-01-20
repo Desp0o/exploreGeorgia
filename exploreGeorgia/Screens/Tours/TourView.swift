@@ -118,35 +118,7 @@ struct TourView: View {
       }
       
       if vm.isSuccessfullyPurchased {
-        withAnimation {
-          ZStack {
-            Color.black.opacity(0.8).ignoresSafeArea()
-            
-            VStack {
-              ZStack {
-                Image("purchasedTour")
-                  .resizable()
-                  .scaledToFill()
-                  .foregroundStyle(.white)
-                  .frame(width: 36, height: 36)
-              }
-              .frame(width: 70, height: 70)
-              .background(.customVine)
-              .clipShape(Circle())
-              
-              Text("Congratulations, your adventure begins!")
-                .styledText(.customVine, 20, .bold, .center)
-                .padding(.horizontal, 18)
-            }
-          }
-          .frame(maxWidth: .infinity, maxHeight: .infinity)
-          .zIndex(99)
-          .onTapGesture {
-            withAnimation {
-              vm.isSuccessfullyPurchased = false
-            }
-          }
-        }
+        TourSuccessComponent(vm: vm)
       }
     }
     .ignoresSafeArea()
