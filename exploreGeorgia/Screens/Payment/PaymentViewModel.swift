@@ -26,14 +26,14 @@ final class PaymentViewModel {
   weak var errorDelegate: PaymentErrorDelegate?
   weak var loadingDelegate: PaymentLoadingDelegate?
   private let paymentsManager: FirebasePayemntsProtocol
-  private let userManager: GetCurrentUserProtocol
+  private let userManager: GetFirebaseUserProtocol
   private let db = Firestore.firestore()
   var creditCards: [CreditCardModel] = []
   var isLoading = false
   var errorMessage = ""
   
   init(
-    userManager: GetCurrentUserProtocol = UserManager(),
+    userManager: GetFirebaseUserProtocol = UserManager(),
     paymentsManager: FirebasePayemntsProtocol = FirebaseFetchingService()
   ) {
     self.userManager = userManager

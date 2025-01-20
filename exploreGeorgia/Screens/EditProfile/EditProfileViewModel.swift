@@ -11,7 +11,7 @@ import _PhotosUI_SwiftUI
 import SwiftUI
 
 final class EditProfileViewModel: ObservableObject {
-  private let userManager: GetCurrentUserProtocol
+  private let userManager: GetFirebaseUserProtocol
   private let passwordManager: ChangePasswordProtocol
   private let userInfoManager: UserInfoUpdaeProtocol
   private let googleUserDeletionManager: DeleteGoogleUser
@@ -42,7 +42,7 @@ final class EditProfileViewModel: ObservableObject {
   let languageArr = ["Eng", "Geo"]
 
   init(
-    userManager: GetCurrentUserProtocol = UserManager(),
+    userManager: GetFirebaseUserProtocol = UserManager(),
     passwordManager: ChangePasswordProtocol = UserManager(),
     userInfoManager: UserInfoUpdaeProtocol = UserManager(),
     googleUserDeletionManager: DeleteGoogleUser = UserManager(),
@@ -65,7 +65,9 @@ final class EditProfileViewModel: ObservableObject {
     
     Task {
       do {
-        let user = try await userManager.getCurrentUser()
+        let userID = Auth.auth().currentUser?.uid
+
+        let user = try await userManager.getFirebaseUser(with: userID ?? "")
         
         await MainActor.run {
           currentAvatar = user?.avatar ?? ""
@@ -184,7 +186,9 @@ final class EditProfileViewModel: ObservableObject {
     
     Task {
       do {
-        guard let user = try await userManager.getCurrentUser() else {
+        let userID = Auth.auth().currentUser?.uid
+
+        guard let user = try await userManager.getFirebaseUser(with: userID ?? "") else {
           return
         }
         

@@ -5,24 +5,25 @@
 //  Created by Despo on 15.01.25.
 //
 
+protocol IdentifiableAndBookmarkable {
+    var id: String? { get }
+    var isBookmarked: Bool? { get set }
+}
+
 import FirebaseFirestore
 import FirebaseStorage
 
 protocol FirebaseFetchingServicePorotocol {
-  func fetchPlaces(
+  func fetchPlaces<T: Codable & IdentifiableAndBookmarkable>(
     collectionName: String,
     pageSize: Int,
     lastDocument: DocumentSnapshot?,
     userBucketList: [String]
-  ) async throws -> (places: [SightSeenModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool)
+  ) async throws -> (places: [T], lastDocument: DocumentSnapshot?, hasMoreData: Bool)
 }
 
 protocol FirebaseSingleElementFetching {
   func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot?
-}
-
-protocol FirebaseSingleUserFetchProtocol {
-  func getUser(with userID: String) async throws -> UserModel?
 }
 
 protocol FirebasePhotoUrlGeneratorProtocol {
@@ -49,12 +50,12 @@ protocol FirebasePayemntsProtocol {
 final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
   let db = Firestore.firestore()
   
-  func fetchPlaces(
+  func fetchPlaces<T: Codable & IdentifiableAndBookmarkable>(
     collectionName: String,
     pageSize: Int,
     lastDocument: DocumentSnapshot?,
     userBucketList: [String]
-  ) async throws -> (places: [SightSeenModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
+  ) async throws -> (places: [T], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
     let collectionRef = db.collection(collectionName).limit(to: pageSize + 1)
     let query: Query
     
@@ -71,8 +72,8 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     
     let documentsToProcess = hasMoreData ? Array(documents.prefix(pageSize)) : documents
     
-    let newPlaces = try documentsToProcess.compactMap { document -> SightSeenModel? in
-      var model = try document.data(as: SightSeenModel.self)
+    let newPlaces = try documentsToProcess.compactMap { document -> T? in
+      var model = try document.data(as: T.self)
       if let id = model.id {
         model.isBookmarked = userBucketList.contains(id)
       }
@@ -80,7 +81,8 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     }
     
     return (places: newPlaces, lastDocument: documentsToProcess.last, hasMoreData: hasMoreData)
-  }  }
+  }
+}
 
 extension FirebaseFetchingService: FirebaseSingleElementFetching {
   func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot? {
@@ -93,40 +95,6 @@ extension FirebaseFetchingService: FirebaseSingleElementFetching {
     let snapshot = try await query.getDocuments()
     
     return snapshot.documents[randomIndex]
-  }
-}
-
-extension FirebaseFetchingService: FirebaseSingleUserFetchProtocol {
-  func getUser(with userID: String) async throws -> UserModel? {
-    let document = try await db.collection("users").document(userID).getDocument()
-    
-    if document.exists, let data = document.data() {
-      let avatar = data["photoURL"] as? String ?? ""
-      let firstName = data["firstName"] as? String ?? ""
-      let lastName = data["lastName"] as? String ?? ""
-      let email = data["email"] as? String ?? ""
-      let gender = data["gender"] as? String ?? ""
-      let points = data["points"] as? Int ?? 0
-      let explored = data["explored"] as? [String] ?? []
-      let bucketList = data["bucketList"] as? [String] ?? []
-      let achievement = data["achievement"] as? [String] ?? []
-      let createdAt = data["createdAt"] as? Timestamp ?? Timestamp()
-      
-      return UserModel(
-        avatar: avatar,
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        gender: gender,
-        points: points,
-        explored: explored,
-        bucketList: bucketList,
-        achievement: achievement,
-        createdAt: createdAt
-      )
-    } else {
-      throw FetchedUserErrors.userDoesntExist(message: "User document does not exist.")
-    }
   }
 }
 

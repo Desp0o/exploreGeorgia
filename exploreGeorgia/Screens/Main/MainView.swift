@@ -29,6 +29,9 @@ struct MainView: View {
         
         PlacesFromUserComponent(vm: vm, tabIndex: $tabIndex)
           .padding(.horizontal, 20)
+        
+        ToursComponent(vm: vm)
+          .padding(.horizontal, 20)
 
         Spacer()
       }

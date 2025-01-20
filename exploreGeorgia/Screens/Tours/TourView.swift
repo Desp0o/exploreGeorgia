@@ -15,6 +15,7 @@ struct TourView: View {
   @State var selectedDate: Date = Date()
   @State private var pickedPlaces = 0
   let startingDate: Date = Date()
+  let tourId: String
   
   var body: some View {
     ZStack(alignment: .top) {
@@ -109,5 +110,8 @@ struct TourView: View {
       }
     }
     .ignoresSafeArea()
+    .onAppear {
+      vm.fetchSingleTour(with: tourId, and: "tours")
+    }
   }
 }
