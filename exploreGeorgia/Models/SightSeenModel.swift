@@ -8,7 +8,7 @@
 import SwiftUI
 import FirebaseFirestore
 
-struct SightSeenModel: Codable, Identifiable, Hashable {
+struct SightSeenModel: Codable, Identifiable, Hashable, IdentifiableAndBookmarkable {
   var id: String?
   var cover: String
   let name: String

@@ -5,8 +5,9 @@
 //  Created by Despo on 18.01.25.
 //
 
-struct TourModel: Codable {
-  let id: String
+struct TourModel: Codable, IdentifiableAndBookmarkable {
+  var isBookmarked: Bool?
+  var id: String?
   let cover: String
   let name: String
   let adress: String

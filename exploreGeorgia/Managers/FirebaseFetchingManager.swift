@@ -5,16 +5,21 @@
 //  Created by Despo on 15.01.25.
 //
 
+protocol IdentifiableAndBookmarkable {
+    var id: String? { get }
+    var isBookmarked: Bool? { get set }
+}
+
 import FirebaseFirestore
 import FirebaseStorage
 
 protocol FirebaseFetchingServicePorotocol {
-  func fetchPlaces(
+  func fetchPlaces<T: Codable & IdentifiableAndBookmarkable>(
     collectionName: String,
     pageSize: Int,
     lastDocument: DocumentSnapshot?,
     userBucketList: [String]
-  ) async throws -> (places: [SightSeenModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool)
+  ) async throws -> (places: [T], lastDocument: DocumentSnapshot?, hasMoreData: Bool)
 }
 
 protocol FirebaseSingleElementFetching {
@@ -45,12 +50,12 @@ protocol FirebasePayemntsProtocol {
 final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
   let db = Firestore.firestore()
   
-  func fetchPlaces(
+  func fetchPlaces<T: Codable & IdentifiableAndBookmarkable>(
     collectionName: String,
     pageSize: Int,
     lastDocument: DocumentSnapshot?,
     userBucketList: [String]
-  ) async throws -> (places: [SightSeenModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
+  ) async throws -> (places: [T], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
     let collectionRef = db.collection(collectionName).limit(to: pageSize + 1)
     let query: Query
     
@@ -67,8 +72,8 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     
     let documentsToProcess = hasMoreData ? Array(documents.prefix(pageSize)) : documents
     
-    let newPlaces = try documentsToProcess.compactMap { document -> SightSeenModel? in
-      var model = try document.data(as: SightSeenModel.self)
+    let newPlaces = try documentsToProcess.compactMap { document -> T? in
+      var model = try document.data(as: T.self)
       if let id = model.id {
         model.isBookmarked = userBucketList.contains(id)
       }
@@ -76,7 +81,8 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     }
     
     return (places: newPlaces, lastDocument: documentsToProcess.last, hasMoreData: hasMoreData)
-  }  }
+  }
+}
 
 extension FirebaseFetchingService: FirebaseSingleElementFetching {
   func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot? {

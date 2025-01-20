@@ -34,7 +34,7 @@ final class AllPopularViewModel: ObservableObject {
           user = data
         }
         
-        let result = try await firebaseManager.fetchPlaces(
+        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
           collectionName: "placesFromApp",
           pageSize: pageSize,
           lastDocument: nil,
@@ -42,7 +42,7 @@ final class AllPopularViewModel: ObservableObject {
         )
         
         await MainActor.run {
-          fetchedData = result.places
+          fetchedData = places
           isLoading = false
         }
         

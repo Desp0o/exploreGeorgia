@@ -18,6 +18,7 @@ final class MainViewModel: ObservableObject {
   @Published var randomFact = ""
   @Published var placesFromApp: [SightSeenModel] = []
   @Published var usersAddedPlacesData: [SightSeenModel] = []
+  @Published var fetchedTours: [TourModel] = []
   @Published var isLoading = false
   
   init(
@@ -30,6 +31,7 @@ final class MainViewModel: ObservableObject {
     self.singleElementFetcherManager = singleElementFetcherManager
     
     fetchSingleFact()
+    fetchTours()
   }
   
   func getPopularPlaces() {
@@ -43,7 +45,7 @@ final class MainViewModel: ObservableObject {
           user = data
         }
         
-        let result = try await firebaseManager.fetchPlaces(
+        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
           collectionName: "placesFromApp",
           pageSize: 5,
           lastDocument: nil,
@@ -51,7 +53,7 @@ final class MainViewModel: ObservableObject {
         )
         
         await MainActor.run {
-          placesFromApp = result.places
+          placesFromApp = places
           isLoading = false
         }
       } catch {
@@ -86,14 +88,14 @@ final class MainViewModel: ObservableObject {
     Task {
       do {
         let userID = Auth.auth().currentUser?.uid
-
+        
         let userData = try await userManager.getFirebaseUser(with: userID ?? "")
         
         await MainActor.run {
           user = userData
         }
         
-        let result = try await firebaseManager.fetchPlaces(
+        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
           collectionName: "usersPlaces",
           pageSize: 3,
           lastDocument: nil,
@@ -101,7 +103,27 @@ final class MainViewModel: ObservableObject {
         )
         
         await MainActor.run {
-          usersAddedPlacesData = result.places
+          usersAddedPlacesData = places
+        }
+      } catch {
+        print(error.localizedDescription)
+      }
+    }
+  }
+  
+  func fetchTours() {
+    Task {
+      do {
+        let (places, _, _): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
+          collectionName: "tours",
+          pageSize: 3,
+          lastDocument: nil,
+          userBucketList: user?.bucketList ?? [""]
+        )
+        
+        await MainActor.run {
+          fetchedTours = places
+          print(fetchedTours)
         }
       } catch {
         print(error.localizedDescription)

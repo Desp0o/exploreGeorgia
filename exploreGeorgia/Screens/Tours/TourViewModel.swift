@@ -44,8 +44,6 @@ final class TourViewModel: ObservableObject {
     self.firebaseManager = firebaseManager
     self.bookmarkManager = bookmarkManager
     self.userManager = userManager
-    
-    fetchSingleTour(with: "cXdFaot6EpnXxB9xsjhm", and: "tours")
   }
   
   func fetchSingleTour(with placeId: String, and collection: String) {
@@ -58,7 +56,7 @@ final class TourViewModel: ObservableObject {
         let user = try await userManager.getFirebaseUser(with: userID ?? "")
         
         if let user {
-          let checkResult = try await bookmarkManager.checkIfBookmarked(placeId: data.id, currentUser: user)
+          let checkResult = try await bookmarkManager.checkIfBookmarked(placeId: data.id ?? "", currentUser: user)
           
           await MainActor.run {
             isBookMarked = checkResult
