@@ -12,10 +12,6 @@ struct TourView: View {
   @State var selectedImage = ""
   @State var isLightBoxVisible = false
   @State var isCalendarShown = false
-  @State var selectedDate: Date = Date()
-  @State private var pickedPlaces = 0
-  @State var totalAmount = 0
-  @State var isPaymentOpened = false
   let startingDate: Date = Date()
   let tourId: String
   
@@ -76,10 +72,10 @@ struct TourView: View {
           if isCalendarShown {
             TourBookingComponent(
               vm: vm,
-              selectedDate: $selectedDate,
-              pickedPlaces: $pickedPlaces,
-              totalAmount: $totalAmount,
-              isPaymentOpened: $isPaymentOpened,
+              selectedDate: $vm.selectedDate,
+              pickedPlaces: $vm.pickedPlaces,
+              totalAmount: $vm.totalAmount,
+              isPaymentOpened: $vm.isPaymentOpened,
               startingDate: startingDate
             )
           }
@@ -113,13 +109,44 @@ struct TourView: View {
         .ignoresSafeArea(.all)
       }
       
-      if isPaymentOpened {
+      if vm.isPaymentOpened {
         TourPurchaseComponent(
           vm: vm,
-          totalAmount: $totalAmount,
-          isPaymentOpened: $isPaymentOpened,
-          tourId: tourId
+          totalAmount: $vm.totalAmount,
+          isPaymentOpened: $vm.isPaymentOpened
         )
+      }
+      
+      if vm.isSuccessfullyPurchased {
+        withAnimation {
+          ZStack {
+            Color.black.opacity(0.8).ignoresSafeArea()
+            
+            VStack {
+              ZStack {
+                Image("purchasedTour")
+                  .resizable()
+                  .scaledToFill()
+                  .foregroundStyle(.white)
+                  .frame(width: 36, height: 36)
+              }
+              .frame(width: 70, height: 70)
+              .background(.customVine)
+              .clipShape(Circle())
+              
+              Text("Congratulations, your adventure begins!")
+                .styledText(.customVine, 20, .bold, .center)
+                .padding(.horizontal, 18)
+            }
+          }
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+          .zIndex(99)
+          .onTapGesture {
+            withAnimation {
+              vm.isSuccessfullyPurchased = false
+            }
+          }
+        }
       }
     }
     .ignoresSafeArea()
