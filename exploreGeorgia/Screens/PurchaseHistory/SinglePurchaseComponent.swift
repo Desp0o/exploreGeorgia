@@ -51,13 +51,13 @@ struct SinglePurchaseComponent: View {
           
           Rectangle()
             .fill(tour.isActive ? .green : .red)
-            .frame(width: 80, height: 30)
+            .frame(width: 85, height: 30)
             .clipShape(
               Capsule()
             )
             .overlay {
               Text(tour.isActive ? "Upcoming" : "Expired")
-                .styledText(.customWhite, 14, .semibold)
+                .styledText(.customBlack, 14, .semibold)
             }
         }
       }

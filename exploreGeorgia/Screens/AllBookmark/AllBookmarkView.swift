@@ -13,141 +13,129 @@ struct AllBookmarkView: View {
   @ObservedObject private var alertManager = CustomAlertManager()
   @State private var currentPlace: SightSeenModel? = nil
   @State private var alertBoxMessage = ""
-  @State private var pageSize = 5
-  @State private var startTransition = false
-  @State private var offsetContent: CGFloat = -UIScreen.main.bounds.width
+  @State private var dataIndex = 0
   
   var body: some View {
     ZStack {
       Color.primaryWhite
         .ignoresSafeArea()
       
-      VStack {
+      VStack(spacing: 30) {
         HStack {
-          Button {
-            dismiss.wrappedValue.dismiss()
-          } label: {
-            ZStack {
-              Circle()
-                .fill(.customBlue)
-                .frame(width: 40, height: 40)
-              
-              Image("backArrow")
-                .renderingMode(.template)
-                .foregroundStyle(.white)
-            }
-          }
-          
-          Spacer()
+          Text("Bookmarks")
+            .styledText(.customBlue, 20, .bold)
         }
         .padding(.horizontal, 20)
-        
-        if vm.bookmarkedPlaces.isEmpty {
-          Text("Your Bucket List Awaits...")
-            .styledText(.customBlue, 16, .semibold)
-            .padding(.bottom, 40)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        } else {
-          
-          Text("Explore More, Bookmark More!")
-            .styledText(.customBlue, 20, .bold)
-            .padding(.top, 10)
-          
-          List {
-            ForEach(Array(vm.bookmarkedPlaces.enumerated()), id: \.element) { index, place in
-              ZStack {
-                NavigationLink(
-                  destination: PlaceDetailsView(
-                    elementID: place.id ?? "",
-                    collectionName: "placesFromApp"
-                  ).navigationBarHidden(true)
-                )
-                {
-                  EmptyView()
-                }.opacity(0.0)
-                
-                SightSeenReusableView(place: place, maxWidth: UIScreen.main.bounds.width - 40, height: 180)
-                  .overlay {
-                    ZStack(alignment: .topTrailing) {
-                      Button {
-                        let indexSet = IndexSet(integer: index)
-                        withAnimation {
-                          vm.removeBookmark(index: indexSet)
-                        }
-                      } label: {
-                        Circle()
-                          .fill(.white.opacity(0.001))
-                      }
-                      .frame(width: 34, height: 34)
-                      .offset(x:-24, y: 24)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                  }
-                
-                if index == vm.bookmarkedPlaces.count - 1 {
-                  Color.white.opacity(0)
-                    .frame(width: 1, height: 0)
-                    .onAppear {
-                      pageSize += 5
-                    }
+        .frame(maxWidth: .infinity)
+        .overlay {
+          ZStack {
+            HStack {
+              Button {
+                dismiss.wrappedValue.dismiss()
+              } label: {
+                ZStack {
+                  Circle()
+                    .fill(.customBlue)
+                    .frame(width: 40, height: 40)
+                  
+                  Image("backArrow")
+                    .renderingMode(.template)
+                    .foregroundStyle(.white)
                 }
               }
-              .offset(x: offsetContent)
-              .onAppear {
-                withAnimation(.bouncy(duration: 0.5)) {
-                  offsetContent = 0
-                }
-              }
-              .buttonStyle(PlainButtonStyle())
-              .listStyle(PlainListStyle())
-              .listRowSeparator(.hidden)
-              .listRowBackground(Color.clear)
+              
+              Spacer()
             }
-            .onDelete(perform: vm.removeBookmark)
-            .id(vm.bookmarkedPlaces)
-          }
-          .listStyle(PlainListStyle())
-          .scrollContentBackground(.hidden)
-          .scrollIndicators(.hidden)
-          .background(Color.clear)
+          }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-      }
-    }
-    .overlay{
-      if vm.isLoaded {
-        ZStack {
-          Color.primaryWhite.ignoresSafeArea()
-          
+        .padding(.horizontal, 20)
+
+        Spacer()
+        
+        if vm.isLoaded {
           ProgressView()
             .scaleEffect(1.5)
             .tint(.customBlue)
+        } else {
+          if vm.bookmarkedPlaces.isEmpty {
+            Text("Your Bucket List Awaits...")
+              .styledText(.customBlue, 16, .semibold)
+              .padding(.bottom, 40)
+              .frame(maxWidth: .infinity, maxHeight: .infinity)
+          } else {
+            ScrollView {
+              HStack(spacing: 20) {
+                ForEach(vm.buttonsArray.indices, id: \.self) { index in
+                  let currentButton = vm.buttonsArray[index]
+                  
+                  Button {
+                    withAnimation {
+                      dataIndex = index
+                    }
+                  } label: {
+                    Text(currentButton)
+                      .styledText(.customBlack, 16, .semibold)
+                      .padding(.horizontal, 10)
+                      .padding(.vertical, 6)
+                      .background(.customBlue.opacity(index == dataIndex ? 1 : 0.3))
+                      .roundedCorners(12)
+                  }
+                }
+              }
+              
+              Spacer()
+                .frame(height: 20)
+              
+              VStack(spacing: 12) {
+                switch dataIndex {
+                case 0:
+                  PlacesBookmarkViewComponent(
+                    vm: vm,
+                    data: vm.bookmarkedPlaces,
+                    collectionName: "placesFromApp"
+                  )
+                case 1:
+                  PlacesBookmarkViewComponent(
+                    vm: vm,
+                    data: vm.bookmarkedPlaces,
+                    collectionName: "usersPlaces"
+                  )
+                case 2:
+                  ToursBookmarkViewComponent(
+                    vm: vm,
+                    data: vm.bookmarkedTours
+                  )
+                default:
+                  PlacesBookmarkViewComponent(
+                    vm: vm,
+                    data: vm.bookmarkedPlaces,
+                    collectionName: "placesFromApp"
+                  )
+                }
+              }
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollIndicators(.hidden)
+            .padding(.horizontal, 20)
+          }
         }
-      }
-      
-      if alertManager.isShown {
-        CustomAlert(
-          alertManager: alertManager,
-          alertMessage: alertBoxMessage,
-          errorType: .error
-        )
+        
+        Spacer()
       }
     }
-    .onAppear {
-      vm.fetchData(pageLimit: pageSize)
-    }
-    .onChange(of: pageSize) { _ in
-      vm.fetchData(pageLimit: pageSize)
-    }
-    .onReceive(vm.$errorMessages) { message in
-      if !message.isEmpty {
-        alertBoxMessage = message
-        alertManager.showAlert()
+    .onChange(of: dataIndex) { _ in
+      switch dataIndex {
+      case 0:
+        vm.bookmarkedPlaces = []
+        vm.fetchData(pageLimit: vm.pageSize, collectionName: "placesFromApp")
+      case 1:
+        vm.bookmarkedPlaces = []
+        vm.fetchData(pageLimit: vm.pageSize, collectionName: "usersPlaces")
+      case 2:
+        vm.fetchToursData(pageLimit: vm.pageSize)
+      default:
+        vm.fetchData(pageLimit: vm.pageSize, collectionName: "placesFromApp")
       }
     }
   }
 }
-
-//
-//#Preview {
-//  AllBookmarkView()
-//}

@@ -55,7 +55,8 @@ struct PlacesFromAppComponents: View {
                   SightSeenReusableView(
                     place: place,
                     maxWidth: 268,
-                    height: 250
+                    height: 250,
+                    isBookmarkIconHidden: false
                   )
                 }
                 .onTapGesture {

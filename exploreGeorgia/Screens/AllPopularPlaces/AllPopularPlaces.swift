@@ -63,7 +63,8 @@ struct AllPopularPlaces: View {
                 SightSeenReusableView(
                   place: place,
                   maxWidth: UIScreen.main.bounds.width / 2 - 30,
-                  height: UIScreen.main.bounds.width / 2
+                  height: UIScreen.main.bounds.width / 2,
+                  isBookmarkIconHidden: false
                 )
                 .opacity(startingOpacity)
                 .onAppear {
