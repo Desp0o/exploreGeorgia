@@ -9,8 +9,6 @@ import SwiftUI
 
 struct IntrestingFacts: View {
   @ObservedObject var vm: MainViewModel
-  @State private var isAnimating = false
-  @State private var animationTimer: Timer?
   
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
@@ -23,7 +21,6 @@ struct IntrestingFacts: View {
           )
         Image(systemName: "lightbulb.max.fill")
           .foregroundStyle(.yellow)
-          .scaleEffect(isAnimating ? 1.1 : 0.9)
       }
       Text(vm.randomFact)
     }
@@ -32,17 +29,5 @@ struct IntrestingFacts: View {
     .background(.customWhite)
     .roundedCorners(12)
     .id(vm.randomFact)
-    .onAppear {
-      isAnimating.toggle()
-      animationTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { _ in
-        withAnimation {
-          isAnimating.toggle()
-        }
-      }
-    }
-    .onDisappear {
-      animationTimer?.invalidate()
-      animationTimer = nil
-    }
   }
 }

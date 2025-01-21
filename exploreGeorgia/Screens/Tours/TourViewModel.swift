@@ -46,9 +46,7 @@ final class TourViewModel: ObservableObject {
     GridItem(),
     GridItem()
   ]
-
-
-
+  
   init(
     firebaseManager: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService(),
     bookmarkManager: CheckBookmarkProtocol = BookMarkManager(),
@@ -67,7 +65,7 @@ final class TourViewModel: ObservableObject {
     Task {
       do {
         let userID = Auth.auth().currentUser?.uid
-
+        
         let data: TourModel = try await firebaseManager.fetchSinglePlaceGeneric(with: placeId, and: collection)
         
         let user = try await userManager.getFirebaseUser(with: userID ?? "")
@@ -115,55 +113,54 @@ final class TourViewModel: ObservableObject {
   
   func createPurchase() {
     let newTour = PurchasedTourModel(
-        id: UUID().uuidString,
-        userId: currentUserId,
-        tickets: pickedPlaces,
-        date: Date(),
-        tourName: tour?.name ?? "",
-        tourDescription: tour?.description ?? "",
-        tourCover: tour?.cover ?? "",
-        total: totalAmount
+      id: UUID().uuidString,
+      userId: currentUserId,
+      tickets: pickedPlaces,
+      date: "\(selectedDate)",
+      tourName: tour?.name ?? "",
+      tourDescription: tour?.description ?? "",
+      tourCover: tour?.cover ?? "",
+      total: totalAmount,
+      isActive: true
     )
-
+    
     Task {
-        do {
-            try await addPurchasedTour(purchasedTour: newTour, forUser: currentUserId)
-          
-          await MainActor.run {
-            isPaymentOpened = false
-            isSuccessfullyPurchased = true
-          }
-        } catch {
-            print("Failed to add purchased tour: \(error.localizedDescription)")
+      do {
+        try await addPurchasedTour(purchasedTour: newTour, forUser: currentUserId)
+        
+        await MainActor.run {
+          isPaymentOpened = false
+          isSuccessfullyPurchased = true
         }
+      } catch {
+        print("Failed to add purchased tour: \(error.localizedDescription)")
+      }
     }
   }
-
+  
   func addPurchasedTour(purchasedTour: PurchasedTourModel, forUser userId: String) async throws {
-      do {
-          let purchasedTourRef = db.collection("purchasedTours").document(purchasedTour.id)
-          try await purchasedTourRef.setData([
-              "id": purchasedTour.id,
-              "userId": purchasedTour.userId,
-              "tickets": purchasedTour.tickets,
-              "date": Timestamp(date: purchasedTour.date),
-              "tourName": purchasedTour.tourName,
-              "tourDescription": purchasedTour.tourDescription,
-              "tourCover": purchasedTour.tourCover
-          ])
-          
-          print("Purchased tour added successfully!")
-          
-          let userRef = db.collection("users").document(userId)
-          
-          try await userRef.updateData([
-              "purchasedTours": FieldValue.arrayUnion([purchasedTour.id])
-          ])
-          
-          print("User's purchased tours updated successfully!")
-      } catch {
-          print("Error adding purchased tour: \(error.localizedDescription)")
-          throw error
-      }
+    do {
+      let purchasedTourRef = db.collection("purchasedTours").document(purchasedTour.id)
+      try await purchasedTourRef.setData([
+        "id": purchasedTour.id,
+        "userId": purchasedTour.userId,
+        "tickets": purchasedTour.tickets,
+        "date": purchasedTour.date,
+        "tourName": purchasedTour.tourName,
+        "tourDescription": purchasedTour.tourDescription,
+        "tourCover": purchasedTour.tourCover,
+        "total": purchasedTour.total,
+        "isActive": true
+      ])
+      
+      let userRef = db.collection("users").document(userId)
+      
+      try await userRef.updateData([
+        "purchasedTours": FieldValue.arrayUnion([purchasedTour.id])
+      ])
+    } catch {
+      print(error.localizedDescription)
+      throw error
+    }
   }
 }
