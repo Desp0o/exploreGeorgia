@@ -37,10 +37,29 @@ struct ProfileSettingsComponent: View {
           HStack(spacing: 14) {
             Image(systemName: "creditcard")
               .defaultOptions()
-              .frame(width: 24, height: 16)
+              .frame(width: 22, height: 16)
               .tint(.customGray)
             
             Text("Payment methods")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
+        //purchased
+        NavigationLink(destination: PurchaseHistoryView()
+          .navigationBarHidden(true)) {
+          HStack(spacing: 14) {
+            Image(systemName: "purchased")
+              .defaultOptions()
+              .frame(width: 14, height: 14)
+              .tint(.customGray)
+            
+            Text("  Purchased tours")
               .styledText(.customBlack, 16, .semibold)
             
             Spacer()
@@ -111,7 +130,7 @@ struct ProfileSettingsComponent: View {
         
         
       }
-      .frame(height: CGFloat(5) * 56)
+      .frame(height: CGFloat(6) * 56)
       .padding(.leading, 16)
       .padding(.trailing, 10)
     }

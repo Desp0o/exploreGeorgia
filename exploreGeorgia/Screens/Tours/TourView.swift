@@ -12,7 +12,7 @@ struct TourView: View {
   @State var selectedImage = ""
   @State var isLightBoxVisible = false
   @State var isCalendarShown = false
-  let startingDate: Date = Date()
+  let startingDate: Date = Date().addingTimeInterval(86400)
   let tourId: String
   
   var body: some View {

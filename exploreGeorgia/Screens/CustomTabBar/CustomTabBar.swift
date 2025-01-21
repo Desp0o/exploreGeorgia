@@ -26,7 +26,6 @@ struct CustomTabBar: View {
         case 0:
           NavigationStack {
             MainView(tabIndex: $currentIdenx)
-            SinglePurchaseComponent()
           }
         case 1:
           NavigationStack {
