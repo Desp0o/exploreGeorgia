@@ -5,7 +5,7 @@
 //  Created by Despo on 18.01.25.
 //
 
-struct TourModel: Codable, IdentifiableAndBookmarkable {
+struct TourModel: Codable, IdentifiableAndBookmarkable, Hashable {
   var isBookmarked: Bool?
   var id: String?
   let cover: String

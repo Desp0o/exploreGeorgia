@@ -13,6 +13,7 @@ struct SightSeenReusableView: View {
   @State var place: SightSeenModel
   let maxWidth: CGFloat
   let height: CGFloat
+  let isBookmarkIconHidden: Bool
   
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
@@ -21,25 +22,27 @@ struct SightSeenReusableView: View {
         .frame(maxWidth: maxWidth - 28)
         .roundedCorners(12)
         .overlay(alignment: .topTrailing) {
-          Button {
-            place.isBookmarked?.toggle()
-            bookmarkManager
-              .savePlaceInBookmark(
-                placeId: place.id ?? "",
-                isBookmarked: !(place.isBookmarked ?? false)
-              )
-          } label: {
-            ZStack {
-              Circle()
-                .fill(.customWhite.opacity(0.7))
-              
-              Image(systemName: place.isBookmarked ?? false ? "bookmark.fill" : "bookmark")
-                .renderingMode(.template)
-                .foregroundStyle(.customBlue)
+          if !isBookmarkIconHidden {
+            Button {
+              place.isBookmarked?.toggle()
+              bookmarkManager
+                .savePlaceInBookmark(
+                  placeId: place.id ?? "",
+                  isBookmarked: !(place.isBookmarked ?? false)
+                )
+            } label: {
+              ZStack {
+                Circle()
+                  .fill(.customWhite.opacity(0.7))
+                
+                Image(systemName: place.isBookmarked ?? false ? "bookmark.fill" : "bookmark")
+                  .renderingMode(.template)
+                  .foregroundStyle(.customBlue)
+              }
             }
+            .offset(x: -10, y: 10)
+            .frame(width: 34, height: 34)
           }
-          .offset(x: -10, y: 10)
-          .frame(width: 34, height: 34)
         }
       
       HStack(spacing: 2) {
