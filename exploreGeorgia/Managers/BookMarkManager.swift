@@ -8,11 +8,20 @@
 import Firebase
 import FirebaseAuth
 
-protocol BookmarkActivityProtocol: AnyObject {
+protocol BookmarkActivityProtocol {
   func toggleBookmark(placeId: String, isBookmarked: Bool) async throws
 }
 
-final class BookMarkManager: ObservableObject, BookmarkActivityProtocol {
+protocol CheckBookmarkProtocol {
+  func checkIfBookmarked(placeId: String, currentUser: UserModel) async throws -> Bool
+}
+
+final class BookMarkManager: ObservableObject {
+  private let userManager: UserManager
+  
+  init(userManager: UserManager = UserManager()) {
+    self.userManager = userManager
+  }
   
   func savePlaceInBookmark(placeId: String, isBookmarked: Bool) {
     Task {
@@ -23,30 +32,38 @@ final class BookMarkManager: ObservableObject, BookmarkActivityProtocol {
       }
     }
   }
+}
 
+extension BookMarkManager: BookmarkActivityProtocol {
   func toggleBookmark(placeId: String, isBookmarked: Bool) async throws {
-      guard let userId = Auth.auth().currentUser?.uid else {
-          print("User not logged in")
-          return
+    guard let userId = Auth.auth().currentUser?.uid else {
+      print("User not logged in")
+      return
+    }
+    
+    let userRef = Firestore.firestore().collection("users").document(userId)
+    
+    do {
+      if isBookmarked {
+        try await userRef.updateData([
+          "bucketList": FieldValue.arrayRemove([placeId])
+        ])
+        print("Bookmark removed successfully")
+      } else {
+        try await userRef.updateData([
+          "bucketList": FieldValue.arrayUnion([placeId])
+        ])
+        print("Bookmark added successfully")
       }
-
-      let userRef = Firestore.firestore().collection("users").document(userId)
-
-      do {
-          if isBookmarked {
-              try await userRef.updateData([
-                  "bucketList": FieldValue.arrayRemove([placeId])
-              ])
-              print("Bookmark removed successfully")
-          } else {
-              try await userRef.updateData([
-                  "bucketList": FieldValue.arrayUnion([placeId])
-              ])
-              print("Bookmark added successfully")
-          }
-      } catch {
-        throw error
-      }
+    } catch {
+      throw error
+    }
   }
+  
+}
 
+extension BookMarkManager: CheckBookmarkProtocol {
+  func checkIfBookmarked(placeId: String, currentUser: UserModel) async throws -> Bool {
+    return currentUser.bucketList.contains(placeId)
+  }
 }

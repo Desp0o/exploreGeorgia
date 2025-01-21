@@ -23,14 +23,13 @@ struct AllBookmarkView: View {
         .ignoresSafeArea()
       
       VStack {
-        
         HStack {
           Button {
             dismiss.wrappedValue.dismiss()
           } label: {
             ZStack {
               Circle()
-                .fill(.customWhite.opacity(0.5))
+                .fill(.customBlue)
                 .frame(width: 40, height: 40)
               
               Image("backArrow")

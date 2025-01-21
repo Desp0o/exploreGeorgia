@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileSettingsComponent: View {
   @Binding var isPresented: Bool
   @ObservedObject var vm = ProfileViewModel()
+  
   var body: some View {
     ZStack {
       RoundedRectangle(cornerRadius: 12)
@@ -20,6 +21,45 @@ struct ProfileSettingsComponent: View {
               .frame(width: 24, height: 24)
             
             Text("Edit Profile")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
+        //payment
+        NavigationLink(destination: PaymentViewWrapper()
+          .ignoresSafeArea()
+          .navigationBarHidden(true)) {
+          HStack(spacing: 14) {
+            Image(systemName: "creditcard")
+              .defaultOptions()
+              .frame(width: 22, height: 16)
+              .tint(.customGray)
+            
+            Text("Payment methods")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
+        //purchased
+        NavigationLink(destination: PurchaseHistoryView()
+          .navigationBarHidden(true)) {
+          HStack(spacing: 14) {
+            Image(systemName: "purchased")
+              .defaultOptions()
+              .frame(width: 14, height: 14)
+              .tint(.customGray)
+            
+            Text("  Purchased tours")
               .styledText(.customBlack, 16, .semibold)
             
             Spacer()
@@ -47,9 +87,11 @@ struct ProfileSettingsComponent: View {
         }
         
         //trip
-        Button(action: {
-          
-        }) {
+        NavigationLink(
+          destination: MyExploresViewControllerWrapper()
+            .navigationBarHidden(true)
+            .ignoresSafeArea()
+        ) {
           HStack(spacing: 14) {
             Image("trip")
               .defaultOptions()
@@ -64,6 +106,7 @@ struct ProfileSettingsComponent: View {
           }
           .frame(height: 56)
         }
+        
         
         //contact
         Button(action: {
@@ -87,9 +130,15 @@ struct ProfileSettingsComponent: View {
         
         
       }
-      .frame(height: CGFloat(4) * 56)
+      .frame(height: CGFloat(6) * 56)
       .padding(.leading, 16)
       .padding(.trailing, 10)
     }
   }
 }
+
+
+
+
+
+

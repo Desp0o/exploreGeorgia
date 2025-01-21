@@ -11,8 +11,8 @@ import FirebaseFirestore
 import GoogleSignIn
 import FirebaseStorage
 
-protocol GetCurrentUserProtocol {
-  func getCurrentUser() async throws -> UserModel?
+protocol GetFirebaseUserProtocol {
+  func getFirebaseUser(with userID: String) async throws -> UserModel?
 }
 
 protocol ChangePasswordProtocol {
@@ -36,21 +36,21 @@ protocol AvatarUpdateProtocol {
 }
 
 
-final class UserManager: GetCurrentUserProtocol {
+final class UserManager: GetFirebaseUserProtocol {
   let firebasePhotoUrlGenerator: FirebasePhotoUrlGeneratorProtocol
   
   init(firebasePhotoUrlGenerator: FirebasePhotoUrlGeneratorProtocol = FirebaseFetchingService()) {
     self.firebasePhotoUrlGenerator = firebasePhotoUrlGenerator
   }
   
-  func getCurrentUser() async throws -> UserModel? {
+  func getFirebaseUser(with userID: String) async throws -> UserModel? {
     let db = Firestore.firestore()
     
     guard let fetchedUser = Auth.auth().currentUser else {
       throw FetchedUserErrors.noUserLogged(message: "No user is signed in.")
     }
     
-    let document = try await db.collection("users").document(fetchedUser.uid).getDocument()
+    let document = try await db.collection("users").document(userID).getDocument()
     
     if document.exists, let data = document.data() {
       let avatar = data["photoURL"] as? String ?? ""

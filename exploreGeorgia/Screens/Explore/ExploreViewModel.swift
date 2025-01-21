@@ -6,13 +6,14 @@
 //
 
 import Combine
+import FirebaseFirestore
 
 final class ExploreViewModel: ObservableObject {
   private let firebaseManager: FirebaseFetchingServicePorotocol
   @Published var fetchedPlaces: [SightSeenModel] = []
   @Published var isLoading = true
   @Published var isFetching = false
-
+  
   init(
     firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService()
   ) {
@@ -20,10 +21,9 @@ final class ExploreViewModel: ObservableObject {
   }
   
   func fetchData(pageSize: Int) {
-    isFetching = true
     Task {
       do {
-        let result = try await firebaseManager.fetchPlaces(
+        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
           collectionName: "usersPlaces",
           pageSize: pageSize,
           lastDocument: nil,
@@ -31,7 +31,7 @@ final class ExploreViewModel: ObservableObject {
         )
         
         await MainActor.run {
-          fetchedPlaces = result.places
+          fetchedPlaces = places
           isLoading = false
           isFetching = false
         }

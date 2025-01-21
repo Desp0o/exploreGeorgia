@@ -1,5 +1,5 @@
 //
-//  UIViewControllerLoadinExtension.swift
+//  UIViewControllerLoadingExtension.swift
 //  exploreGeorgia
 //
 //  Created by Despo on 05.01.25.
@@ -12,17 +12,17 @@ extension UIViewController {
         view.subviews.first { $0.tag == 999 }
     }
     
-    func showLoading() {
+    func showLoading(backgroundOpacity: CGFloat = 0.7) {
         guard loadingView == nil else { return }
         
         let loadingView = UIView()
         loadingView.frame = view.bounds
         loadingView.tag = 999
+        loadingView.backgroundColor = UIColor.black.withAlphaComponent(backgroundOpacity)
         
         let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.color = .customBlue
-        activityIndicator.center = loadingView.center
+        activityIndicator.color = .customVine
         activityIndicator.startAnimating()
 
         loadingView.addSubview(activityIndicator)
