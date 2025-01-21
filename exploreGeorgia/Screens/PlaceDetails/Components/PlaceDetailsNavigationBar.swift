@@ -19,13 +19,7 @@ struct PlaceDetailsNavigationBar: View {
         presentationMode.wrappedValue.dismiss()
       } label: {
         ZStack {
-          Circle()
-            .fill(.customWhite.opacity(0.5))
-            .frame(width: 40, height: 40)
-          
-          Image("backArrow")
-            .renderingMode(.template)
-            .foregroundStyle(.white)
+          OverlayActionButtonIcon(iconName: "chevron.backward", tint: .white, scale: 0.9)
         }
       }
       
@@ -35,15 +29,7 @@ struct PlaceDetailsNavigationBar: View {
         bookmarkManager.savePlaceInBookmark(placeId: placeID, isBookmarked: isBookMarked)
         isBookMarked.toggle()
       } label: {
-        ZStack {
-          Circle()
-            .fill(.customWhite.opacity(0.5))
-            .frame(width: 40, height: 40)
-          
-          Image(systemName: isBookMarked ? "bookmark.fill" : "bookmark")
-            .renderingMode(.template)
-            .foregroundStyle(.white)
-        }
+        OverlayActionButtonIcon(iconName: isBookMarked ? "bookmark.fill" : "bookmark", tint: .white, scale: 0.9)
       }
     }
     .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
@@ -51,7 +37,3 @@ struct PlaceDetailsNavigationBar: View {
     .zIndex(2)
   }
 }
-//
-//#Preview {
-//  NavigationBarReusable()
-//}

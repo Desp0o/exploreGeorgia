@@ -49,40 +49,40 @@ struct AllBookmarkView: View {
           }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .padding(.horizontal, 20)
-
-        Spacer()
         
-        if vm.isLoaded {
-          ProgressView()
-            .scaleEffect(1.5)
-            .tint(.customBlue)
-        } else {
-          if vm.bookmarkedPlaces.isEmpty {
-            Text("Your Bucket List Awaits...")
-              .styledText(.customBlue, 16, .semibold)
-              .padding(.bottom, 40)
-              .frame(maxWidth: .infinity, maxHeight: .infinity)
-          } else {
-            ScrollView {
-              HStack(spacing: 20) {
-                ForEach(vm.buttonsArray.indices, id: \.self) { index in
-                  let currentButton = vm.buttonsArray[index]
-                  
-                  Button {
-                    withAnimation {
-                      dataIndex = index
-                    }
-                  } label: {
-                    Text(currentButton)
-                      .styledText(.customBlack, 16, .semibold)
-                      .padding(.horizontal, 10)
-                      .padding(.vertical, 6)
-                      .background(.customBlue.opacity(index == dataIndex ? 1 : 0.3))
-                      .roundedCorners(12)
-                  }
-                }
-              }
+        ScrollView {
+          HStack(spacing: 20) {
+            ForEach(vm.buttonsArray.indices, id: \.self) { index in
+              let currentButton = vm.buttonsArray[index]
               
+              Button {
+                withAnimation {
+                  dataIndex = index
+                }
+              } label: {
+                Text(currentButton)
+                  .styledText(.customBlack, 16, .semibold)
+                  .padding(.horizontal, 10)
+                  .padding(.vertical, 6)
+                  .background(.customBlue.opacity(index == dataIndex ? 1 : 0.3))
+                  .roundedCorners(12)
+              }
+            }
+          }
+          
+          if vm.isLoaded {
+            ProgressView()
+              .scaleEffect(1.5)
+              .tint(.customBlue)
+          } else {
+            if vm.bookmarkedPlaces.isEmpty {
+              VStack{
+                Text("Your Bucket List Awaits...")
+                  .styledText(.customBlue, 16, .semibold)
+                  .padding(.bottom, 40)
+              }
+              .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
               Spacer()
                 .frame(height: 20)
               
@@ -114,15 +114,27 @@ struct AllBookmarkView: View {
                 }
               }
             }
-            .scrollBounceBehavior(.basedOnSize)
-            .scrollIndicators(.hidden)
-            .padding(.horizontal, 20)
           }
         }
-        
-        Spacer()
+        .scrollBounceBehavior(.basedOnSize)
+        .scrollIndicators(.hidden)
+        .padding(.horizontal, 20)
       }
     }
+    .onAppear(perform: {
+      switch dataIndex {
+      case 0:
+        vm.bookmarkedPlaces = []
+        vm.fetchData(pageLimit: vm.pageSize, collectionName: "placesFromApp")
+      case 1:
+        vm.bookmarkedPlaces = []
+        vm.fetchData(pageLimit: vm.pageSize, collectionName: "usersPlaces")
+      case 2:
+        vm.fetchToursData(pageLimit: vm.pageSize)
+      default:
+        vm.fetchData(pageLimit: vm.pageSize, collectionName: "placesFromApp")
+      }
+    })
     .onChange(of: dataIndex) { _ in
       switch dataIndex {
       case 0:

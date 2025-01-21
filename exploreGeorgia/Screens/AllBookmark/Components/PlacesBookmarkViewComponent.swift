@@ -13,54 +13,37 @@ struct PlacesBookmarkViewComponent: View {
   let data: [SightSeenModel]
   let collectionName: String
   
-  
   var body: some View {
     ForEach(Array(data.enumerated()), id: \.element) { index, place in
-      ZStack {
-        HStack {
-          Spacer()
-          
-          Button {
-            let indexSet = IndexSet(integer: index)
-            withAnimation {
-              vm.removeBookmark(index: indexSet)
+      NavigationLink(
+        destination: PlaceDetailsView(
+          elementID: place.id ?? "",
+          collectionName: collectionName
+        ).navigationBarHidden(true)
+      ) {
+        SightSeenReusableView(
+          place: place,
+          maxWidth: UIScreen.main.bounds.width - 40,
+          height: 130,
+          isBookmarkIconHidden: true
+        )
+        .overlay {
+          ZStack {
+            Button {
+              let indexSet = IndexSet(integer: index)
+              withAnimation {
+                vm.removeBookmark(index: indexSet)
+              }
+            } label: {
+              OverlayActionButtonIcon(iconName: "trash", tint: .white, scale: 0.8)
             }
-          } label: {
-            VStack {
-              Image(systemName: "trash")
-                .renderingMode(.template)
-                .foregroundStyle(.white)
-                .offset(x: 5)
-            }
-            .frame(width: 54, height: 212)
+            .frame(width: 36, height: 36)
+            .padding(20)
           }
-          .background(.red)
-          .clipShape(
-            .rect(
-              topLeadingRadius: 0,
-              bottomLeadingRadius: 0,
-              bottomTrailingRadius: 12,
-              topTrailingRadius: 12
-            )
-          )
+          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
         }
-        
-        NavigationLink(
-          destination: PlaceDetailsView(
-            elementID: place.id ?? "",
-            collectionName: collectionName
-          ).navigationBarHidden(true)
-        ) {
-          SightSeenReusableView(
-            place: place,
-            maxWidth: UIScreen.main.bounds.width - 80,
-            height: 130,
-            isBookmarkIconHidden: true
-          )
-        }
-        .padding(.trailing, 40)
+        .opacity(opacityPoint)
       }
-      .opacity(opacityPoint)
     }
     .onAppear {
       withAnimation(.easeIn(duration: 0.2)) {

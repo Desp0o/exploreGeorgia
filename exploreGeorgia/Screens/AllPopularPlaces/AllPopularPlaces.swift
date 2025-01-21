@@ -25,15 +25,7 @@ struct AllPopularPlaces: View {
             Button {
               dismiss.wrappedValue.dismiss()
             } label: {
-              ZStack {
-                Circle()
-                  .fill(.customBlue)
-                  .frame(width: 40, height: 40)
-                
-                Image("backArrow")
-                  .renderingMode(.template)
-                  .foregroundStyle(.white)
-              }
+              OverlayActionButtonIcon(iconName: "chevron.backward", tint: .white)
             }
             
             Spacer()
@@ -48,7 +40,7 @@ struct AllPopularPlaces: View {
           .padding(.vertical, 20)
           .padding(.horizontal, 20)
           
-          LazyVGrid(columns:[GridItem(), GridItem()]) {
+          LazyVGrid(columns:[GridItem(), GridItem()], spacing: 20) {
             ForEach(vm.fetchedData.indices, id: \.self) { index in
               let place = vm.fetchedData[index]
               
@@ -62,8 +54,8 @@ struct AllPopularPlaces: View {
               ) {
                 SightSeenReusableView(
                   place: place,
-                  maxWidth: UIScreen.main.bounds.width / 2 - 30,
-                  height: UIScreen.main.bounds.width / 2,
+                  maxWidth: UIScreen.main.bounds.width / 2 - 40,
+                  height: 140,
                   isBookmarkIconHidden: false
                 )
                 .opacity(startingOpacity)
@@ -85,6 +77,7 @@ struct AllPopularPlaces: View {
             }
           }
           .padding(.horizontal, 20)
+          .padding(.bottom, 20)
           .id(vm.fetchedData)
           .id(isSomethingChanged)
         }
