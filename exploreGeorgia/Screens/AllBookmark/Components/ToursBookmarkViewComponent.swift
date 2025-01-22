@@ -38,7 +38,7 @@ struct ToursBookmarkViewComponent: View {
               .opacity(opacityPoint)
           }
           .onAppear {
-            if index == vm.bookmarkedPlaces.count - 2 {
+            if index == vm.bookmarkedPlaces.count - 3 {
               vm.pageSize += 10
               vm.fetchToursData(pageLimit: vm.pageSize)
             }

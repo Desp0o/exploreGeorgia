@@ -14,7 +14,7 @@ final class AllBookmarkViewModel: ObservableObject {
   @Published var isFetching = false
   @Published var isLoading = true
   @Published var errorMessages = ""
-  @Published var pageSize = 10
+  @Published var pageSize = 4
   @Published var dataIndex = 0
   private let bookmarkManager: BookmarkActivityProtocol
   private let fetchBookmarksManager: GetDocumetnsFromBucketListProtocol
@@ -34,10 +34,6 @@ final class AllBookmarkViewModel: ObservableObject {
   func fetchData(pageLimit: Int, collectionName: FirebaseCollectionEnum) {
     Task {
       do {
-        await MainActor.run {
-          isLoading = true
-        }
-        
         let userID = Auth.auth().currentUser?.uid
         guard let id = userID else { return }
         
@@ -63,10 +59,6 @@ final class AllBookmarkViewModel: ObservableObject {
   func fetchToursData(pageLimit: Int) {
     Task {
       do {
-        await MainActor.run {
-          isLoading = true
-        }
-        
         let userID = Auth.auth().currentUser?.uid
         guard let id = userID else { return }
         
@@ -123,14 +115,16 @@ final class AllBookmarkViewModel: ObservableObject {
   func requestData() {
     switch dataIndex {
     case 0:
-      bookmarkedPlaces = []
+      isLoading = true
       fetchData(pageLimit: pageSize, collectionName: .appPlace)
     case 1:
-      bookmarkedPlaces = []
+      isLoading = true
       fetchData(pageLimit: pageSize, collectionName: .usersPlace)
     case 2:
+      isLoading = true
       fetchToursData(pageLimit: pageSize)
     default:
+      isLoading = true
       fetchData(pageLimit: pageSize, collectionName: .appPlace)
     }
   }

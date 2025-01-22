@@ -48,9 +48,10 @@ struct PlacesBookmarkViewComponent: View {
             .opacity(opacityPoint)
           }
           .onAppear {
-            if index == vm.bookmarkedPlaces.count - 2 {
+            if index == vm.bookmarkedPlaces.count - 3 {
               vm.pageSize += 10
               vm.fetchData(pageLimit: vm.pageSize, collectionName: .appPlace)
+              print(vm.bookmarkedPlaces.count)
             }
           }
         }
