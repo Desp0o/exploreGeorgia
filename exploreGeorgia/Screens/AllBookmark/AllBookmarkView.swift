@@ -32,7 +32,7 @@ struct AllBookmarkView: View {
                 dismiss.wrappedValue.dismiss()
               } label: {
                 OverlayActionButtonIcon(
-                  iconName: "chevron.backward",
+                  iconName: IconsEnum.backButton.rawValue,
                   tint: .white,
                   scale: 0.9,
                   bgColor: .customBlue,

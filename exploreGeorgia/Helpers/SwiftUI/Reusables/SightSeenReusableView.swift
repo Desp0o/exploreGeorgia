@@ -32,7 +32,7 @@ struct SightSeenReusableView: View {
                 )
             } label: {
               OverlayActionButtonIcon(
-                iconName: place.isBookmarked ?? false ? "bookmark.fill" : "bookmark",
+                iconName: place.isBookmarked ?? false ? IconsEnum.bookmarkActive.rawValue : IconsEnum.bookmarkInactive.rawValue,
                 tint: .customVine
               )
             }

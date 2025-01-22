@@ -38,7 +38,7 @@ struct PlacesBookmarkViewComponent: View {
                     vm.removeBookmark(index: indexSet)
                   }
                 } label: {
-                  OverlayActionButtonIcon(iconName: "trash", tint: .white, scale: 0.8)
+                  OverlayActionButtonIcon(iconName: IconsEnum.trash.rawValue, tint: .white, scale: 0.8)
                 }
                 .frame(width: 36, height: 36)
                 .padding(20)
