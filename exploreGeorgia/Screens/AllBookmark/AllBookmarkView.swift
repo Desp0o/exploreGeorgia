@@ -79,13 +79,13 @@ struct AllBookmarkView: View {
             VStack(spacing: 12) {
               switch vm.dataIndex {
               case 0:
-                PlacesBookmarkViewComponent(vm: vm, collectionName: "placesFromApp")
+                PlacesBookmarkViewComponent(vm: vm, collectionName: .appPlace)
               case 1:
-                PlacesBookmarkViewComponent(vm: vm, collectionName: "usersPlaces")
+                PlacesBookmarkViewComponent(vm: vm, collectionName: .usersPlace)
               case 2:
                 ToursBookmarkViewComponent(vm: vm)
               default:
-                PlacesBookmarkViewComponent(vm: vm, collectionName: "placesFromApp")
+                NoBookmarksComponent()
               }
             }
           }

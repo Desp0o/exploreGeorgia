@@ -34,10 +34,10 @@ final class PlaceDetailsViewModel: ObservableObject {
     self.firebaseSinglePlaceFetcher = firebaseSinglePlaceFetcher
   }
   
-  func fetchSinglePlaceByID(with id: String, and collection: String) {
+  func fetchSinglePlaceByID(with id: String, and collection: FirebaseCollectionEnum) {
     Task {
       do {
-        let data: SightSeenModel = try await firebaseSinglePlaceFetcher.fetchSinglePlaceGeneric(with: id, and: collection)
+        let data: SightSeenModel = try await firebaseSinglePlaceFetcher.fetchSinglePlaceGeneric(with: id, and: collection.rawValue)
         
         await MainActor.run {
           currentPlace = data

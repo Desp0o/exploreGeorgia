@@ -10,7 +10,7 @@ import SwiftUI
 struct PlacesBookmarkViewComponent: View {
   @ObservedObject var vm: AllBookmarkViewModel
   @State private var opacityPoint: CGFloat = 0
-  let collectionName: String
+  let collectionName: FirebaseCollectionEnum
   
   var body: some View {
     if vm.bookmarkedPlaces.isEmpty {

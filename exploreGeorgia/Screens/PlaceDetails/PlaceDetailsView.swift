@@ -15,7 +15,7 @@ struct PlaceDetailsView: View {
   @State var isPresented = false
   @State var isBookmarked = false
   let elementID: String
-  var collectionName: String
+  var collectionName: FirebaseCollectionEnum
 
   var body: some View {
     VStack(spacing: 0) {
