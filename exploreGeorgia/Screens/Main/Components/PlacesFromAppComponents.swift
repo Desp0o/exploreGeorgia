@@ -48,14 +48,15 @@ struct PlacesFromAppComponents: View {
                 NavigationLink(
                   destination: PlaceDetailsView(
                     elementID: place.id ?? "",
-                    collectionName: "placesFromApp"
+                    collectionName: .appPlace
                   )
                   .navigationBarHidden(true)
                 ) {
                   SightSeenReusableView(
                     place: place,
                     maxWidth: 268,
-                    height: 250
+                    height: 250,
+                    isBookmarkIconHidden: false
                   )
                 }
                 .onTapGesture {

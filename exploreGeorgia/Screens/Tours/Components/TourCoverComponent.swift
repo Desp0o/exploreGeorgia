@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TourCoverComponent: View {
   @ObservedObject var vm: TourViewModel
-  @Binding var isBookMarked: Bool
   
   var body: some View {
     ZStack(alignment: .bottomLeading) {
@@ -37,7 +36,7 @@ struct TourCoverComponent: View {
     }
     .overlay {
       ZStack() {
-        PlaceDetailsNavigationBar(isBookMarked: $isBookMarked, placeID: vm.tour?.id ?? "")
+        PlaceDetailsNavigationBar(isBookMarked: $vm.isBookMarked, placeID: vm.tour?.id ?? "")
       }
       .frame(maxHeight: .infinity, alignment: .top)
     }

@@ -9,12 +9,11 @@ import SwiftUI
 import _PhotosUI_SwiftUI
 
 struct CoverUploadComponent: View {
-  var choosenCover: UIImage?
-  @Binding var selectedCoverFromPicker: PhotosPickerItem?
+  @ObservedObject var vm: AddPlaceViewModel
   
     var body: some View {
       HStack(spacing: 20) {
-        if let image = choosenCover {
+        if let image = vm.choosenCover {
           Image(uiImage: image)
             .defaultOptions()
             .frame(width: 40, height: 40)
@@ -28,7 +27,7 @@ struct CoverUploadComponent: View {
         
         Spacer()
         
-        PhotosPicker(selection: $selectedCoverFromPicker) {
+        PhotosPicker(selection: $vm.selectedCoverFromPicker) {
           Text("Upload Cover")
             .styledText(.customBlue, 16, .semibold)
             .frame(maxWidth: .infinity)

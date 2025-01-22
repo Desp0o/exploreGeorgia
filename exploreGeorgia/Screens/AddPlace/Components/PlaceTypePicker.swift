@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct PlaceTypePicker: View {
-  @Binding var selectedPlace: AddPlaceTypes
-  let placeTypes: [AddPlaceTypes]
+  @ObservedObject var vm: AddPlaceViewModel
   
   var body: some View {
-    Picker("Place Type", selection: $selectedPlace) {
-      ForEach(placeTypes, id: \.self) { type in
+    Picker("Place Type", selection: $vm.selectedPlace) {
+      ForEach(vm.placeType, id: \.self) { type in
         Text(type.rawValue)
       }
     }
