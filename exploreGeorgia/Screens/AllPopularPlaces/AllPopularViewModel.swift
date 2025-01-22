@@ -34,8 +34,8 @@ final class AllPopularViewModel: ObservableObject {
           user = data
         }
         
-        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
-          collectionName: "placesFromApp",
+        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+          collectionName: .appPlace,
           pageSize: pageSize,
           lastDocument: nil,
           userBucketList: user?.bucketList ?? [""]

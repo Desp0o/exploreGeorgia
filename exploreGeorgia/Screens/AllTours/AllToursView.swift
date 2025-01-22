@@ -60,7 +60,6 @@ struct AllToursView: View {
               .frame(width: 1, height: 0)
               .onAppear {
                 pageSize += 10
-                print(pageSize)
               }
           }
         }

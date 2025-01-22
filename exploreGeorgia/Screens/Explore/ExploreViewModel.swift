@@ -23,8 +23,8 @@ final class ExploreViewModel: ObservableObject {
   func fetchData(pageSize: Int) {
     Task {
       do {
-        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
-          collectionName: "usersPlaces",
+        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+          collectionName: .usersPlace,
           pageSize: pageSize,
           lastDocument: nil,
           userBucketList: [""]
