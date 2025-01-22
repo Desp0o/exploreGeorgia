@@ -5,6 +5,10 @@
 //  Created by Despo on 12.01.25.
 //
 
+struct FactModel: Codable {
+  let fact: String
+}
+
 import FirebaseFirestore
 import FirebaseAuth
 
@@ -12,10 +16,10 @@ final class MainViewModel: ObservableObject {
   private let db = Firestore.firestore()
   private let userManager: GetFirebaseUserProtocol
   private let firebaseManager: FirebaseFetchingServicePorotocol
-  private let singleElementFetcherManager: FirebaseSingleElementFetching
+  private let firebaseSimpleManager: FirebaseSimpleCollectionFetchProtocol
   @Published var user: UserModel? = nil
   @Published var errorMessage = ""
-  @Published var randomFact = ""
+  @Published var intrestingFacts: [FactModel] = []
   @Published var placesFromApp: [SightSeenModel] = []
   @Published var usersAddedPlacesData: [SightSeenModel] = []
   @Published var fetchedTours: [TourModel] = []
@@ -24,12 +28,11 @@ final class MainViewModel: ObservableObject {
   init(
     userManager: GetFirebaseUserProtocol = UserManager(),
     firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService(),
-    singleElementFetcherManager: FirebaseSingleElementFetching = FirebaseFetchingService()
+    firebaseSimpleManager: FirebaseSimpleCollectionFetchProtocol = FirebaseFetchingService()
   ) {
     self.userManager = userManager
     self.firebaseManager = firebaseManager
-    self.singleElementFetcherManager = singleElementFetcherManager
-    
+    self.firebaseSimpleManager = firebaseSimpleManager
     fetchSingleFact()
     fetchTours()
   }
@@ -45,8 +48,8 @@ final class MainViewModel: ObservableObject {
           user = data
         }
         
-        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
-          collectionName: "placesFromApp",
+        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+          collectionName: .appPlace,
           pageSize: 5,
           lastDocument: nil,
           userBucketList: user?.bucketList ?? [""]
@@ -68,18 +71,12 @@ final class MainViewModel: ObservableObject {
   func fetchSingleFact() {
     Task {
       do {
-        let fact = try await singleElementFetcherManager.fetchRandomDocument(collectionName: "facts")
-        guard let fetchedFact = fact else { return }
-        
-        if let factData = fetchedFact.data(), let factText = factData["fact"] as? String {
-          await MainActor.run {
-            randomFact = factText
-          }
-        } else {
-          print("No fact text found.")
+        let result: [FactModel] = try await firebaseSimpleManager.fetchCollection(collectionName: .fatcs)
+        await MainActor.run {
+          intrestingFacts = result
         }
       } catch {
-        print(error.localizedDescription, "❌")
+        print(error.localizedDescription)
       }
     }
   }
@@ -95,8 +92,8 @@ final class MainViewModel: ObservableObject {
           user = userData
         }
         
-        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
-          collectionName: "usersPlaces",
+        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+          collectionName: .usersPlace,
           pageSize: 3,
           lastDocument: nil,
           userBucketList: user?.bucketList ?? [""]
@@ -114,8 +111,8 @@ final class MainViewModel: ObservableObject {
   func fetchTours() {
     Task {
       do {
-        let (places, _, _): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
-          collectionName: "tours",
+        let (places, _, _): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+          collectionName: .tours,
           pageSize: 3,
           lastDocument: nil,
           userBucketList: user?.bucketList ?? [""]
@@ -123,7 +120,6 @@ final class MainViewModel: ObservableObject {
         
         await MainActor.run {
           fetchedTours = places
-          print(fetchedTours)
         }
       } catch {
         print(error.localizedDescription)

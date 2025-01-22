@@ -19,8 +19,8 @@ final class AllToursViewModel: ObservableObject {
   func fetchTours(pageSize: Int) {
     Task {
       do {
-        let (places, _, _): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchPlaces(
-          collectionName: "tours",
+        let (places, _, _): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+          collectionName: .tours,
           pageSize: pageSize,
           lastDocument: nil,
           userBucketList: [""]

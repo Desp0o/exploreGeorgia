@@ -6,24 +6,20 @@
 //
 
 protocol IdentifiableAndBookmarkable {
-    var id: String? { get }
-    var isBookmarked: Bool? { get set }
+  var id: String? { get }
+  var isBookmarked: Bool? { get set }
 }
 
 import FirebaseFirestore
 import FirebaseStorage
 
 protocol FirebaseFetchingServicePorotocol {
-  func fetchPlaces<T: Codable & IdentifiableAndBookmarkable>(
-    collectionName: String,
+  func fetchCollectionFromFirebase<T: Codable & IdentifiableAndBookmarkable>(
+    collectionName: FirebaseCollectionEnum,
     pageSize: Int,
     lastDocument: DocumentSnapshot?,
     userBucketList: [String]
   ) async throws -> (places: [T], lastDocument: DocumentSnapshot?, hasMoreData: Bool)
-}
-
-protocol FirebaseSingleElementFetching {
-  func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot?
 }
 
 protocol FirebasePhotoUrlGeneratorProtocol {
@@ -46,17 +42,21 @@ protocol FirebasePayemntsProtocol {
   )
 }
 
+protocol FirebaseSimpleCollectionFetchProtocol {
+  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum) async throws -> [T]
+}
+
 
 final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
   let db = Firestore.firestore()
   
-  func fetchPlaces<T: Codable & IdentifiableAndBookmarkable>(
-    collectionName: String,
+  func fetchCollectionFromFirebase<T: Codable & IdentifiableAndBookmarkable>(
+    collectionName: FirebaseCollectionEnum,
     pageSize: Int,
     lastDocument: DocumentSnapshot?,
     userBucketList: [String]
   ) async throws -> (places: [T], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
-    let collectionRef = db.collection(collectionName).limit(to: pageSize + 1)
+    let collectionRef = db.collection(collectionName.rawValue).limit(to: pageSize + 1)
     let query: Query
     
     if let lastDocument = lastDocument {
@@ -81,20 +81,6 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     }
     
     return (places: newPlaces, lastDocument: documentsToProcess.last, hasMoreData: hasMoreData)
-  }
-}
-
-extension FirebaseFetchingService: FirebaseSingleElementFetching {
-  func fetchRandomDocument(collectionName: String) async throws -> DocumentSnapshot? {
-    let querySnapshot = try await db.collection(collectionName).getDocuments()
-    let documentCount = querySnapshot.documents.count
-    
-    let randomIndex = Int.random(in: 0..<documentCount)
-    
-    let query = db.collection(collectionName).limit(to: randomIndex + 1)
-    let snapshot = try await query.getDocuments()
-    
-    return snapshot.documents[randomIndex]
   }
 }
 
@@ -144,7 +130,7 @@ extension FirebaseFetchingService: FirebasePayemntsProtocol {
     pageSize: Int,
     lastDocument: DocumentSnapshot?
   ) async throws -> (payments: [CreditCardModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
-    let collectionRef = db.collection("payments")
+    let collectionRef = db.collection(FirebaseCollectionEnum.payments.rawValue)
       .whereField("userId", isEqualTo: userId)
       .limit(to: pageSize + 1)
     
@@ -173,5 +159,16 @@ extension FirebaseFetchingService: FirebasePayemntsProtocol {
       lastDocument: documentsToProcess.last,
       hasMoreData: hasMoreData
     )
+  }
+}
+
+extension FirebaseFetchingService: FirebaseSimpleCollectionFetchProtocol {
+  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum) async throws -> [T] {
+    let db = Firestore.firestore()
+    let querySnapshot = try await db.collection(collectionName.rawValue).limit(to: 100).getDocuments()
+    
+    return try querySnapshot.documents.map { document in
+      try document.data(as: T.self)
+    }
   }
 }
