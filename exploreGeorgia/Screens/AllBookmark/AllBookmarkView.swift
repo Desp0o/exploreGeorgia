@@ -11,9 +11,7 @@ struct AllBookmarkView: View {
   @Environment(\.presentationMode) var dismiss
   @StateObject private var vm = AllBookmarkViewModel()
   @ObservedObject private var alertManager = CustomAlertManager()
-  @State private var currentPlace: SightSeenModel? = nil
   @State private var alertBoxMessage = ""
-  @State private var dataIndex = 0
   
   var body: some View {
     ZStack {
@@ -33,121 +31,74 @@ struct AllBookmarkView: View {
               Button {
                 dismiss.wrappedValue.dismiss()
               } label: {
-                ZStack {
-                  Circle()
-                    .fill(.customBlue)
-                    .frame(width: 40, height: 40)
-                  
-                  Image("backArrow")
-                    .renderingMode(.template)
-                    .foregroundStyle(.white)
-                }
+                OverlayActionButtonIcon(
+                  iconName: "chevron.backward",
+                  tint: .white,
+                  scale: 0.9,
+                  bgColor: .customBlue,
+                  opacity: 1
+                )
               }
-              
               Spacer()
             }
           }.frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .padding(.horizontal, 20)
         
-        ScrollView {
-          HStack(spacing: 20) {
-            ForEach(vm.buttonsArray.indices, id: \.self) { index in
-              let currentButton = vm.buttonsArray[index]
-              
-              Button {
-                withAnimation {
-                  dataIndex = index
-                }
-              } label: {
-                Text(currentButton)
-                  .styledText(.customBlack, 16, .semibold)
-                  .padding(.horizontal, 10)
-                  .padding(.vertical, 6)
-                  .background(.customBlue.opacity(index == dataIndex ? 1 : 0.3))
-                  .roundedCorners(12)
-              }
-            }
-          }
-          
-          if vm.isLoaded {
+        if vm.isLoading {
+          VStack {
             ProgressView()
               .scaleEffect(1.5)
               .tint(.customBlue)
-          } else {
-            if vm.bookmarkedPlaces.isEmpty {
-              VStack{
-                Text("Your Bucket List Awaits...")
-                  .styledText(.customBlue, 16, .semibold)
-                  .padding(.bottom, 40)
-              }
-              .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else {
-              Spacer()
-                .frame(height: 20)
-              
-              VStack(spacing: 12) {
-                switch dataIndex {
-                case 0:
-                  PlacesBookmarkViewComponent(
-                    vm: vm,
-                    data: vm.bookmarkedPlaces,
-                    collectionName: "placesFromApp"
-                  )
-                case 1:
-                  PlacesBookmarkViewComponent(
-                    vm: vm,
-                    data: vm.bookmarkedPlaces,
-                    collectionName: "usersPlaces"
-                  )
-                case 2:
-                  ToursBookmarkViewComponent(
-                    vm: vm,
-                    data: vm.bookmarkedTours
-                  )
-                default:
-                  PlacesBookmarkViewComponent(
-                    vm: vm,
-                    data: vm.bookmarkedPlaces,
-                    collectionName: "placesFromApp"
-                  )
+          }
+          .frame(maxHeight: .infinity)
+        } else {
+          ScrollView {
+            HStack(spacing: 20) {
+              ForEach(vm.buttonsArray.indices, id: \.self) { index in
+                let currentButton = vm.buttonsArray[index]
+                
+                Button {
+                  withAnimation {
+                    vm.dataIndex = index
+                  }
+                } label: {
+                  Text(currentButton)
+                    .styledText(.customBlack, 16, .semibold)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(.customBlue.opacity(index == vm.dataIndex ? 1 : 0.3))
+                    .roundedCorners(12)
                 }
               }
             }
+            
+            Spacer()
+              .frame(height: 20)
+            
+            VStack(spacing: 12) {
+              switch vm.dataIndex {
+              case 0:
+                PlacesBookmarkViewComponent(vm: vm, collectionName: "placesFromApp")
+              case 1:
+                PlacesBookmarkViewComponent(vm: vm, collectionName: "usersPlaces")
+              case 2:
+                ToursBookmarkViewComponent(vm: vm)
+              default:
+                PlacesBookmarkViewComponent(vm: vm, collectionName: "placesFromApp")
+              }
+            }
           }
+          .scrollBounceBehavior(.basedOnSize)
+          .scrollIndicators(.hidden)
         }
-        .scrollBounceBehavior(.basedOnSize)
-        .scrollIndicators(.hidden)
-        .padding(.horizontal, 20)
       }
     }
-    .onAppear(perform: {
-      switch dataIndex {
-      case 0:
-        vm.bookmarkedPlaces = []
-        vm.fetchData(pageLimit: vm.pageSize, collectionName: "placesFromApp")
-      case 1:
-        vm.bookmarkedPlaces = []
-        vm.fetchData(pageLimit: vm.pageSize, collectionName: "usersPlaces")
-      case 2:
-        vm.fetchToursData(pageLimit: vm.pageSize)
-      default:
-        vm.fetchData(pageLimit: vm.pageSize, collectionName: "placesFromApp")
-      }
-    })
-    .onChange(of: dataIndex) { _ in
-      switch dataIndex {
-      case 0:
-        vm.bookmarkedPlaces = []
-        vm.fetchData(pageLimit: vm.pageSize, collectionName: "placesFromApp")
-      case 1:
-        vm.bookmarkedPlaces = []
-        vm.fetchData(pageLimit: vm.pageSize, collectionName: "usersPlaces")
-      case 2:
-        vm.fetchToursData(pageLimit: vm.pageSize)
-      default:
-        vm.fetchData(pageLimit: vm.pageSize, collectionName: "placesFromApp")
-      }
+    .onAppear {
+      vm.requestData()
+    }
+    .onChange(of: vm.dataIndex) { _ in
+      vm.requestData()
     }
   }
 }

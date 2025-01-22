@@ -9,12 +9,12 @@ import SwiftUI
 import _PhotosUI_SwiftUI
 
 struct AlbumAddComponent: View {
-  @Binding var selectedAlbum: [PhotosPickerItem]
-  let choosenAlbum: [UIImage]
+  @ObservedObject var vm: AddPlaceViewModel
+  
   
   var body: some View {
     VStack(spacing: 10) {
-      PhotosPicker(selection: $selectedAlbum, maxSelectionCount: 5) {
+      PhotosPicker(selection: $vm.selectedAlbum, maxSelectionCount: 5) {
         Text("Tap to Upload Photos")
           .styledText(.customBlue, 16, .semibold)
           .frame(maxWidth: .infinity)
@@ -28,7 +28,7 @@ struct AlbumAddComponent: View {
       }
       
       HStack(spacing: 10) {
-        ForEach(Array(choosenAlbum.enumerated()), id: \.offset) { _, image in
+        ForEach(Array(vm.choosenAlbum.enumerated()), id: \.offset) { _, image in
           Image(uiImage: image)
             .resizable()
             .scaledToFill()

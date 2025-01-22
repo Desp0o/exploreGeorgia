@@ -10,45 +10,57 @@ import SwiftUI
 struct PlacesBookmarkViewComponent: View {
   @ObservedObject var vm: AllBookmarkViewModel
   @State private var opacityPoint: CGFloat = 0
-  let data: [SightSeenModel]
   let collectionName: String
   
   var body: some View {
-    ForEach(Array(data.enumerated()), id: \.element) { index, place in
-      NavigationLink(
-        destination: PlaceDetailsView(
-          elementID: place.id ?? "",
-          collectionName: collectionName
-        ).navigationBarHidden(true)
-      ) {
-        SightSeenReusableView(
-          place: place,
-          maxWidth: UIScreen.main.bounds.width - 40,
-          height: 130,
-          isBookmarkIconHidden: true
-        )
-        .overlay {
-          ZStack {
-            Button {
-              let indexSet = IndexSet(integer: index)
-              withAnimation {
-                vm.removeBookmark(index: indexSet)
+    if vm.bookmarkedPlaces.isEmpty {
+      NoBookmarksComponent()
+    } else {
+      LazyVStack(spacing: 20) {
+        ForEach(Array(vm.bookmarkedPlaces.enumerated()), id: \.element) { index, place in
+          NavigationLink(
+            destination: PlaceDetailsView(
+              elementID: place.id ?? "",
+              collectionName: collectionName
+            ).navigationBarHidden(true)
+          ) {
+            SightSeenReusableView(
+              place: place,
+              maxWidth: UIScreen.main.bounds.width - 40,
+              height: 130,
+              isBookmarkIconHidden: true
+            )
+            .overlay {
+              ZStack {
+                Button {
+                  let indexSet = IndexSet(integer: index)
+                  withAnimation {
+                    vm.removeBookmark(index: indexSet)
+                  }
+                } label: {
+                  OverlayActionButtonIcon(iconName: "trash", tint: .white, scale: 0.8)
+                }
+                .frame(width: 36, height: 36)
+                .padding(20)
               }
-            } label: {
-              OverlayActionButtonIcon(iconName: "trash", tint: .white, scale: 0.8)
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             }
-            .frame(width: 36, height: 36)
-            .padding(20)
+            .opacity(opacityPoint)
           }
-          .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+          .onAppear {
+            if index == vm.bookmarkedPlaces.count - 2 {
+              vm.pageSize += 10
+              vm.fetchData(pageLimit: vm.pageSize, collectionName: .appPlace)
+            }
+          }
         }
-        .opacity(opacityPoint)
+        .onAppear {
+          withAnimation(.easeIn(duration: 0.2)) {
+            opacityPoint = 1
+          }
+        }
       }
-    }
-    .onAppear {
-      withAnimation(.easeIn(duration: 0.2)) {
-        opacityPoint = 1
-      }
+      .padding(.bottom, 20)
     }
   }
 }

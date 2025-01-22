@@ -16,6 +16,14 @@ protocol CheckBookmarkProtocol {
   func checkIfBookmarked(placeId: String, currentUser: UserModel) async throws -> Bool
 }
 
+protocol GetDocumetnsFromBucketListProtocol {
+  func getDocumentsFromBucketList<T: Codable>(
+    userId: String,
+    pageLimit: Int,
+    collectionName: FirebaseCollectionEnum
+  ) async throws -> [T]
+}
+
 final class BookMarkManager: ObservableObject {
   private let userManager: UserManager
   
@@ -65,5 +73,29 @@ extension BookMarkManager: BookmarkActivityProtocol {
 extension BookMarkManager: CheckBookmarkProtocol {
   func checkIfBookmarked(placeId: String, currentUser: UserModel) async throws -> Bool {
     return currentUser.bucketList.contains(placeId)
+  }
+}
+
+extension BookMarkManager: GetDocumetnsFromBucketListProtocol {
+  func getDocumentsFromBucketList<T: Codable>(
+    userId: String,
+    pageLimit: Int,
+    collectionName: FirebaseCollectionEnum
+  ) async throws -> [T] {
+    let db = Firestore.firestore()
+    let userDocRef = db.collection("users").document(userId)
+    let userDoc = try await userDocRef.getDocument()
+    
+    guard let bucketList = userDoc.data()?["bucketList"] as? [String], !bucketList.isEmpty else {
+      return []
+    }
+    
+    let placesQuery = db.collection(collectionName.rawValue).whereField("id", in: bucketList).limit(to: pageLimit)
+    let placesSnapshot = try await placesQuery.getDocuments()
+    
+    let documents: [T] = try placesSnapshot.documents.compactMap { document in
+      try document.data(as: T.self)
+    }
+    return documents
   }
 }

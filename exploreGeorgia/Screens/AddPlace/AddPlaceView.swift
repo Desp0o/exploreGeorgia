@@ -15,9 +15,9 @@ struct AddPlaceView: View {
   @ObservedObject var alertManager = CustomAlertManager()
   @ObservedObject private var toastManager = ToastManager()
   @State var isPresented = false
-  @Binding var isAppeared: Bool
   @State var currentLocationForUse: Location?
   @State private var alertBoxMessage = ""
+  @Binding var isAppeared: Bool
   
   var body: some View {
     ZStack(alignment: .top) {
@@ -46,11 +46,7 @@ struct AddPlaceView: View {
           Button {
             dismiss()
           } label: {
-            Image(systemName: "xmark.circle.fill")
-              .resizable()
-              .scaledToFill()
-              .foregroundStyle(.customBlue)
-              .frame(width: 40, height: 40)
+            OverlayActionButtonIcon(iconName: "xmark", tint: .white, bgColor: .customBlue, opacity: 1)
           }
           .padding(.horizontal, 20)
           
@@ -63,10 +59,7 @@ struct AddPlaceView: View {
           
           Spacer().frame(height: 10)
           
-          CoverUploadComponent(
-            choosenCover: vm.choosenCover,
-            selectedCoverFromPicker: $vm.selectedCoverFromPicker
-          )
+          CoverUploadComponent(vm: vm)
           
           VStack(spacing: 20) {
             TextField("Place name", text: $vm.placeName)
@@ -97,12 +90,9 @@ struct AddPlaceView: View {
           }
           .customBorderedButton(height: 40, borderColor: .customBlue)
           
-          PlaceTypePicker(selectedPlace: $vm.selectedPlace, placeTypes: vm.placeType)
+          PlaceTypePicker(vm: vm)
           
-          AlbumAddComponent(
-            selectedAlbum: $vm.selectedAlbum,
-            choosenAlbum: vm.choosenAlbum
-          )
+          AlbumAddComponent(vm: vm)
           
           Button {
             vm.latitude = currentLocationForUse?.coordinate.latitude ?? 0
