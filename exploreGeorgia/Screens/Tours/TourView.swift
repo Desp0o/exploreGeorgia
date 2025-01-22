@@ -22,7 +22,7 @@ struct TourView: View {
       ScrollViewReader { proxy in
         ScrollView {
           VStack(spacing: 24) {
-            TourCoverComponent(vm: vm, isBookMarked: $vm.isBookMarked)
+            TourCoverComponent(vm: vm)
             
             TourAlbumComponent(
               vm: vm,
@@ -70,14 +70,7 @@ struct TourView: View {
           .padding(.bottom, 30)
           
           if isCalendarShown {
-            TourBookingComponent(
-              vm: vm,
-              selectedDate: $vm.selectedDate,
-              pickedPlaces: $vm.pickedPlaces,
-              totalAmount: $vm.totalAmount,
-              isPaymentOpened: $vm.isPaymentOpened,
-              startingDate: startingDate
-            )
+            TourBookingComponent(vm: vm, startingDate: startingDate)
           }
           
           Spacer()
@@ -110,11 +103,7 @@ struct TourView: View {
       }
       
       if vm.isPaymentOpened {
-        TourPurchaseComponent(
-          vm: vm,
-          totalAmount: $vm.totalAmount,
-          isPaymentOpened: $vm.isPaymentOpened
-        )
+        TourPurchaseComponent(vm: vm)
       }
       
       if vm.isSuccessfullyPurchased {
@@ -123,7 +112,7 @@ struct TourView: View {
     }
     .ignoresSafeArea()
     .onAppear {
-      vm.fetchSingleTour(with: tourId, and: "tours")
+      vm.fetchSingleTour(with: tourId, and: .tours)
     }
   }
 }

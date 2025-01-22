@@ -10,8 +10,6 @@ import SwiftUI
 struct TourPurchaseComponent: View {
   @ObservedObject var vm: TourViewModel
   @State var selectedCardIndex = 0
-  @Binding var totalAmount: Int
-  @Binding var isPaymentOpened: Bool
   
   var body: some View {
     ZStack {
@@ -77,7 +75,7 @@ struct TourPurchaseComponent: View {
           Spacer()
           
           HStack {
-            Text("\(totalAmount) ₾")
+            Text("\(vm.totalAmount) ₾")
               .styledText(.customBlue, 18, .bold)
             
             Button {
@@ -98,7 +96,7 @@ struct TourPurchaseComponent: View {
         .padding(.horizontal, 30)
         .onTapGesture {
           withAnimation {
-            isPaymentOpened = true
+            vm.isPaymentOpened = true
           }
         }
       }
@@ -106,11 +104,11 @@ struct TourPurchaseComponent: View {
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .onTapGesture {
       withAnimation {
-        isPaymentOpened = false
+        vm.isPaymentOpened = false
       }
     }
     .onDisappear {
-      isPaymentOpened = false
+      vm.isPaymentOpened = false
     }
   }
 }

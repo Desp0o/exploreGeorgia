@@ -61,12 +61,12 @@ final class TourViewModel: ObservableObject {
     fetchCreditCards()
   }
   
-  func fetchSingleTour(with placeId: String, and collection: String) {
+  func fetchSingleTour(with placeId: String, and collection: FirebaseCollectionEnum) {
     Task {
       do {
         let userID = Auth.auth().currentUser?.uid
         
-        let data: TourModel = try await firebaseManager.fetchSinglePlaceGeneric(with: placeId, and: collection)
+        let data: TourModel = try await firebaseManager.fetchSinglePlaceGeneric(with: placeId, and: collection.rawValue)
         
         let user = try await userManager.getFirebaseUser(with: userID ?? "")
         
