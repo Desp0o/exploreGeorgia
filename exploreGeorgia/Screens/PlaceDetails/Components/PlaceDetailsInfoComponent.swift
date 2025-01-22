@@ -152,10 +152,10 @@ struct PlaceDetailsInfoComponent: View {
     .background(.customWhite)
     .clipShape(
       .rect(
-        topLeadingRadius: 12,
+        topLeadingRadius: 20,
         bottomLeadingRadius: 0,
         bottomTrailingRadius: 0,
-        topTrailingRadius: 12
+        topTrailingRadius: 20
       )
     )
   }

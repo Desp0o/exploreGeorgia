@@ -33,7 +33,7 @@ struct PlaceDetailsView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else {
-        PlaceDetailsBGComponent(vm: vm)
+        PlaceDetailsBGComponent(cover: vm.currentPlace?.cover ?? "")
           .overlay {
             VStack {
               PlaceDetailsNavigationBar(
