@@ -24,7 +24,7 @@ struct AddPlaceView: View {
       if toastManager.isShown {
         ToastView(
           message: "Your travel memory has been successfully added!",
-          bgColor: .green
+          bgColor: .successfully
         )
       }
       

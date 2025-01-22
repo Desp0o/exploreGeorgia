@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ToastView: View {
   let message: String
-  let bgColor: Color
+  let bgColor: ToastTypes
   
     var body: some View {
       Text(message)
@@ -20,16 +20,10 @@ struct ToastView: View {
         )
         .frame(maxWidth: .infinity)
         .frame(height: 50)
-        .background(bgColor)
+        .background(bgColor.backgroundColor)
         .roundedCorners(12)
         .transition(.move(edge: .top).combined(with: .opacity))
         .zIndex(99)
         .padding(.top, 10)
     }
-}
-
-#Preview {
-  let msg = "test"
-  let col = Color.green
-  ToastView(message: msg, bgColor: col)
 }
