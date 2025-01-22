@@ -9,45 +9,53 @@ import SwiftUI
 
 struct ToursBookmarkViewComponent: View {
   @ObservedObject var vm: AllBookmarkViewModel
-  let data: [TourModel]
+  @State private var opacityPoint: CGFloat = 0
   
   var body: some View {
-    ForEach(Array(data.enumerated()), id: \.element) { index, tour in
-      ZStack {
-        HStack {
-          Spacer()
-          
-          Button {
-            let indexSet = IndexSet(integer: index)
-            withAnimation {
-              vm.removeTourBookmark(index: indexSet)
-            }
-          } label: {
-            VStack {
-              Image(systemName: "trash")
-                .renderingMode(.template)
-                .foregroundStyle(.white)
-                .offset(x: 5)
-            }
-            .frame(width: 54, height: 150)
+    if vm.bookmarkedTours.isEmpty {
+      NoBookmarksComponent()
+    } else {
+      LazyVStack(spacing: 20) {
+        ForEach(Array(vm.bookmarkedTours.enumerated()), id: \.element) { index, tour in
+          NavigationLink(destination:TourView(tourId: tour.id ?? "").navigationBarHidden(true)
+          ) {
+            SingleTourFeedView(tour: tour, tourMaxWidth: .infinity, isBookButtonVisible: true)
+              .overlay {
+                ZStack {
+                  Button {
+                    let indexSet = IndexSet(integer: index)
+                    withAnimation {
+                      vm.removeTourBookmark(index: indexSet)
+                    }
+                  } label: {
+                    OverlayActionButtonIcon(iconName: IconsEnum.trash.rawValue, tint: .white, scale: 0.8)
+                  }
+                  .frame(width: 36, height: 36)
+                  .padding(10)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+              }
+              .opacity(opacityPoint)
           }
-          .background(.red)
-          .clipShape(
-            .rect(
-              topLeadingRadius: 0,
-              bottomLeadingRadius: 0,
-              bottomTrailingRadius: 12,
-              topTrailingRadius: 12
-            )
-          )
+          .onAppear {
+            if index == vm.bookmarkedPlaces.count - 3 {
+              vm.pageSize += 10
+              vm.fetchToursData(pageLimit: vm.pageSize)
+            }
+          }
         }
-        
-        NavigationLink(destination:TourView(tourId: tour.id ?? "").navigationBarHidden(true)
-        ) {
-          SingleTourFeedView(tour: tour, tourMaxWidth: UIScreen.main.bounds.width - 80, isBookButtonVisible: true)
+        .onAppear {
+          withAnimation(.easeIn(duration: 0.2)) {
+            opacityPoint = 1
+          }
         }
-        .padding(.trailing, 40)
       }
+      .padding(.horizontal, 20)
+      .padding(.bottom, 20)
     }
   }
 }
+
+
+
+

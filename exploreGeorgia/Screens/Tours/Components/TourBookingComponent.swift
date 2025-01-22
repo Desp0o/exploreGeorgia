@@ -9,10 +9,6 @@ import SwiftUI
 
 struct TourBookingComponent: View {
   @ObservedObject var vm: TourViewModel
-  @Binding var selectedDate: Date
-  @Binding var pickedPlaces: Int
-  @Binding var totalAmount:  Int
-  @Binding var isPaymentOpened: Bool
   @State var isBounced = false
   let startingDate: Date
   
@@ -20,7 +16,7 @@ struct TourBookingComponent: View {
     VStack(alignment: .leading, spacing: 12) {
       DatePicker(
         "Booking Date",
-        selection: $selectedDate,
+        selection: $vm.selectedDate,
         in: startingDate...,
         displayedComponents: [.date]
       )
@@ -42,41 +38,40 @@ struct TourBookingComponent: View {
           Text(" x ")
             .styledText(isBounced ? .red : .customBlack, 18, .bold)
           
-          Text("\(pickedPlaces)")
+          Text("\(vm.pickedPlaces)")
             .styledText(isBounced ? .red : .customBlack, 18, .bold)
         }
         .scaleEffect(isBounced ? 1.1 : 1.0)
         .animation(.bouncy, value: isBounced)
         
         Stepper("") {
-          if pickedPlaces <= 11 {
-            pickedPlaces += 1
-            totalAmount += (vm.tour?.price ?? 0) * pickedPlaces
+          if vm.pickedPlaces <= 11 {
+            vm.pickedPlaces += 1
+            vm.totalAmount += vm.tour?.price ?? 0
           }
         } onDecrement: {
-          if pickedPlaces > 0 {
-            pickedPlaces -= 1
-            totalAmount -= (vm.tour?.price ?? 0) * pickedPlaces
+          if vm.pickedPlaces > 0 {
+            vm.pickedPlaces -= 1
+            vm.totalAmount -= vm.tour?.price ?? 0
           }
         }
       }
       
       HStack {
-        Text("Total: \((vm.tour?.price ?? 0) * pickedPlaces)")
+        Text("Total: \((vm.tour?.price ?? 0) * vm.pickedPlaces)")
           .styledText(.customBlack, 18, .bold)
         
         Spacer()
         
         Button {
-          if totalAmount == 0 {
+          if vm.totalAmount == 0 {
             isBounced = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
               isBounced = false
             }
-            print(isBounced)
           } else {
             withAnimation {
-              isPaymentOpened = true
+              vm.isPaymentOpened = true
             }
           }
         } label: {

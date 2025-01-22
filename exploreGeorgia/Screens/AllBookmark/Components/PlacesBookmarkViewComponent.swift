@@ -10,62 +10,58 @@ import SwiftUI
 struct PlacesBookmarkViewComponent: View {
   @ObservedObject var vm: AllBookmarkViewModel
   @State private var opacityPoint: CGFloat = 0
-  let data: [SightSeenModel]
-  let collectionName: String
-  
+  let collectionName: FirebaseCollectionEnum
   
   var body: some View {
-    ForEach(Array(data.enumerated()), id: \.element) { index, place in
-      ZStack {
-        HStack {
-          Spacer()
-          
-          Button {
-            let indexSet = IndexSet(integer: index)
-            withAnimation {
-              vm.removeBookmark(index: indexSet)
-            }
-          } label: {
-            VStack {
-              Image(systemName: "trash")
-                .renderingMode(.template)
-                .foregroundStyle(.white)
-                .offset(x: 5)
-            }
-            .frame(width: 54, height: 212)
-          }
-          .background(.red)
-          .clipShape(
-            .rect(
-              topLeadingRadius: 0,
-              bottomLeadingRadius: 0,
-              bottomTrailingRadius: 12,
-              topTrailingRadius: 12
+    if vm.bookmarkedPlaces.isEmpty {
+      NoBookmarksComponent()
+    } else {
+      LazyVStack(spacing: 20) {
+        ForEach(Array(vm.bookmarkedPlaces.enumerated()), id: \.element) { index, place in
+          NavigationLink(
+            destination: PlaceDetailsView(
+              elementID: place.id ?? "",
+              collectionName: collectionName
+            ).navigationBarHidden(true)
+          ) {
+            SightSeenReusableView(
+              place: place,
+              maxWidth: UIScreen.main.bounds.width - 40,
+              height: 130,
+              isBookmarkIconHidden: true
             )
-          )
+            .overlay {
+              ZStack {
+                Button {
+                  let indexSet = IndexSet(integer: index)
+                  withAnimation {
+                    vm.removeBookmark(index: indexSet)
+                  }
+                } label: {
+                  OverlayActionButtonIcon(iconName: IconsEnum.trash.rawValue, tint: .white, scale: 0.8)
+                }
+                .frame(width: 36, height: 36)
+                .padding(20)
+              }
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            }
+            .opacity(opacityPoint)
+          }
+          .onAppear {
+            if index == vm.bookmarkedPlaces.count - 3 {
+              vm.pageSize += 10
+              vm.fetchData(pageLimit: vm.pageSize, collectionName: .appPlace)
+              print(vm.bookmarkedPlaces.count)
+            }
+          }
         }
-        
-        NavigationLink(
-          destination: PlaceDetailsView(
-            elementID: place.id ?? "",
-            collectionName: collectionName
-          ).navigationBarHidden(true)
-        ) {
-          SightSeenReusableView(
-            place: place,
-            maxWidth: UIScreen.main.bounds.width - 80,
-            height: 130,
-            isBookmarkIconHidden: true
-          )
+        .onAppear {
+          withAnimation(.easeIn(duration: 0.2)) {
+            opacityPoint = 1
+          }
         }
-        .padding(.trailing, 40)
       }
-      .opacity(opacityPoint)
-    }
-    .onAppear {
-      withAnimation(.easeIn(duration: 0.2)) {
-        opacityPoint = 1
-      }
+      .padding(.bottom, 20)
     }
   }
 }

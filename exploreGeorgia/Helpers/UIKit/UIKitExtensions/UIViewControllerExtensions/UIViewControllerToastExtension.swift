@@ -6,54 +6,41 @@
 //
 
 import UIKit
+import SwiftUI
 
 extension UIViewController {
   func showToast(message: String, toastType: ToastTypes) {
-    let toast = UILabel()
-    toast.createLabel(
-      text: message,
-      fontWeight: .bold,
-      textColor: .primaryWhite,
-      textAlignment: .center,
-      autoTranslate: true
-    )
+    let toastView = ToastView(message: message, bgColor: toastType)
     
-    switch toastType {
-    case .successfully:
-      toast.backgroundColor = .systemGreen
-    case .warning:
-      toast.backgroundColor = .systemYellow
-    case .error:
-      toast.backgroundColor = .systemRed
-    }
+    let hostingController = UIHostingController(rootView: toastView)
+    hostingController.view.backgroundColor = .clear
+    hostingController.view.isUserInteractionEnabled = false
     
-    toast.layer.cornerRadius = 12
-    toast.clipsToBounds = true
-    toast.alpha = 0.0
-    
-    let textSize = toast.intrinsicContentSize
-    let verticalPadding: CGFloat = 25
     let toastWidth = view.frame.width - 40
-    let toastHeight = textSize.height + verticalPadding
+    let toastHeight: CGFloat = 50
     
-    toast.frame = CGRect(
+    let topPadding = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0
+    
+    hostingController.view.frame = CGRect(
       x: 20,
-      y: 0,
+      y: topPadding,
       width: toastWidth,
       height: toastHeight
     )
     
-    view.addSubview(toast)
+    view.addSubview(hostingController.view)
     
-    UIView.animate(withDuration: 0.2, animations: {
-      toast.alpha = 1.0
-      toast.frame.origin.y = toastHeight + 20
+    hostingController.view.alpha = 0
+    hostingController.view.transform = CGAffineTransform(translationX: 0, y: -toastHeight)
+    
+    UIView.animate(withDuration: 0.3, animations: {
+      hostingController.view.alpha = 1.0
+      hostingController.view.transform = .identity
     }) { _ in
-      UIView.animate(withDuration: 0.2, delay: 2, options: .curveLinear, animations: {
-        toast.alpha = 0.0
-        toast.frame.origin.y = 0
+      UIView.animate(withDuration: 0.3, delay: 2, options: .curveEaseIn, animations: {
+        hostingController.view.alpha = 0.0
       }) { _ in
-        toast.removeFromSuperview()
+        hostingController.view.removeFromSuperview()
       }
     }
   }

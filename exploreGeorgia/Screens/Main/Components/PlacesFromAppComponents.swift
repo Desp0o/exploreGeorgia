@@ -48,7 +48,7 @@ struct PlacesFromAppComponents: View {
                 NavigationLink(
                   destination: PlaceDetailsView(
                     elementID: place.id ?? "",
-                    collectionName: "placesFromApp"
+                    collectionName: .appPlace
                   )
                   .navigationBarHidden(true)
                 ) {

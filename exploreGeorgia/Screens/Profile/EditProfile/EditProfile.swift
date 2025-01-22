@@ -23,7 +23,7 @@ struct EditProfile: View {
       if toastManager.isShown {
         ToastView(
           message: toastMessage,
-          bgColor: .green
+          bgColor: .successfully
         )
       }
       

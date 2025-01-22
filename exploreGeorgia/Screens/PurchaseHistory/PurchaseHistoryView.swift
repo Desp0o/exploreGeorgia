@@ -55,20 +55,22 @@ struct PurchaseHistoryView: View {
             }
           }
           
-          ForEach(vm.historyData, id: \.self) { tour in
-            SinglePurchaseComponent(tour: tour)
-              .opacity(startingOpacity)
-              .onAppear {
-                if tour == vm.historyData.last {
-                  pageSize += 10
+          LazyVStack(spacing: 20) {
+            ForEach(vm.historyData, id: \.self) { tour in
+              SinglePurchaseComponent(tour: tour)
+                .opacity(startingOpacity)
+                .onAppear {
+                  if tour == vm.historyData.last {
+                    pageSize += 10
+                  }
                 }
-              }
+            }
           }
+          .padding(.bottom, 20)
         }
         .scrollBounceBehavior(.basedOnSize)
         .scrollIndicators(.hidden)
         .padding(.horizontal, 20)
-        .padding(.bottom, 20)
         .onAppear {
           withAnimation(.easeOut(duration: 0.3)) {
             startingOpacity = 1

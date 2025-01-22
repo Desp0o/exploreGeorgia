@@ -41,9 +41,11 @@ struct YourApp: App {
             .ignoresSafeArea(edges: .all)
         
       } else {
+        NavigationStack {
           LoginViewControllerWrapper()
             .preferredColorScheme(isDarkTheme ? .dark : .light)
             .ignoresSafeArea(edges: .all)
+        }
         
       }
     }

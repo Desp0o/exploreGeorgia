@@ -31,14 +31,10 @@ struct SightSeenReusableView: View {
                   isBookmarked: !(place.isBookmarked ?? false)
                 )
             } label: {
-              ZStack {
-                Circle()
-                  .fill(.customWhite.opacity(0.7))
-                
-                Image(systemName: place.isBookmarked ?? false ? "bookmark.fill" : "bookmark")
-                  .renderingMode(.template)
-                  .foregroundStyle(.customBlue)
-              }
+              OverlayActionButtonIcon(
+                iconName: place.isBookmarked ?? false ? IconsEnum.bookmarkActive.rawValue : IconsEnum.bookmarkInactive.rawValue,
+                tint: .customVine
+              )
             }
             .offset(x: -10, y: 10)
             .frame(width: 34, height: 34)
