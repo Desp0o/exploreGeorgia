@@ -25,7 +25,8 @@ struct CustomTabBar: View {
         switch currentIdenx {
         case 0:
           NavigationStack {
-            MainView(tabIndex: $currentIdenx)
+//            MainView(tabIndex: $currentIdenx)
+            ResturantView()
           }
         case 1:
           NavigationStack {
