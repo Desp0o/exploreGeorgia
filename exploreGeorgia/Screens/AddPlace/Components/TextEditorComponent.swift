@@ -9,12 +9,14 @@ import SwiftUI
 
 struct TextEditorComponent: View {
   @Binding var textForEditor: String
+  let placeholder: String
   
   var body: some View {
     ZStack {
       Color.customWhite.roundedCorners(12)
       
       TextEditor(text: $textForEditor)
+        .autocorrectionDisabled()
         .scrollContentBackground(.hidden)
         .frame(height: 200)
         .frame(maxWidth: .infinity, maxHeight: 300)
@@ -22,7 +24,7 @@ struct TextEditorComponent: View {
         .padding(10)
         .background(
           ZStack {
-            Text(!textForEditor.isEmpty ? "" : "Add description...")
+            Text(!textForEditor.isEmpty ? "" : placeholder)
               .foregroundStyle(.gray.opacity(0.6))
           }
             .padding(.horizontal, 15)

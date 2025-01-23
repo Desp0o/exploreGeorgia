@@ -19,7 +19,7 @@ struct ResturantModel: Codable, IdentifiableAndBookmarkable {
   let isVegan: Bool
   let isVegetarian: Bool
   let about: String
-  let reviews: [String]
+  var reviews: [String]
   let menu: [String: FoodItem]
 }
 

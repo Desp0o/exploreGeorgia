@@ -7,6 +7,7 @@
 
 import Combine
 import FirebaseAuth
+import FirebaseFirestore
 
 final class ResturantViewModel: ObservableObject {
   private let firebaseManager: FirebaseSinglePlaceGenericProtocol
@@ -15,6 +16,9 @@ final class ResturantViewModel: ObservableObject {
   @Published var errorMessage: CustomErrorsMessage? = nil
   @Published var isBookMarked = false
   @Published var isLoading = true
+  @Published var usersReviweText = ""
+  @Published var reviews: [String] = []
+  @Published var successMessage = ""
   
   init(
     firebaseManager: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService(),
@@ -36,6 +40,7 @@ final class ResturantViewModel: ObservableObject {
         await MainActor.run {
           singleResturant = result
           isLoading = false
+          reviews = singleResturant?.reviews ?? []
           
           guard let user = currentUser else { return }
           isBookMarked = user.bucketList.contains(result.id ?? "")
@@ -48,4 +53,41 @@ final class ResturantViewModel: ObservableObject {
       }
     }
   }
+  
+  func addUserReview() {
+    guard !usersReviweText.isEmpty else { return }
+    
+    Task {
+      do {
+        guard let restaurantId = singleResturant?.id else { return }
+        try await updateReviews(
+          collectionName: .resturant,
+          restaurantId: restaurantId,
+          newReview: usersReviweText
+        )
+        
+        await MainActor.run {
+          successMessage = "Review added successfully"
+          reviews.insert(usersReviweText, at: 0)
+          usersReviweText = ""
+        }
+      } catch {
+        await MainActor.run {
+          errorMessage = .feedbackError
+        }
+      }
+    }
+  }
+  
+  func updateReviews(collectionName: FirebaseCollectionEnum , restaurantId: String, newReview: String) async throws {
+    let db = Firestore.firestore()
+    let restaurantRef = db.collection(collectionName.rawValue).document(restaurantId)
+    
+    try await restaurantRef.updateData([
+      "reviews": FieldValue.arrayUnion([newReview])
+    ])
+  }
+  
 }
+
+
