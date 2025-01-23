@@ -121,7 +121,9 @@ final class AddPlaceViewModel: ObservableObject {
           isLoading = false
           isSuccessfullyAdded = false
         }
-        errorMessage = error.localizedDescription
+        await MainActor.run {
+          errorMessage = error.localizedDescription
+        }
       }
     }
   }
