@@ -157,6 +157,7 @@ struct ResturantView: View {
         )
       }
     }
+    .background(.primaryWhite)
   }
 }
 
