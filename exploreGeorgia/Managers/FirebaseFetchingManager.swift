@@ -29,19 +29,6 @@ protocol FirebasePhotoUrlGeneratorProtocol {
 protocol FirebaseSinglePlaceGenericProtocol {
   func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: String) async throws -> T
 }
-
-protocol FirebasePayemntsProtocol {
-  func fetchPayments(
-    userId: String,
-    pageSize: Int,
-    lastDocument: DocumentSnapshot?
-  ) async throws -> (
-    payments: [CreditCardModel],
-    lastDocument: DocumentSnapshot?,
-    hasMoreData: Bool
-  )
-}
-
 protocol FirebaseSimpleCollectionFetchProtocol {
   func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum) async throws -> [T]
 }
@@ -121,44 +108,6 @@ extension FirebaseFetchingService: FirebaseSinglePlaceGenericProtocol {
     } catch {
       throw error
     }
-  }
-}
-
-extension FirebaseFetchingService: FirebasePayemntsProtocol {
-  func fetchPayments(
-    userId: String,
-    pageSize: Int,
-    lastDocument: DocumentSnapshot?
-  ) async throws -> (payments: [CreditCardModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
-    let collectionRef = db.collection(FirebaseCollectionEnum.payments.rawValue)
-      .whereField("userId", isEqualTo: userId)
-      .limit(to: pageSize + 1)
-    
-    let query: Query
-    if let lastDocument = lastDocument {
-      query = collectionRef.start(afterDocument: lastDocument)
-    } else {
-      query = collectionRef
-    }
-    
-    let snapshot = try await query.getDocuments()
-    let documents = snapshot.documents
-    
-    let hasMoreData = documents.count > pageSize
-    
-    let documentsToProcess = hasMoreData ? Array(documents.prefix(pageSize)) : documents
-    
-    let payments = try documentsToProcess.compactMap { document -> CreditCardModel? in
-      var creditCard = try document.data(as: CreditCardModel.self)
-      creditCard.id = document.documentID
-      return creditCard
-    }
-    
-    return (
-      payments: payments,
-      lastDocument: documentsToProcess.last,
-      hasMoreData: hasMoreData
-    )
   }
 }
 

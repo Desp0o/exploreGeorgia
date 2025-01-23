@@ -25,7 +25,6 @@ final class PaymentViewModel {
   weak var dataDelegate: PaymentDataDelegate?
   weak var errorDelegate: PaymentErrorDelegate?
   weak var loadingDelegate: PaymentLoadingDelegate?
-  private let paymentsManager: FirebasePayemntsProtocol
   private let userManager: GetFirebaseUserProtocol
   private let db = Firestore.firestore()
   var creditCards: [CreditCardModel] = []
@@ -33,11 +32,9 @@ final class PaymentViewModel {
   var errorMessage = ""
   
   init(
-    userManager: GetFirebaseUserProtocol = UserManager(),
-    paymentsManager: FirebasePayemntsProtocol = FirebaseFetchingService()
+    userManager: GetFirebaseUserProtocol = UserManager()
   ) {
     self.userManager = userManager
-    self.paymentsManager = paymentsManager
     
     fetchAllUserPayments()
   }
@@ -87,36 +84,26 @@ final class PaymentViewModel {
   }
   
   func attachCardToUser(card: CreditCardModel) async throws {
-    let db = Firestore.firestore()
-    
-    do {
-      let cardData: [String: Any] = [
-        "userId": card.userId,
-        "number": card.number,
-        "expDate": card.expDate,
-        "holder": card.holder
-      ]
+      let db = Firestore.firestore()
       
-      var documentRef: DocumentReference? = nil
-      documentRef = db.collection("payments").addDocument(data: cardData) { error in
-        if let error = error {
-          print("Error saving credit card: \(error)")
-        } else if let documentRef = documentRef {
-          print("Credit card successfully saved with ID: \(documentRef.documentID)")
+      do {
+          let cardData: [String: Any] = [
+              "number": card.number,
+              "expDate": card.expDate,
+              "holder": card.holder
+          ]
           
           let userRef = db.collection("users").document(card.userId)
-          userRef.updateData([
-            "creditCards": FieldValue.arrayUnion([documentRef.documentID])
-          ]) { error in
-            if let error = error {
-              print("Error updating user's creditCards array: \(error)")
-            } else {
-              print("Credit card ID added to user's creditCards array")
-            }
-          }
-        }
+          
+          try await userRef.updateData([
+              "payments": FieldValue.arrayUnion([cardData])
+          ])
+          
+          print("Credit card successfully added to user's payments")
+      } catch {
+          print("Error adding credit card: \(error)")
+          throw error
       }
-    }
   }
   
   func sendCreditCardToDdataBase(cardholder: String, cardNumber: String, cardExpireDate: String) {
@@ -183,12 +170,12 @@ final class PaymentViewModel {
   func fetchAllUserPayments() {
     Task {
       do {
-        let user = Auth.auth().currentUser?.uid
+        let userID = Auth.auth().currentUser?.uid ?? ""
         
-        let data = try await paymentsManager.fetchPayments(userId: user ?? "", pageSize: 10, lastDocument: nil)
+        let data = try await userManager.getFirebaseUser(with: userID)
         
         await MainActor.run {
-          creditCards = data.payments
+          creditCards = data?.payments ?? []
           dataDelegate?.didDataFetched()
         }
         

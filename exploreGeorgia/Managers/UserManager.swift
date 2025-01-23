@@ -53,6 +53,7 @@ final class UserManager: GetFirebaseUserProtocol {
     let document = try await db.collection("users").document(userID).getDocument()
     
     if document.exists, let data = document.data() {
+      let id = data["id"] as? String ?? ""
       let avatar = data["photoURL"] as? String ?? ""
       let firstName = data["firstName"] as? String ?? ""
       let lastName = data["lastName"] as? String ?? ""
@@ -63,7 +64,16 @@ final class UserManager: GetFirebaseUserProtocol {
       let bucketList = data["bucketList"] as? [String] ?? []
       let achievement = data["achievement"] as? [String] ?? []
       let createdAt = data["createdAt"] as? Timestamp ?? Timestamp()
-      
+      let paymentsData = data["payments"] as? [[String: Any]] ?? []
+      let payments = paymentsData.compactMap { dict -> CreditCardModel? in
+          guard
+              let expDate = dict["expDate"] as? String,
+              let holder = dict["holder"] as? String,
+              let number = dict["number"] as? String
+          else { return nil }
+          
+        return CreditCardModel(userId: id, number: number, expDate: expDate, holder: holder)
+      }
       return UserModel(
         avatar: avatar,
         firstName: firstName,
@@ -74,7 +84,8 @@ final class UserManager: GetFirebaseUserProtocol {
         explored: explored,
         bucketList: bucketList,
         achievement: achievement,
-        createdAt: createdAt
+        createdAt: createdAt,
+        payments: payments
       )
     } else {
       throw FetchedUserErrors.userDoesntExist(message: "Document does not exist.")
