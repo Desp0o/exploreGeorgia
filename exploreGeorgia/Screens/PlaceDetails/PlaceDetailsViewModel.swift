@@ -41,6 +41,11 @@ final class PlaceDetailsViewModel: ObservableObject {
         
         await MainActor.run {
           currentPlace = data
+          
+          print(currentPlace)
+          if currentPlace?.user == nil {
+            print("🟢")
+          }
         }
         
         await checkIfBookmarked(placeId: id)

@@ -84,26 +84,26 @@ final class PaymentViewModel {
   }
   
   func attachCardToUser(card: CreditCardModel) async throws {
-      let db = Firestore.firestore()
+    let db = Firestore.firestore()
+    
+    do {
+      let cardData: [String: Any] = [
+        "number": card.number,
+        "expDate": card.expDate,
+        "holder": card.holder
+      ]
       
-      do {
-          let cardData: [String: Any] = [
-              "number": card.number,
-              "expDate": card.expDate,
-              "holder": card.holder
-          ]
-          
-          let userRef = db.collection("users").document(card.userId)
-          
-          try await userRef.updateData([
-              "payments": FieldValue.arrayUnion([cardData])
-          ])
-          
-          print("Credit card successfully added to user's payments")
-      } catch {
-          print("Error adding credit card: \(error)")
-          throw error
-      }
+      let userRef = db.collection(FirebaseCollectionEnum.users.rawValue).document(card.userId)
+      
+      try await userRef.updateData([
+        "payments": FieldValue.arrayUnion([cardData])
+      ])
+      
+      print("Credit card successfully added to user's payments")
+    } catch {
+      print("Error adding credit card: \(error)")
+      throw error
+    }
   }
   
   func sendCreditCardToDdataBase(cardholder: String, cardNumber: String, cardExpireDate: String) {
@@ -185,34 +185,31 @@ final class PaymentViewModel {
     }
   }
   
-  func deleteCreditCard(with id: String) {
+  func deleteCreditCard(with card: CreditCardModel) {
     Task {
       do {
-        try await removeElementFromPaymentsAndUsers(paymentId: id)
+        try await removeElementFromPaymentsAndUsers(card: card)
       } catch {
         print(error)
       }
     }
   }
   
-  func removeElementFromPaymentsAndUsers(paymentId: String) async throws{
+  func removeElementFromPaymentsAndUsers(card: CreditCardModel) async throws {
     do {
-      try await db.collection("payments").document(paymentId).delete()
-      print("Deleted payment document with ID \(paymentId).")
+      let cardData: [String: Any] = [
+        "number": card.number,
+        "expDate": card.expDate,
+        "holder": card.holder
+      ]
       
-      let usersRef = db.collection("users")
+      let userRef = db.collection(FirebaseCollectionEnum.users.rawValue).document(card.userId)
       
-      let snapshot = try await usersRef.whereField("creditCards", arrayContains: paymentId).getDocuments()
+      try await userRef.updateData([
+        "payments": FieldValue.arrayRemove([cardData])
+      ])
       
-      for document in snapshot.documents {
-        let userId = document.documentID
-        try await usersRef.document(userId).updateData([
-          "creditCards": FieldValue.arrayRemove([paymentId])
-        ])
-        print("Removed payment ID \(paymentId) from user \(userId)'s creditCards.")
-      }
     } catch {
       throw error
     }
-  }
-}
+  }}
