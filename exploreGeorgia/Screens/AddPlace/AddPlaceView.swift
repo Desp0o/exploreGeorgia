@@ -76,6 +76,7 @@ struct AddPlaceView: View {
               .keyboardType(.numberPad)
             
             TextEditorComponent(textForEditor: $vm.placeDescription, placeholder: "Write place description...")
+              .frame(height: 200)
           }
           
           Button {
