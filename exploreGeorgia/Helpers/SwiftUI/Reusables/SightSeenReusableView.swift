@@ -33,7 +33,7 @@ struct SightSeenReusableView: View {
             } label: {
               OverlayActionButtonIcon(
                 iconName: place.isBookmarked ?? false ? IconsEnum.bookmarkActive.rawValue : IconsEnum.bookmarkInactive.rawValue,
-                tint: .customVine
+                tint: .gold
               )
             }
             .offset(x: -10, y: 10)
@@ -83,7 +83,7 @@ struct SightSeenReusableView: View {
         
         Text(place.price == 0 ? "Free" : "₾\(place.price)")
           .styledText(
-            .customVine,
+            .customBlue,
             14,
             .semibold
           )

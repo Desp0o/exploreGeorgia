@@ -24,7 +24,7 @@ struct DrinkViewGrid: View {
               .ignoresSafeArea()
           } label: {
             Text("View more")
-              .styledText(.customVine, 14)
+              .styledText(.customBlue, 14)
           }
         }
         

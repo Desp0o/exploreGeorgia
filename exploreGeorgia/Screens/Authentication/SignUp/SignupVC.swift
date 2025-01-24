@@ -136,7 +136,7 @@ final class SignupVC: UIViewController {
       title: "Sign in",
       fontSize: 14,
       fontWeight: .medium,
-      titleColor: .customVine
+      titleColor: .customBlue
     )
     button.addAction(UIAction(handler: {[weak self] _ in
       self?.navigationController?.popViewController(animated: true)

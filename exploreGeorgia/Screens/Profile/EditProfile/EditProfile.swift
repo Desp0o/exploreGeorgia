@@ -40,7 +40,7 @@ struct EditProfile: View {
         if vm.isUpdatignInfo {
           ProgressView()
             .scaleEffect(2.0)
-            .tint(.customVine)
+            .tint(.customBlue)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)

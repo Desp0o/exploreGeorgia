@@ -57,10 +57,10 @@ struct AIView: View {
         VStack {
             ProgressView()
               .scaleEffect(1.5)
-              .tint(.customVine)
+              .tint(.customBlue)
             
             Text("We are processing the best answer for you. Please stand by.")
-            .styledText(.customVine, 13, .semibold, .center)
+            .styledText(.customBlue, 13, .semibold, .center)
               .frame(maxWidth: 300)
           }
         }
