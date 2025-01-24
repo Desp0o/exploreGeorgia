@@ -10,7 +10,9 @@ import SwiftUI
 struct FoodView: View {
   @StateObject var vm = FoodViewModel()
   @ObservedObject var pushVM = SightSeenRepository()
-  
+  @State private var isPresented = false
+  @State private var addButtonScale: CGFloat = 0
+
   var body: some View {
     VStack {
       Button {
@@ -82,12 +84,20 @@ struct FoodView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
     }
-    
     .background(
       Image("foodBG")
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
     )
     .background(Color.primaryWhite)
+    .overlay {
+      ZStack(alignment: .bottomTrailing) {
+        AddButtonComponent(addButtonScale: $addButtonScale, isPresented: $isPresented, icon: .aiIcon)
+      }
+      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+    }
+    .sheet(isPresented: $isPresented) {
+      AIView()
+    }
   }
 }
