@@ -21,6 +21,7 @@ struct ResturantModel: Codable, IdentifiableAndBookmarkable {
   let about: String
   var reviews: [String]
   let menu: [String: FoodItem]
+  let type: String
 }
 
 struct FoodItem: Codable {

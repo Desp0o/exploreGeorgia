@@ -56,12 +56,10 @@ extension BookMarkManager: BookmarkActivityProtocol {
         try await userRef.updateData([
           "bucketList": FieldValue.arrayRemove([placeId])
         ])
-        print("Bookmark removed successfully")
       } else {
         try await userRef.updateData([
           "bucketList": FieldValue.arrayUnion([placeId])
         ])
-        print("Bookmark added successfully")
       }
     } catch {
       throw error
@@ -83,6 +81,7 @@ extension BookMarkManager: GetDocumetnsFromBucketListProtocol {
     collectionName: FirebaseCollectionEnum
   ) async throws -> [T] {
     let db = Firestore.firestore()
+    
     let userDocRef = db.collection("users").document(userId)
     let userDoc = try await userDocRef.getDocument()
     
@@ -90,12 +89,19 @@ extension BookMarkManager: GetDocumetnsFromBucketListProtocol {
       return []
     }
     
-    let placesQuery = db.collection(collectionName.rawValue).whereField("id", in: bucketList).limit(to: pageLimit)
+    let placesQuery = db.collection(collectionName.rawValue)
+      .limit(to: pageLimit)
     let placesSnapshot = try await placesQuery.getDocuments()
     
-    let documents: [T] = try placesSnapshot.documents.compactMap { document in
-      try document.data(as: T.self)
+    let documents: [T] = placesSnapshot.documents.compactMap { document in
+      autoreleasepool {
+        guard let id = document.data()["id"] as? String, bucketList.contains(id) else {
+          return nil
+        }
+        return try? document.data(as: T.self)
+      }
     }
+    
     return documents
   }
 }

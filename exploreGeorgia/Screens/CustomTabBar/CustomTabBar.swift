@@ -26,16 +26,17 @@ struct CustomTabBar: View {
         case 0:
           NavigationStack {
             MainView(tabIndex: $currentIdenx)
-//            ResturantView()
           }
         case 1:
           NavigationStack {
             ExploreView()
           }
         case 2:
-          VocabularyViewControllerWrapper()
+          NavigationStack {
+            FoodView()
+          }
         case 3:
-          Text("hello")
+          VocabularyViewControllerWrapper()
         case 4:
           NavigationStack {
             ProfileView()

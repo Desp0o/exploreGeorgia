@@ -63,7 +63,7 @@ final class TourViewModel: ObservableObject {
       do {
         let userID = Auth.auth().currentUser?.uid
         
-        let data: TourModel = try await firebaseManager.fetchSinglePlaceGeneric(with: placeId, and: collection.rawValue)
+        let data: TourModel = try await firebaseManager.fetchSinglePlaceGeneric(with: placeId, and: collection)
         
         let user = try await userManager.getFirebaseUser(with: userID ?? "")
         

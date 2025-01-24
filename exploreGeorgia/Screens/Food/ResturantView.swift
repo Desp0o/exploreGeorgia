@@ -16,6 +16,7 @@ struct ResturantView: View {
   @State private var isPresent = false
   @State var isReviewVisible = false
   @State var isError = false
+  let place: ResturantModel
   
   var body: some View {
     ZStack {
@@ -158,12 +159,12 @@ struct ResturantView: View {
       }
     }
     .background(.primaryWhite)
+    .onAppear {
+      vm.fetchData(id: place.id ?? "", collection: .resturant)
+    }
   }
 }
 
-#Preview {
-  ResturantView()
-}
 
 
 
