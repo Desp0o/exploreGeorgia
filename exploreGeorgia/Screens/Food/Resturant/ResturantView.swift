@@ -38,6 +38,7 @@ struct ResturantView: View {
       VStack {
         PlaceDetailsBGComponent(cover: vm.singleResturant?.cover ?? "")
           .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.40)
+          .clipped()
           .overlay {
             VStack {
               PlaceDetailsNavigationBar(
@@ -113,6 +114,10 @@ struct ResturantView: View {
                 }
               }
               .frame(maxWidth: .infinity, maxHeight: geometry.size.height * 0.60)
+              .background(
+                Image("foodBG")
+                  .frame(maxWidth: .infinity, maxHeight: .infinity)
+              )
               .background(.primaryWhite)
               .clipShape(
                 .rect(

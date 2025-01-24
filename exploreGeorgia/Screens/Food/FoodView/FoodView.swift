@@ -75,7 +75,6 @@ struct FoodView: View {
       Image("foodBG")
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .ignoresSafeArea()
-        .opacity(1)
     )
     .background(Color.primaryWhite)
   }
