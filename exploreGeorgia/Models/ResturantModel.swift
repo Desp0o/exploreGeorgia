@@ -6,7 +6,7 @@
 //
 
 
-struct ResturantModel: Codable, IdentifiableAndBookmarkable {
+struct ResturantModel: Codable, IdentifiableAndBookmarkable, Identifiable {
   var id: String?
   let name: String
   let cover: String

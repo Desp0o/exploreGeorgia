@@ -85,7 +85,6 @@ final class ResturantViewModel: ObservableObject {
       "reviews": FieldValue.arrayUnion([newReview])
     ])
   }
-  
 }
 
 

@@ -12,4 +12,6 @@ enum FirebaseCollectionEnum: String {
   case tours = "tours"
   case fatcs = "facts"
   case resturant = "resturant"
+  case drinks = "drinks"
+  case bakery = "bakery"
 }

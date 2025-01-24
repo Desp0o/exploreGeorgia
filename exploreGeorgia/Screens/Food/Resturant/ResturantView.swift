@@ -17,6 +17,7 @@ struct ResturantView: View {
   @State var isReviewVisible = false
   @State var isError = false
   let place: ResturantModel
+  let collection: FirebaseCollectionEnum
   
   var body: some View {
     ZStack {
@@ -160,7 +161,7 @@ struct ResturantView: View {
     }
     .background(.primaryWhite)
     .onAppear {
-      vm.fetchData(id: place.id ?? "", collection: .resturant)
+      vm.fetchData(id: place.id ?? "", collection: collection)
     }
   }
 }

@@ -46,8 +46,8 @@ class SightSeenRepository: ObservableObject {
     
     let restaurant = ResturantModel(
       id: nil,
-      name: "Khinkali house",
-      cover: "https://glovo.dhmedia.io/image/stores-glovo/stores/786711fe767e83c53bbeffb3f6f6e861c119361911e045df7fa7452ca8e85cd8?t=W3siYXV0byI6eyJxIjoibG93In19LHsicmVzaXplIjp7Im1vZGUiOiJmaWxsIiwiYmciOiJ0cmFuc3BhcmVudCIsIndpZHRoIjo1ODgsImhlaWdodCI6MzIwfX1d",
+      name: "Apetit",
+      cover: "https://glovo.dhmedia.io/image/stores-glovo/stores/c4662fd62ec504d10da27f2e31ed49b3889a2e8f508d38c6ed92dbd0c2f3dc6c?t=W3siYXV0byI6eyJxIjoibG93In19LHsicmVzaXplIjp7Im1vZGUiOiJmaWxsIiwiYmciOiJ0cmFuc3BhcmVudCIsIndpZHRoIjo1ODgsImhlaWdodCI6MzIwfX1d",
       workingHours: "8:00 AM - 10:00 PM",
       minCost: 25.0,
       latitude: 41,
@@ -59,7 +59,7 @@ class SightSeenRepository: ObservableObject {
       about: "t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
       reviews: [],
       menu: ["Caprese Salad": sampleFoodItem],
-      type: "National"
+      type: "Bakery"
     )
     
     
@@ -81,7 +81,7 @@ class SightSeenRepository: ObservableObject {
     
     do {
       // Save the document to Firestore
-      try db.collection("resturant").document(restaurantToSave.id!).setData(from: restaurantToSave)
+      try db.collection("bakery").document(restaurantToSave.id!).setData(from: restaurantToSave)
     } catch {
       // Propagate the error to the caller
       throw error
