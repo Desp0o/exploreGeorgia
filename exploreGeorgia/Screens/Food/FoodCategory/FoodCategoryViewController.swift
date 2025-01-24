@@ -80,15 +80,15 @@ final class FoodCategoryViewController: UIViewController  {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    vm.fetchDataFromDB(collectionName: .bakery)
     setupUI()
   }
   
   private func setupUI() {
     view.backgroundColor = .primaryWhite
-    vm.fetchDataFromDB(collectionName: .resturant, pageSize: 10)
     
     vm.dataDelegate = self
+    vm.loadingDelegate = self
     
     screenTitle.text = titleText
     setupConstraints()
@@ -126,6 +126,16 @@ extension FoodCategoryViewController: DataFetchingDelegae {
   }
 }
 
+extension FoodCategoryViewController: DataLoadingDelegate {
+  func DidDataLoaded() {
+    if vm.isLoading {
+      showLoading(backgroundOpacity: 0)
+    } else {
+      hideLoading()
+    }
+  }
+}
+
 extension FoodCategoryViewController: UICollectionViewDataSource, UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return vm.fetchedData.count
@@ -138,6 +148,10 @@ extension FoodCategoryViewController: UICollectionViewDataSource, UICollectionVi
     
     let currentElement = vm.fetchedData[indexPath.row]
     cell.configureCell(with: currentElement)
+
+    if indexPath.row == vm.fetchedData.count - 1  {
+      vm.fetchDataFromDB(collectionName: .bakery)
+    }
     
     return cell
   }

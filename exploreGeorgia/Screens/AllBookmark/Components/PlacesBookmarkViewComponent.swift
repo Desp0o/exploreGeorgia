@@ -49,7 +49,7 @@ struct PlacesBookmarkViewComponent: View {
           }
           .onAppear {
             if index == vm.bookmarkedPlaces.count - 1 {
-              vm.pageSize = 10
+              vm.pageSize += 5
               vm.fetchData(pageLimit: vm.pageSize, collectionName: collectionName)
               print(vm.bookmarkedPlaces.count)
             }

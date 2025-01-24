@@ -46,8 +46,8 @@ class SightSeenRepository: ObservableObject {
     
     let restaurant = ResturantModel(
       id: nil,
-      name: "Apetit",
-      cover: "https://glovo.dhmedia.io/image/stores-glovo/stores/c4662fd62ec504d10da27f2e31ed49b3889a2e8f508d38c6ed92dbd0c2f3dc6c?t=W3siYXV0byI6eyJxIjoibG93In19LHsicmVzaXplIjp7Im1vZGUiOiJmaWxsIiwiYmciOiJ0cmFuc3BhcmVudCIsIndpZHRoIjo1ODgsImhlaWdodCI6MzIwfX1d",
+      name: "Puroba",
+      cover: "https://glovo.dhmedia.io/image/stores-glovo/stores/31c0369c9a423391aa6b3883131a3908fab8ae70519cd303ac4a87703585becc?t=W3siYXV0byI6eyJxIjoibG93In19LHsicmVzaXplIjp7Im1vZGUiOiJmaWxsIiwiYmciOiJ0cmFuc3BhcmVudCIsIndpZHRoIjo1ODgsImhlaWdodCI6MzIwfX1d",
       workingHours: "8:00 AM - 10:00 PM",
       minCost: 25.0,
       latitude: 41,
@@ -59,7 +59,7 @@ class SightSeenRepository: ObservableObject {
       about: "t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
       reviews: [],
       menu: ["Caprese Salad": sampleFoodItem],
-      type: "Bakery"
+      type: "National"
     )
     
     
@@ -89,38 +89,38 @@ class SightSeenRepository: ObservableObject {
   }
   
   
-  class YourViewModel: ObservableObject {
-    private let repository = SightSeenRepository()
+  
+}
+class YourViewModel: ObservableObject {
+  private let repository = SightSeenRepository()
+  
+  func addNewSight() {
+    let newSight = SightSeenModel(
+      id: nil,
+      cover: "https://picsum.photos/200/300?random=1",
+      name: "Eiffel Tower",
+      region: "Paris",
+      album: ["https://picsum.photos/200/300?random=2",
+              "https://picsum.photos/200/300?random=4"],
+      description: "Famous iron tower",
+      rating: "4.8",
+      price: 20,
+      adress: "Champ de Mars, Paris",
+      ratingCount: 1000,
+      latitude: 48.8584,
+      longitude: 2.2945,
+      isBookmarked: nil,
+      isSightseen: false,
+      isFood: false
+    )
     
-    func addNewSight() {
-      let newSight = SightSeenModel(
-        id: nil,
-        cover: "https://picsum.photos/200/300?random=1",
-        name: "Eiffel Tower",
-        region: "Paris",
-        album: ["https://picsum.photos/200/300?random=2",
-                "https://picsum.photos/200/300?random=4"],
-        description: "Famous iron tower",
-        rating: "4.8",
-        price: 20,
-        adress: "Champ de Mars, Paris",
-        ratingCount: 1000,
-        latitude: 48.8584,
-        longitude: 2.2945,
-        isBookmarked: nil,
-        isSightseen: false,
-        isFood: false
-      )
-      
-      Task {
-        do {
-          let newId = try await repository.addSight(sight: newSight)
-          print("Successfully added sight with ID: \(newId)")
-        } catch {
-          print("Error adding sight: \(error)")
-        }
+    Task {
+      do {
+        let newId = try await repository.addSight(sight: newSight)
+        print("Successfully added sight with ID: \(newId)")
+      } catch {
+        print("Error adding sight: \(error)")
       }
     }
   }
-  
 }

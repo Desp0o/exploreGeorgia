@@ -20,7 +20,7 @@ struct FoodViewSingleComponent: View {
           .frame(height: 140)
           .frame(maxWidth: elementWidth)
           .roundedCorners(12)
-          .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+          .shadow(color: .black.opacity(0.30), radius: 4, y: 2)
         
         Text(type)
           .styledText(.customBlack, 13, .semibold)
