@@ -11,6 +11,7 @@ import UIKit
 final class FoodCategoryViewController: UIViewController  {
   private let vm: FoodCategoryViewModel
   let titleText: String
+  let collectionName: FirebaseCollectionEnum
   
   private lazy var backgroundImageView: UIImageView = {
     let imageView = UIImageView()
@@ -67,10 +68,12 @@ final class FoodCategoryViewController: UIViewController  {
   
   init(
     vm: FoodCategoryViewModel = FoodCategoryViewModel(),
-    titleText: String
+    titleText: String,
+    collectionName: FirebaseCollectionEnum
   ) {
     self.vm = vm
     self.titleText = titleText
+    self.collectionName = collectionName
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -80,17 +83,18 @@ final class FoodCategoryViewController: UIViewController  {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    vm.fetchDataFromDB(collectionName: .bakery)
+    vm.fetchDataFromDB(collectionName: collectionName)
     setupUI()
   }
   
   private func setupUI() {
     view.backgroundColor = .primaryWhite
-    
+
     vm.dataDelegate = self
     vm.loadingDelegate = self
     
     screenTitle.text = titleText
+
     setupConstraints()
   }
   
@@ -101,10 +105,10 @@ final class FoodCategoryViewController: UIViewController  {
     view.addSubview(collectionView)
     
     NSLayoutConstraint.activate([
-      backgroundImageView.topAnchor.constraint(equalTo: view.topAnchor),
-      backgroundImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-      backgroundImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      backgroundImageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      backgroundImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+      backgroundImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+      backgroundImageView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+      backgroundImageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
       
       backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
       backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -150,7 +154,7 @@ extension FoodCategoryViewController: UICollectionViewDataSource, UICollectionVi
     cell.configureCell(with: currentElement)
 
     if indexPath.row == vm.fetchedData.count - 1  {
-      vm.fetchDataFromDB(collectionName: .bakery)
+      vm.fetchDataFromDB(collectionName: collectionName)
     }
     
     return cell
@@ -158,7 +162,7 @@ extension FoodCategoryViewController: UICollectionViewDataSource, UICollectionVi
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let place = vm.fetchedData[indexPath.row]
-    let swiftUIView = ResturantView(place: place, collection: .resturant).navigationBarHidden(true)
+    let swiftUIView = ResturantView(place: place, collection: collectionName).navigationBarHidden(true)
     let hostingController = UIHostingController(rootView: swiftUIView)
     navigationController?.pushViewController(hostingController, animated: true)
   }
@@ -166,10 +170,11 @@ extension FoodCategoryViewController: UICollectionViewDataSource, UICollectionVi
 
 struct FoodCategoryWrapper: UIViewControllerRepresentable {
   let titleText: String
+  let collectionName: FirebaseCollectionEnum
   
   func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
   
   func makeUIViewController(context: Context) -> FoodCategoryViewController {
-    return FoodCategoryViewController(titleText: titleText)
+    return FoodCategoryViewController(titleText: titleText, collectionName: collectionName)
   }
 }

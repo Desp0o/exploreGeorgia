@@ -33,14 +33,20 @@ struct FoodView: View {
                 Spacer()
                 
                 NavigationLink {
-                  
+                  FoodCategoryWrapper(titleText: "Traditional Kitchen", collectionName: .resturant)
+                    .navigationBarHidden(true)
+                    .ignoresSafeArea()
                 } label: {
                   Text("View more")
                     .styledText(.customVine, 14)
                 }
                 
               }
-              FoodViewGrid(data: vm.resturantsData, elementWidth: geometry.size.width / 2 - 40, collection: .resturant)
+              FoodViewGrid(
+                data: vm.resturantsData,
+                elementWidth: geometry.size.width / 2 - 40,
+                collection: .resturant
+              )
             }
             
             DrinkViewGrid(data: vm.drinksData)
@@ -53,14 +59,20 @@ struct FoodView: View {
                 Spacer()
                 
                 NavigationLink {
-                  
+                  FoodCategoryWrapper(titleText: "Bakery", collectionName: .bakery)
+                    .navigationBarHidden(true)
+                    .ignoresSafeArea()
                 } label: {
                   Text("View more")
                     .styledText(.customVine, 14)
                 }
                 
               }
-              FoodViewGrid(data: vm.bakeryData, elementWidth: geometry.size.width / 2 - 40, collection: .bakery)
+              FoodViewGrid(
+                data: vm.bakeryData,
+                elementWidth: geometry.size.width / 2 - 40,
+                collection: .bakery
+              )
             }
           }
           .padding(.horizontal, 20)

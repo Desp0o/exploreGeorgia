@@ -25,8 +25,7 @@ struct CustomTabBar: View {
         switch currentIdenx {
         case 0:
           NavigationStack {
-//            MainView(tabIndex: $currentIdenx)
-            FoodCategoryWrapper(titleText: "სათაური")
+            MainView(tabIndex: $currentIdenx)
           }
         case 1:
           NavigationStack {

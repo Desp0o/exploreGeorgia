@@ -19,14 +19,14 @@ struct DrinkViewGrid: View {
           Spacer()
           
           NavigationLink {
-            
+            FoodCategoryWrapper(titleText: "Drinks", collectionName: .drinks)
+              .navigationBarHidden(true)
+              .ignoresSafeArea()
           } label: {
             Text("View more")
               .styledText(.customVine, 14)
           }
-          
         }
-        
         
         ForEach(data.indices, id: \.self) { index in
           let resturant = data[index]
