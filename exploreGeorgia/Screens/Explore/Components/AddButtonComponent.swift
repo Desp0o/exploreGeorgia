@@ -10,12 +10,13 @@ import SwiftUI
 struct AddButtonComponent: View {
   @Binding var addButtonScale: CGFloat
   @Binding var isPresented: Bool
+  let icon: IconsEnum
   
   var body: some View {
     Button {
       isPresented.toggle()
     } label: {
-      Image(systemName: "plus.circle.fill")
+      Image(systemName: icon.rawValue)
         .resizable()
         .scaledToFit()
         .tint(.customBlue)

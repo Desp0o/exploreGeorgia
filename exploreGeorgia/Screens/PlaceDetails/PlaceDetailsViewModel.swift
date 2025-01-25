@@ -37,10 +37,14 @@ final class PlaceDetailsViewModel: ObservableObject {
   func fetchSinglePlaceByID(with id: String, and collection: FirebaseCollectionEnum) {
     Task {
       do {
-        let data: SightSeenModel = try await firebaseSinglePlaceFetcher.fetchSinglePlaceGeneric(with: id, and: collection.rawValue)
+        let data: SightSeenModel = try await firebaseSinglePlaceFetcher.fetchSinglePlaceGeneric(with: id, and: collection)
         
         await MainActor.run {
           currentPlace = data
+          
+          if currentPlace?.user == nil {
+            print("🟢")
+          }
         }
         
         await checkIfBookmarked(placeId: id)

@@ -25,17 +25,18 @@ struct CustomTabBar: View {
         switch currentIdenx {
         case 0:
           NavigationStack {
-//            MainView(tabIndex: $currentIdenx)
-            ResturantView()
+            MainView(tabIndex: $currentIdenx)
           }
         case 1:
           NavigationStack {
             ExploreView()
           }
         case 2:
-          VocabularyViewControllerWrapper()
+          NavigationStack {
+            FoodView()
+          }
         case 3:
-          Text("hello")
+          VocabularyViewControllerWrapper()
         case 4:
           NavigationStack {
             ProfileView()
@@ -67,7 +68,7 @@ struct CustomTabBar: View {
             
             Text(item.title)
               .styledText(
-                currentIdenx == index ? Color.customVine : Color.customGray,
+                currentIdenx == index ? Color.customBlue : Color.customGray,
                 12)
           }
           
@@ -78,7 +79,7 @@ struct CustomTabBar: View {
       .padding(.horizontal, 20)
       .frame(maxWidth: .infinity)
       .frame(height: 70)
-      .background(.customWhite)
+      .background(.primaryWhite)
       .clipShape(
         .rect(
           topLeadingRadius: 12,

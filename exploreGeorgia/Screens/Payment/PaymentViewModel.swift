@@ -25,7 +25,6 @@ final class PaymentViewModel {
   weak var dataDelegate: PaymentDataDelegate?
   weak var errorDelegate: PaymentErrorDelegate?
   weak var loadingDelegate: PaymentLoadingDelegate?
-  private let paymentsManager: FirebasePayemntsProtocol
   private let userManager: GetFirebaseUserProtocol
   private let db = Firestore.firestore()
   var creditCards: [CreditCardModel] = []
@@ -33,11 +32,9 @@ final class PaymentViewModel {
   var errorMessage = ""
   
   init(
-    userManager: GetFirebaseUserProtocol = UserManager(),
-    paymentsManager: FirebasePayemntsProtocol = FirebaseFetchingService()
+    userManager: GetFirebaseUserProtocol = UserManager()
   ) {
     self.userManager = userManager
-    self.paymentsManager = paymentsManager
     
     fetchAllUserPayments()
   }
@@ -91,31 +88,21 @@ final class PaymentViewModel {
     
     do {
       let cardData: [String: Any] = [
-        "userId": card.userId,
         "number": card.number,
         "expDate": card.expDate,
         "holder": card.holder
       ]
       
-      var documentRef: DocumentReference? = nil
-      documentRef = db.collection("payments").addDocument(data: cardData) { error in
-        if let error = error {
-          print("Error saving credit card: \(error)")
-        } else if let documentRef = documentRef {
-          print("Credit card successfully saved with ID: \(documentRef.documentID)")
-          
-          let userRef = db.collection("users").document(card.userId)
-          userRef.updateData([
-            "creditCards": FieldValue.arrayUnion([documentRef.documentID])
-          ]) { error in
-            if let error = error {
-              print("Error updating user's creditCards array: \(error)")
-            } else {
-              print("Credit card ID added to user's creditCards array")
-            }
-          }
-        }
-      }
+      let userRef = db.collection(FirebaseCollectionEnum.users.rawValue).document(card.userId)
+      
+      try await userRef.updateData([
+        "payments": FieldValue.arrayUnion([cardData])
+      ])
+      
+      print("Credit card successfully added to user's payments")
+    } catch {
+      print("Error adding credit card: \(error)")
+      throw error
     }
   }
   
@@ -183,12 +170,12 @@ final class PaymentViewModel {
   func fetchAllUserPayments() {
     Task {
       do {
-        let user = Auth.auth().currentUser?.uid
+        let userID = Auth.auth().currentUser?.uid ?? ""
         
-        let data = try await paymentsManager.fetchPayments(userId: user ?? "", pageSize: 10, lastDocument: nil)
+        let data = try await userManager.getFirebaseUser(with: userID)
         
         await MainActor.run {
-          creditCards = data.payments
+          creditCards = data?.payments ?? []
           dataDelegate?.didDataFetched()
         }
         
@@ -198,34 +185,31 @@ final class PaymentViewModel {
     }
   }
   
-  func deleteCreditCard(with id: String) {
+  func deleteCreditCard(with card: CreditCardModel) {
     Task {
       do {
-        try await removeElementFromPaymentsAndUsers(paymentId: id)
+        try await removeElementFromPaymentsAndUsers(card: card)
       } catch {
         print(error)
       }
     }
   }
   
-  func removeElementFromPaymentsAndUsers(paymentId: String) async throws{
+  func removeElementFromPaymentsAndUsers(card: CreditCardModel) async throws {
     do {
-      try await db.collection("payments").document(paymentId).delete()
-      print("Deleted payment document with ID \(paymentId).")
+      let cardData: [String: Any] = [
+        "number": card.number,
+        "expDate": card.expDate,
+        "holder": card.holder
+      ]
       
-      let usersRef = db.collection("users")
+      let userRef = db.collection(FirebaseCollectionEnum.users.rawValue).document(card.userId)
       
-      let snapshot = try await usersRef.whereField("creditCards", arrayContains: paymentId).getDocuments()
+      try await userRef.updateData([
+        "payments": FieldValue.arrayRemove([cardData])
+      ])
       
-      for document in snapshot.documents {
-        let userId = document.documentID
-        try await usersRef.document(userId).updateData([
-          "creditCards": FieldValue.arrayRemove([paymentId])
-        ])
-        print("Removed payment ID \(paymentId) from user \(userId)'s creditCards.")
-      }
     } catch {
       throw error
     }
-  }
-}
+  }}

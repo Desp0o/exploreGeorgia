@@ -162,8 +162,8 @@ extension PaymentViewController: UITableViewDataSource, UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
     let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (action, view, completion) in
-      let currentCardId = self?.vm.creditCards[indexPath.row].id ?? ""
-      self?.vm.deleteCreditCard(with: currentCardId)
+      guard let currentCard = self?.vm.creditCards[indexPath.row] else { return }
+      self?.vm.deleteCreditCard(with: currentCard)
       self?.vm.creditCards.remove(at: indexPath.row)
       tableView.deleteRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .fade)
       self?.adjustTableViewHeight()

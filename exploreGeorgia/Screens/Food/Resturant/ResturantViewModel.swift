@@ -26,16 +26,14 @@ final class ResturantViewModel: ObservableObject {
   ) {
     self.firebaseManager = firebaseManager
     self.userManager = userManager
-    
-    fetchData()
   }
   
-  func fetchData() {
+  func fetchData(id: String, collection: FirebaseCollectionEnum) {
     Task {
       do {
         let userID = Auth.auth().currentUser?.uid ?? ""
         let currentUser = try await userManager.getFirebaseUser(with: userID)
-        let result: ResturantModel = try await firebaseManager.fetchSinglePlaceGeneric(with: "1pOkR761H11Srg8qqD1r", and: "resturant")
+        let result: ResturantModel = try await firebaseManager.fetchSinglePlaceGeneric(with: id, and: collection)
         
         await MainActor.run {
           singleResturant = result
@@ -87,7 +85,6 @@ final class ResturantViewModel: ObservableObject {
       "reviews": FieldValue.arrayUnion([newReview])
     ])
   }
-  
 }
 
 

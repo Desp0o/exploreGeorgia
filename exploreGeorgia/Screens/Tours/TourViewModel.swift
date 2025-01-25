@@ -15,7 +15,6 @@ final class TourViewModel: ObservableObject {
   private let firebaseManager: FirebaseSinglePlaceGenericProtocol
   private let bookmarkManager: CheckBookmarkProtocol
   private let userManager: UserManager
-  private let paymentManager: FirebasePayemntsProtocol
   private let db = Firestore.firestore()
   private var currentUserId = ""
   @Published var tour: TourModel? = nil
@@ -50,13 +49,11 @@ final class TourViewModel: ObservableObject {
   init(
     firebaseManager: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService(),
     bookmarkManager: CheckBookmarkProtocol = BookMarkManager(),
-    userManager: UserManager = UserManager(),
-    paymentManager: FirebasePayemntsProtocol = FirebaseFetchingService()
+    userManager: UserManager = UserManager()
   ) {
     self.firebaseManager = firebaseManager
     self.bookmarkManager = bookmarkManager
     self.userManager = userManager
-    self.paymentManager = paymentManager
     
     fetchCreditCards()
   }
@@ -66,7 +63,7 @@ final class TourViewModel: ObservableObject {
       do {
         let userID = Auth.auth().currentUser?.uid
         
-        let data: TourModel = try await firebaseManager.fetchSinglePlaceGeneric(with: placeId, and: collection.rawValue)
+        let data: TourModel = try await firebaseManager.fetchSinglePlaceGeneric(with: placeId, and: collection)
         
         let user = try await userManager.getFirebaseUser(with: userID ?? "")
         
@@ -98,12 +95,12 @@ final class TourViewModel: ObservableObject {
   func fetchCreditCards() {
     Task {
       do {
-        let userID = Auth.auth().currentUser?.uid
-        let cards = try await paymentManager.fetchPayments(userId: userID ?? "", pageSize: 10, lastDocument: nil)
+        let userID = Auth.auth().currentUser?.uid ?? ""
+        let currentUser = try await userManager.getFirebaseUser(with: userID)
         
         await MainActor.run {
-          cardData = cards.payments
-          currentUserId = userID ?? ""
+          cardData = currentUser?.payments ?? []
+          currentUserId = userID
         }
       } catch {
         print(error.localizedDescription)

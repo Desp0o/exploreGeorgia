@@ -6,10 +6,12 @@
 //
 
 enum FirebaseCollectionEnum: String {
+  case users = "users" 
   case appPlace = "placesFromApp"
   case usersPlace = "usersPlaces"
   case tours = "tours"
-  case payments = "payments"
   case fatcs = "facts"
   case resturant = "resturant"
+  case drinks = "drinks"
+  case bakery = "bakery"
 }

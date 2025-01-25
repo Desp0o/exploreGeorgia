@@ -70,7 +70,8 @@ struct ExploreView: View {
       
       AddButtonComponent(
         addButtonScale: $addButtonScale,
-        isPresented: $isPresented
+        isPresented: $isPresented,
+        icon: .pluIcon
       )
       .scaleEffect(addButtonScale)
       .onAppear {

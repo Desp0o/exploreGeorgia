@@ -29,7 +29,7 @@ struct ToursComponent: View {
               )
           } label: {
             Text("View all")
-              .styledText(.customVine, 14)
+              .styledText(.customBlue, 14)
           }
         }
         

@@ -68,7 +68,7 @@ struct AllPopularPlaces: View {
               .onTapGesture {
                 lastSelectedID = place.id
               }
-              if index == vm.fetchedData.count {
+              if index == vm.fetchedData.count - 1 {
                 Color.clear
                   .onAppear {
                     pageSize += 10

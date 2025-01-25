@@ -71,7 +71,7 @@ final class MainViewModel: ObservableObject {
   func fetchSingleFact() {
     Task {
       do {
-        let result: [FactModel] = try await firebaseSimpleManager.fetchCollection(collectionName: .fatcs)
+        let result: [FactModel] = try await firebaseSimpleManager.fetchCollection(collectionName: .fatcs, limit: 100)
         await MainActor.run {
           intrestingFacts = result
         }

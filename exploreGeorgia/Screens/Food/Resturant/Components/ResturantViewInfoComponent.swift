@@ -41,7 +41,7 @@ struct ResturantViewInfoComponent: View {
             isPresent.toggle()
           } label: {
             Text("See on map")
-              .styledText(.customVine, 14)
+              .styledText(.customBlue, 14)
           }
           
           Spacer()
@@ -113,7 +113,7 @@ struct ResturantViewInfoComponent: View {
             }
           } label: {
             Text(isReviewVisible ? "Cancel review" : "Add review")
-              .styledText(.customVine, 16, .semibold)
+              .styledText(.customBlue, 16, .semibold)
           }
         }
         
