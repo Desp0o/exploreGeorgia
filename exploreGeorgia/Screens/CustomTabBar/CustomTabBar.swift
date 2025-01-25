@@ -29,7 +29,8 @@ struct CustomTabBar: View {
           }
         case 1:
           NavigationStack {
-            ExploreView()
+            SIngleUserProfileWrapper()
+              .ignoresSafeArea()
           }
         case 2:
           NavigationStack {

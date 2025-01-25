@@ -53,7 +53,7 @@ struct CachedAsyncImage: View {
         self.image = downloadedImage
       }
     } catch {
-      print("Image loading failed: \(error)")
+      print("Image loading failed: \(error)", "🔴🔴🔴🔴🔴")
     }
   }
 }
