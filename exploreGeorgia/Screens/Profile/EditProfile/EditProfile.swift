@@ -39,7 +39,7 @@ struct EditProfile: View {
       VStack{
         if vm.isUpdatignInfo {
           ProgressView()
-            .scaleEffect(2.0)
+            .scaleEffect(1.5)
             .tint(.customBlue)
         }
       }
@@ -50,10 +50,12 @@ struct EditProfile: View {
         if vm.isLoading {
           VStack {
             ProgressView()
-              .scaleEffect(2.0)
+              .scaleEffect(1.5)
               .tint(.customBlue)
           }
           .frame(maxWidth: .infinity)
+          .padding(.top, 200)
+          
         } else {
           VStack(spacing: 50) {
             UserAvatarChangeComponent(vm: vm)

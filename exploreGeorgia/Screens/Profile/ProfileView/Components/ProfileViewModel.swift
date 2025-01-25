@@ -54,7 +54,6 @@ final class ProfileViewModel: ObservableObject {
   
   func updateProfileStatistic() {
     profileStatistic = [
-      ProfileStatModel(title: "Points", count: user?.points ?? 0),
       ProfileStatModel(title: "Explored", count: user?.explored.count ?? 0),
       ProfileStatModel(title: "Bucket List", count: user?.bucketList.count ?? 0)
     ]
