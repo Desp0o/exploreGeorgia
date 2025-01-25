@@ -6,7 +6,7 @@
 //
 
 
-struct ResturantModel: Codable, IdentifiableAndBookmarkable {
+struct ResturantModel: Codable, IdentifiableAndBookmarkable, Identifiable, Equatable {
   var id: String?
   let name: String
   let cover: String
@@ -21,9 +21,10 @@ struct ResturantModel: Codable, IdentifiableAndBookmarkable {
   let about: String
   var reviews: [String]
   let menu: [String: FoodItem]
+  let type: String
 }
 
-struct FoodItem: Codable {
+struct FoodItem: Codable, Equatable {
     let foodCover: String
     let foodIngredients: String
     let foodName: String

@@ -52,6 +52,6 @@ struct SingleTourFeedView: View {
         .roundedCorners(12)
       }
     }
-    .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+    .shadow(color: .black.opacity(0.5), radius: 4, y: 2)
   }
 }

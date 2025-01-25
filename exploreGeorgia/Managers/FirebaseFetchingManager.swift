@@ -27,10 +27,10 @@ protocol FirebasePhotoUrlGeneratorProtocol {
 }
 
 protocol FirebaseSinglePlaceGenericProtocol {
-  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: String) async throws -> T
+  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: FirebaseCollectionEnum) async throws -> T
 }
 protocol FirebaseSimpleCollectionFetchProtocol {
-  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum) async throws -> [T]
+  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum, limit: Int) async throws -> [T]
 }
 
 
@@ -96,8 +96,8 @@ extension FirebaseFetchingService: FirebasePhotoUrlGeneratorProtocol {
 }
 
 extension FirebaseFetchingService: FirebaseSinglePlaceGenericProtocol {
-  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: String) async throws -> T {
-    let documentRef = db.collection(collection).document(id)
+  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: FirebaseCollectionEnum) async throws -> T {
+    let documentRef = db.collection(collection.rawValue).document(id)
     
     do {
       let documentSnapshot = try await documentRef.getDocument()
@@ -112,9 +112,9 @@ extension FirebaseFetchingService: FirebaseSinglePlaceGenericProtocol {
 }
 
 extension FirebaseFetchingService: FirebaseSimpleCollectionFetchProtocol {
-  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum) async throws -> [T] {
+  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum, limit: Int) async throws -> [T] {
     let db = Firestore.firestore()
-    let querySnapshot = try await db.collection(collectionName.rawValue).limit(to: 100).getDocuments()
+    let querySnapshot = try await db.collection(collectionName.rawValue).limit(to: limit).getDocuments()
     
     return try querySnapshot.documents.map { document in
       try document.data(as: T.self)

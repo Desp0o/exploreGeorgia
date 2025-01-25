@@ -18,7 +18,6 @@ struct TextEditorComponent: View {
       TextEditor(text: $textForEditor)
         .autocorrectionDisabled()
         .scrollContentBackground(.hidden)
-        .frame(height: 200)
         .frame(maxWidth: .infinity, maxHeight: 300)
         .roundedCorners(12)
         .padding(10)

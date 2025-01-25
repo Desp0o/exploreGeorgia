@@ -16,6 +16,8 @@ struct ResturantView: View {
   @State private var isPresent = false
   @State var isReviewVisible = false
   @State var isError = false
+  let place: ResturantModel
+  let collection: FirebaseCollectionEnum
   
   var body: some View {
     ZStack {
@@ -36,6 +38,7 @@ struct ResturantView: View {
       VStack {
         PlaceDetailsBGComponent(cover: vm.singleResturant?.cover ?? "")
           .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.40)
+          .clipped()
           .overlay {
             VStack {
               PlaceDetailsNavigationBar(
@@ -63,7 +66,7 @@ struct ResturantView: View {
                     VStack {
                       HStack(spacing: 40) {
                         Text("Info")
-                          .styledText(isInfo ? .customVine : .customBlack, 18, .semibold)
+                          .styledText(isInfo ? .customBlue : .customBlack, 18, .semibold)
                           .onTapGesture {
                             isInfo = true
                             withAnimation {
@@ -73,7 +76,7 @@ struct ResturantView: View {
                           }
                         
                         Text("Menu")
-                          .styledText(!isInfo ? .customVine : .customBlack, 18, .semibold)
+                          .styledText(!isInfo ? .customBlue : .customBlack, 18, .semibold)
                           .onTapGesture {
                             isInfo = false
                             withAnimation {
@@ -111,6 +114,10 @@ struct ResturantView: View {
                 }
               }
               .frame(maxWidth: .infinity, maxHeight: geometry.size.height * 0.60)
+              .background(
+                Image("foodBG")
+                  .frame(maxWidth: .infinity, maxHeight: .infinity)
+              )
               .background(.primaryWhite)
               .clipShape(
                 .rect(
@@ -158,12 +165,12 @@ struct ResturantView: View {
       }
     }
     .background(.primaryWhite)
+    .onAppear {
+      vm.fetchData(id: place.id ?? "", collection: collection)
+    }
   }
 }
 
-#Preview {
-  ResturantView()
-}
 
 
 

@@ -31,7 +31,7 @@ struct PlacesFromAppComponents: View {
             )
         } label: {
           Text("View all")
-            .styledText(.customVine, 14)
+            .styledText(.customBlue, 14)
         }
       }
       .padding(.horizontal, 20)
