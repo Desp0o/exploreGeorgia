@@ -42,7 +42,7 @@ struct AddPlaceView: View {
       }
       
       ScrollView {
-        HStack {
+        ZStack(alignment: .leading) {
           Button {
             dismiss()
           } label: {
@@ -50,15 +50,14 @@ struct AddPlaceView: View {
           }
           .padding(.horizontal, 20)
           
-          Spacer()
+          VStack {
+            Text("Map Your Adventures")
+              .styledText(.customBlue, 22, .bold)
+              .frame(maxWidth: .infinity, alignment: .center)
+          }
         }
         
         VStack(spacing: 20) {
-          Text("Map Your Adventures")
-            .styledText(.customBlue, 22, .bold)
-          
-          Spacer().frame(height: 10)
-          
           CoverUploadComponent(vm: vm)
           
           VStack(spacing: 20) {

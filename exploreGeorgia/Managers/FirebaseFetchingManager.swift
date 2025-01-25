@@ -29,10 +29,22 @@ protocol FirebasePhotoUrlGeneratorProtocol {
 protocol FirebaseSinglePlaceGenericProtocol {
   func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: FirebaseCollectionEnum) async throws -> T
 }
+
 protocol FirebaseSimpleCollectionFetchProtocol {
   func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum, limit: Int) async throws -> [T]
 }
 
+protocol FetchSingleUserExploredPlacesProtocol {
+  func fetchUserPlaces(
+    userId: String,
+    pageSize: Int,
+    lastDocument: DocumentSnapshot?
+  ) async throws -> (
+    places: [SightSeenModel],
+    lastDocument: DocumentSnapshot?,
+    hasMoreData: Bool
+  )
+}
 
 final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
   let db = Firestore.firestore()
@@ -119,5 +131,46 @@ extension FirebaseFetchingService: FirebaseSimpleCollectionFetchProtocol {
     return try querySnapshot.documents.map { document in
       try document.data(as: T.self)
     }
+  }
+}
+
+extension FirebaseFetchingService: FetchSingleUserExploredPlacesProtocol {
+  func fetchUserPlaces(
+    userId: String,
+    pageSize: Int,
+    lastDocument: DocumentSnapshot? = nil
+  ) async throws -> (
+    places: [SightSeenModel],
+    lastDocument: DocumentSnapshot?,
+    hasMoreData: Bool
+  ) {
+    let userDocument = try await db.collection("users").document(userId).getDocument()
+    
+    guard let data = userDocument.data(),
+          let exploredIds = data["explored"] as? [String] else {
+      throw NSError(domain: "FirestoreError", code: 404, userInfo: [NSLocalizedDescriptionKey: "User's explored list is empty or not found."])
+    }
+    
+    var query = db.collection("usersPlaces")
+      .limit(to: pageSize)
+    
+    if let lastDocument = lastDocument {
+      query = query.start(afterDocument: lastDocument)
+    }
+    
+    let snapshot = try await query.getDocuments()
+    
+    let places = snapshot.documents.compactMap { document in
+      let sightSeen = try? document.data(as: SightSeenModel.self)
+      return sightSeen?.id != nil && exploredIds.contains(sightSeen!.id!) ? sightSeen : nil
+    }
+    
+    let hasMoreData = snapshot.documents.count == pageSize
+    
+    return (
+      places,
+      snapshot.documents.last,
+      hasMoreData
+    )
   }
 }

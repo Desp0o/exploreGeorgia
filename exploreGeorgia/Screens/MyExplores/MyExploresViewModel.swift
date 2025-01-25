@@ -24,6 +24,7 @@ final class MyExploresViewModel {
   private var lastDocument: DocumentSnapshot?
   private let db = Firestore.firestore()
   private var hasMoreData = true
+  private let firebaseManager: FetchSingleUserExploredPlacesProtocol
   weak var exploresDelegate: MyExploresDelegate?
   weak var loadingDelegate: MyExploresLoadingDelegate?
   weak var errorDeleage: MyExploresErrorDelegate?
@@ -32,7 +33,8 @@ final class MyExploresViewModel {
   var errorMessage = ""
   private var userID = ""
   
-  init() {
+  init(firebaseManager: FetchSingleUserExploredPlacesProtocol = FirebaseFetchingService()) {
+    self.firebaseManager = firebaseManager
     fetchData(pageSize: 10)
   }
   
@@ -43,7 +45,11 @@ final class MyExploresViewModel {
       do {
         let userId = Auth.auth().currentUser?.uid
         
-        let result = try await fetchUserPlaces(userId: userId ?? "", pageSize: pageSize)
+        let result = try await firebaseManager.fetchUserPlaces(
+          userId: userId ?? "",
+          pageSize: pageSize,
+          lastDocument: lastDocument
+        )
         
         await MainActor.run {
           userID = userId ?? ""
@@ -67,51 +73,7 @@ final class MyExploresViewModel {
       }
     }
   }
-  
-  func fetchUserPlaces(
-    userId: String,
-    pageSize: Int
-  ) async throws -> (
-    places: [SightSeenModel],
-    lastDocument: DocumentSnapshot?,
-    hasMoreData: Bool
-  ) {
-    var query = db.collection(
-      "usersPlaces"
-    )
-      .whereField(
-        "user",
-        isEqualTo: userId
-      )
-      .limit(
-        to: pageSize
-      )
     
-    if let lastDocument = lastDocument {
-      query = query
-        .start(
-          afterDocument: lastDocument
-        )
-    }
-    
-    let snapshot = try await query.getDocuments()
-    
-    let places = snapshot.documents.compactMap { document in
-      try? document
-        .data(
-          as: SightSeenModel.self
-        )
-    }
-    
-    let hasMoreData = snapshot.documents.count == pageSize
-    
-    return (
-      places,
-      snapshot.documents.last,
-      hasMoreData
-    )
-  }
-  
   func deletePlaceFromDataBase(placeId: String) async throws {
     let db = Firestore.firestore()
     let placesFromUserRef = db.collection("usersPlaces").document(placeId)
