@@ -8,8 +8,9 @@
 import UIKit
 import SwiftUI
 
-final class SingleUserProfile: UIViewController {
+final class SingleUserProfileViewController: UIViewController {
   private let vm: SingleUserProfileViewModel
+  private var pageSize = 10
   
   private lazy var emptyView: UIView = {
     let view = UIView()
@@ -52,6 +53,21 @@ final class SingleUserProfile: UIViewController {
     return label
   }()
   
+  private lazy var table: UITableView = {
+    let table = UITableView()
+    table.translatesAutoresizingMaskIntoConstraints = false
+    table.dataSource = self
+    table.delegate = self
+    table.separatorStyle = .none
+    table.separatorColor = .clear
+    table.backgroundColor = .clear
+    table.register(SingleUserProfileCell.self, forCellReuseIdentifier: "SingleUserProfileCell")
+    table.showsVerticalScrollIndicator = false
+    table.alwaysBounceVertical = false
+    
+    return table
+  }()
+  
   init(vm: SingleUserProfileViewModel = SingleUserProfileViewModel()) {
     self.vm = vm
     super.init(nibName: nil, bundle: nil)
@@ -76,7 +92,11 @@ final class SingleUserProfile: UIViewController {
   private func setupUI() {
     view.backgroundColor = .primaryWhite
     vm.fetchUser(userId: "x4ldqrU6VMMFsBmFhH9SRGG16sJ3")
+    vm.fetchData(pageSize: pageSize, userId: "x4ldqrU6VMMFsBmFhH9SRGG16sJ3")
+    
     vm.userDelegate = self
+    vm.loadingDelegate = self
+    vm.dataDelegate = self
     
     setupConstraints()
   }
@@ -86,6 +106,7 @@ final class SingleUserProfile: UIViewController {
     profieStack.addArrangedSubview(emptyView)
     profieStack.addArrangedSubview(fullNameLabel)
     view.addSubview(backButton)
+    view.addSubview(table)
     
     NSLayoutConstraint.activate([
       backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -94,8 +115,12 @@ final class SingleUserProfile: UIViewController {
       profieStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
       profieStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
       profieStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-      profieStack.heightAnchor.constraint(equalToConstant: 200),
-
+      profieStack.heightAnchor.constraint(equalToConstant: 240),
+      
+      table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+      table.topAnchor.constraint(equalTo: profieStack.bottomAnchor, constant: 20),
+      table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+      table.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -5)
     ])
   }
   
@@ -112,7 +137,7 @@ final class SingleUserProfile: UIViewController {
     let shadowLayer = CALayer()
     shadowLayer.frame = view.frame
     shadowLayer.shadowColor = UIColor.black.cgColor
-    shadowLayer.shadowOpacity = 0.25
+    shadowLayer.shadowOpacity = 0.05
     shadowLayer.shadowRadius = 4
     shadowLayer.shadowOffset = CGSize(width: 0, height: 2)
     shadowLayer.shadowPath = UIBezierPath(roundedRect: view.bounds,
@@ -140,7 +165,7 @@ final class SingleUserProfile: UIViewController {
   }
 }
 
-extension SingleUserProfile: SingleUserFetchDelegate {
+extension SingleUserProfileViewController: SingleUserFetchDelegate {
   func didUserFetched() {
     let firstName = vm.user?.firstName ?? ""
     let lastName = vm.user?.lastName ?? ""
@@ -150,11 +175,51 @@ extension SingleUserProfile: SingleUserFetchDelegate {
   }
 }
 
-struct SIngleUserProfileWrapper: UIViewControllerRepresentable {
-  func makeUIViewController(context: Context) -> SingleUserProfile {
-    return SingleUserProfile()
+extension SingleUserProfileViewController: SingleUserLoadingDelegate {
+  func didLoadingStopped() {
+    
+  }
+}
+
+extension SingleUserProfileViewController: SingleUserDataDelegate {
+  func didDataFetched() {
+    table.reloadData()
+  }
+}
+
+extension SingleUserProfileViewController: UITableViewDataSource, UITableViewDelegate {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    vm.fetchedPlaces.count
   }
   
-  func updateUIViewController(_ uiViewController: SingleUserProfile, context: Context) {}
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: "SingleUserProfileCell", for: indexPath) as? SingleUserProfileCell
+    let place = vm.fetchedPlaces[indexPath.row]
+    cell?.setupCell(with: place)
+    cell?.selectionStyle = .none
+    
+    if indexPath.row == vm.fetchedPlaces.count - 1 {
+      pageSize += 10
+      vm.fetchData(pageSize: pageSize, userId: "x4ldqrU6VMMFsBmFhH9SRGG16sJ3")
+    }
+    
+    return cell ?? SingleUserProfileCell()
+  }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let place = vm.fetchedPlaces[indexPath.row]
+    let swiftUIView = PlaceDetailsView(elementID: place.id ?? "", collectionName: .usersPlace).navigationBarHidden(true)
+    let hostingController = UIHostingController(rootView: swiftUIView)
+    
+    navigationController?.pushViewController(hostingController, animated: true)
+  }
+}
+
+struct SIngleUserProfileWrapper: UIViewControllerRepresentable {
+  func makeUIViewController(context: Context) -> SingleUserProfileViewController {
+    return SingleUserProfileViewController()
+  }
+  
+  func updateUIViewController(_ uiViewController: SingleUserProfileViewController, context: Context) {}
 }
 
