@@ -68,7 +68,7 @@ struct CustomTabBar: View {
             
             Text(item.title)
               .styledText(
-                currentIdenx == index ? Color.customVine : Color.customGray,
+                currentIdenx == index ? Color.customBlue : Color.customGray,
                 12)
           }
           
@@ -79,7 +79,7 @@ struct CustomTabBar: View {
       .padding(.horizontal, 20)
       .frame(maxWidth: .infinity)
       .frame(height: 70)
-      .background(.customWhite)
+      .background(.primaryWhite)
       .clipShape(
         .rect(
           topLeadingRadius: 12,

@@ -40,7 +40,7 @@ struct FoodView: View {
                     .ignoresSafeArea()
                 } label: {
                   Text("View more")
-                    .styledText(.customVine, 14)
+                    .styledText(.customBlue, 14)
                 }
                 
               }
@@ -66,7 +66,7 @@ struct FoodView: View {
                     .ignoresSafeArea()
                 } label: {
                   Text("View more")
-                    .styledText(.customVine, 14)
+                    .styledText(.customBlue, 14)
                 }
                 
               }

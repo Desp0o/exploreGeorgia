@@ -96,7 +96,7 @@ struct PlaceDetailsInfoComponent: View {
             vm.currentPlace?.price ?? 0 > 0 ? "₾\(vm.currentPlace?.price ?? 0)" : "Free"
           )
           .styledText(
-            .customVine,
+            .customBlue,
             15
           )
         }

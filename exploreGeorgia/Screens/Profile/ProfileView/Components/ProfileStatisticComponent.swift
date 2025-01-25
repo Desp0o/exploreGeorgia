@@ -51,7 +51,7 @@ struct ProfileStatisticComponent: View {
               
               Text("\(statisticArray[index].count)")
                 .styledText(
-                  .customVine,
+                  .customBlue,
                   14,
                   .semibold
                 )

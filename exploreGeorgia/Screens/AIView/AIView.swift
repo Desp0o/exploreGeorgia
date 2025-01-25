@@ -10,24 +10,33 @@ import SwiftUI
 struct AIView: View {
   @StateObject var vm = AIViewModel()
   @State private var opacityPoint: CGFloat = 0
+  @State var currentIndex = 0
   
   var body: some View {
     VStack {
-      ScrollView {
-        VStack(spacing: 20) {
-          Text("Do you love cooking at home? Then ask for a recipe!")
-            .styledText(.customBlue, 16, .semibold, .center)
-          
-//          if !vm.responseAI.isEmpty {
-            Text(vm.responseAI)
-            .opacity(opacityPoint)
-              .animation(.easeOut, value: vm.responseAI)
-//          }
+      ScrollViewReader { proxy in
+        ScrollView {
+          VStack(spacing: 20) {
+            Text("Do you love cooking at home? Then ask for a recipe!")
+              .styledText(.customBlue, 16, .semibold, .center)
+              .frame(maxWidth: .infinity)
+            
+            if vm.responseAI != "" {
+              TypingAnimationView(currentIndex: $currentIndex, fullText: vm.responseAI, typingSpeed: 0.02)
+                .onChange(of: currentIndex) { _ in
+                  withAnimation {
+                    proxy.scrollTo("bottom", anchor: .bottom)
+                  }
+                }
+            }
+          }
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .id("bottom")
         }
+        .scrollBounceBehavior(.basedOnSize)
+        .scrollIndicators(.hidden)
+        .padding(.bottom, 20)
       }
-      .scrollBounceBehavior(.basedOnSize)
-      .scrollIndicators(.hidden)
-      .padding(.bottom, 20)
       
       VStack(spacing: 10) {
         TextEditorComponent(textForEditor: $vm.prompt, placeholder: "Example: Give me a recipe for Georgian food Khinkali.")
@@ -52,15 +61,14 @@ struct AIView: View {
     .background(.primaryWhite)
     .overlay {
       if vm.isLoading {
-      ZStack {
-        Color.black.opacity(0.3).ignoresSafeArea()
-        VStack {
+        ZStack {
+          VStack {
             ProgressView()
               .scaleEffect(1.5)
-              .tint(.customVine)
+              .tint(.customBlue)
             
             Text("We are processing the best answer for you. Please stand by.")
-            .styledText(.customVine, 13, .semibold, .center)
+              .styledText(.customBlue, 13, .semibold, .center)
               .frame(maxWidth: 300)
           }
         }
@@ -68,7 +76,7 @@ struct AIView: View {
       }
     }
     .onChange(of: vm.responseAI) { _ in
-        opacityPoint = 1
+      opacityPoint = 1
     }
   }
 }

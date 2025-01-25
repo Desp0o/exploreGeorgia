@@ -19,7 +19,7 @@ struct AddButtonComponent: View {
       Image(systemName: icon.rawValue)
         .resizable()
         .scaledToFit()
-        .tint(.customVine)
+        .tint(.customBlue)
     }
     .frame(width: 40, height: 40)
     .offset(x: -20, y: -20)

@@ -66,7 +66,7 @@ struct ResturantView: View {
                     VStack {
                       HStack(spacing: 40) {
                         Text("Info")
-                          .styledText(isInfo ? .customVine : .customBlack, 18, .semibold)
+                          .styledText(isInfo ? .customBlue : .customBlack, 18, .semibold)
                           .onTapGesture {
                             isInfo = true
                             withAnimation {
@@ -76,7 +76,7 @@ struct ResturantView: View {
                           }
                         
                         Text("Menu")
-                          .styledText(!isInfo ? .customVine : .customBlack, 18, .semibold)
+                          .styledText(!isInfo ? .customBlue : .customBlack, 18, .semibold)
                           .onTapGesture {
                             isInfo = false
                             withAnimation {

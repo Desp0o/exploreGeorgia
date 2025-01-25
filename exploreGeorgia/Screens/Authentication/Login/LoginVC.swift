@@ -81,7 +81,7 @@ final class LoginVC: UIViewController {
       title: "Forget Password?",
       fontSize: 14,
       fontWeight: .medium,
-      titleColor: .customVine
+      titleColor: .customBlue
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
@@ -117,7 +117,7 @@ final class LoginVC: UIViewController {
       title: "Sign Up",
       fontSize: 14,
       fontWeight: .medium,
-      titleColor: .customVine
+      titleColor: .customBlue
     )
     button.addAction(UIAction(handler: {[weak self] _ in
       self?.navigateToSignupVC()

@@ -11,5 +11,5 @@ enum IconsEnum: String {
   case bookmarkInactive = "bookmark"
   case trash = "trash"
   case pluIcon = "plus.circle.fill"
-  case aiIcon = "ellipsis.message.fill"
+  case aiIcon = "message.fill"
 }

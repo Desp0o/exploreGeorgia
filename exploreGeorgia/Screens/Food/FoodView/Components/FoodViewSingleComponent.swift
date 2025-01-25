@@ -23,9 +23,9 @@ struct FoodViewSingleComponent: View {
           .shadow(color: .black.opacity(0.30), radius: 4, y: 2)
         
         Text(type)
-          .styledText(.customBlack, 13, .semibold)
+          .styledText(.white, 13, .semibold)
           .padding(4)
-          .background(.customVine)
+          .background(.customBlue)
           .roundedCorners(5)
           .offset(x:-10, y: 10)
       }
