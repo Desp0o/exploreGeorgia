@@ -22,7 +22,6 @@ struct ResturantMenuComponent: View {
           price: foodItem?.foodPrice ?? 0
         )
       }
-      
     }
     .padding(.vertical, 20)
   }

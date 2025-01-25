@@ -46,7 +46,7 @@ struct AddPlaceView: View {
           Button {
             dismiss()
           } label: {
-            OverlayActionButtonIcon(iconName: "xmark", tint: .white, bgColor: .customBlue, opacity: 1)
+            OverlayActionButtonIcon(iconName: .xmark, tint: .white, bgColor: .customBlue, opacity: 1)
           }
           .padding(.horizontal, 20)
           

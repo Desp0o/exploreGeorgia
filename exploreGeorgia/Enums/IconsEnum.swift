@@ -12,4 +12,8 @@ enum IconsEnum: String {
   case trash = "trash"
   case pluIcon = "plus.circle.fill"
   case aiIcon = "message.fill"
+  case xmark = "xmark"
+  case ratingStar = "star.fill"
+  case sun = "sun.min"
+  case moon = "moon.fill"
 }

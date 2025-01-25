@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ToursBookmarkViewComponent: View {
-  @ObservedObject var vm: AllBookmarkViewModel
+  @EnvironmentObject var vm: AllBookmarkViewModel
   @State private var opacityPoint: CGFloat = 0
   
   var body: some View {
@@ -28,7 +28,7 @@ struct ToursBookmarkViewComponent: View {
                       vm.removeTourBookmark(index: indexSet)
                     }
                   } label: {
-                    OverlayActionButtonIcon(iconName: IconsEnum.trash.rawValue, tint: .white, scale: 0.8)
+                    OverlayActionButtonIcon(iconName: .trash, tint: .white, scale: 0.8)
                   }
                   .frame(width: 36, height: 36)
                   .padding(10)

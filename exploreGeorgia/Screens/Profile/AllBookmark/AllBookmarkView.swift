@@ -32,7 +32,7 @@ struct AllBookmarkView: View {
                 dismiss.wrappedValue.dismiss()
               } label: {
                 OverlayActionButtonIcon(
-                  iconName: IconsEnum.backButton.rawValue,
+                  iconName: .backButton,
                   tint: .white,
                   scale: 0.9,
                   bgColor: .customBlue,
@@ -79,11 +79,11 @@ struct AllBookmarkView: View {
             VStack(spacing: 12) {
               switch vm.dataIndex {
               case 0:
-                PlacesBookmarkViewComponent(vm: vm, collectionName: .appPlace)
+                PlacesBookmarkViewComponent(collectionName: .appPlace)
               case 1:
-                PlacesBookmarkViewComponent(vm: vm, collectionName: .usersPlace)
+                PlacesBookmarkViewComponent(collectionName: .usersPlace)
               case 2:
-                ToursBookmarkViewComponent(vm: vm)
+                ToursBookmarkViewComponent()
               default:
                 NoBookmarksComponent()
               }
@@ -100,5 +100,6 @@ struct AllBookmarkView: View {
     .onChange(of: vm.dataIndex) { _ in
       vm.requestData()
     }
+    .environmentObject(vm)
   }
 }

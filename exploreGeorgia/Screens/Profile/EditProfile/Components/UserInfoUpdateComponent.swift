@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserInfoUpdateComponent: View {
-  @ObservedObject var vm: EditProfileViewModel
+  @EnvironmentObject var vm: EditProfileViewModel
   
   var body: some View {
     VStack(spacing: 20) {
@@ -44,9 +44,4 @@ struct UserInfoUpdateComponent: View {
       .customStyledButton()
     }
   }
-}
-
-#Preview {
-  @ObservedObject var vm = EditProfileViewModel()
-  UserInfoUpdateComponent(vm: vm)
 }

@@ -80,7 +80,6 @@ struct ResturantViewInfoComponent: View {
               .padding(.vertical, 6)
               .background(.customWhite)
               .clipShape(RoundedRectangle(cornerRadius: 12))
-            
           }
           .id(vm.reviews)
         }

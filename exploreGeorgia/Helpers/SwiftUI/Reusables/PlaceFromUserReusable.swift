@@ -35,10 +35,7 @@ struct PlaceFromUserReusable: View {
             .frame(width: 16, height: 16)
           
           Text(place.region)
-            .styledText(
-              .customGray,
-              15
-            )
+            .styledText(.customGray, 15)
         }
       }
       

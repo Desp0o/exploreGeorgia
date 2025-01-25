@@ -8,16 +8,15 @@
 import SwiftUI
 
 struct TourBookingComponent: View {
-  @ObservedObject var vm: TourViewModel
+  @EnvironmentObject var vm: TourViewModel
   @State var isBounced = false
-  let startingDate: Date
   
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
       DatePicker(
         "Booking Date",
         selection: $vm.selectedDate,
-        in: startingDate...,
+        in: vm.startingDate...,
         displayedComponents: [.date]
       )
       .accentColor(.customBlue)

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SinglePurchaseComponent: View {
-  @StateObject var vm = PurchaseHistoryViewModel()
   let tour: PurchasedTourModel
   
   var body: some View {

@@ -29,8 +29,8 @@ struct CustomTabBar: View {
           }
         case 1:
           NavigationStack {
-            SIngleUserProfileWrapper()
-              .ignoresSafeArea()
+            ExploreView()
+//              .ignoresSafeArea()
           }
         case 2:
           NavigationStack {
@@ -61,16 +61,11 @@ struct CustomTabBar: View {
               Image(currentIdenx == index ? item.activeIcon : item.inactiveIcon)
                 .resizable()
                 .scaledToFill()
-                .frame(
-                  width: 24,
-                  height: 24
-                )
+                .frame(width: 24, height: 24)
             }
             
             Text(item.title)
-              .styledText(
-                currentIdenx == index ? Color.customBlue : Color.customGray,
-                12)
+              .styledText(currentIdenx == index ? Color.customBlue : Color.customGray, 12)
           }
           
           Spacer()

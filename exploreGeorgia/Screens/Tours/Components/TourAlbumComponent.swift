@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct TourAlbumComponent: View {
-  @ObservedObject var vm: TourViewModel
-  @Binding var isLightBoxVisible: Bool
-  @Binding var selectedImage: String
+  @EnvironmentObject var vm: TourViewModel
   
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
@@ -20,8 +18,8 @@ struct TourAlbumComponent: View {
             .frame(width: 52, height: 52)
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .onTapGesture {
-              selectedImage = image
-              isLightBoxVisible = true
+              vm.selectedImage = image
+              vm.isLightBoxVisible = true
             }
         }
       }

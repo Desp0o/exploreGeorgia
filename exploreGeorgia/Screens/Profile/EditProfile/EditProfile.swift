@@ -12,7 +12,6 @@ struct EditProfile: View {
   @StateObject private var vm = EditProfileViewModel()
   @ObservedObject private var toastManager = ToastManager()
   @ObservedObject private var alertManager = CustomAlertManager()
-  @State private var showInput = false
   @State private var toastMessage = ""
   @State private var alertBoxMessage = ""
   
@@ -58,20 +57,19 @@ struct EditProfile: View {
           
         } else {
           VStack(spacing: 50) {
-            UserAvatarChangeComponent(vm: vm)
-            
-            UserInfoUpdateComponent(vm: vm)
+            UserAvatarChangeComponent()
+            UserInfoUpdateComponent()
             
             if !vm.isUserFromGoogle {
-              UserPasswordChangeComponent(vm: vm)
+              UserPasswordChangeComponent()
             }
             
             VStack(spacing: 20) {
-              ThemeTogglerComponent(vm: vm)
-              LanguageSelectorComponent(vm: vm)
+              ThemeTogglerComponent()
+              LanguageSelectorComponent()
             }
             
-            UserDeleteComponent(vm: vm, showInput: $showInput)
+            UserDeleteComponent()
           }
           .padding(.horizontal, 20)
         }
@@ -93,8 +91,8 @@ struct EditProfile: View {
         alertManager.showAlert()
       }
     }
+    .environmentObject(vm)
   }
-  
 }
 
 //

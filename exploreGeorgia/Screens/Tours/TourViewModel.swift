@@ -31,20 +31,10 @@ final class TourViewModel: ObservableObject {
   @Published var totalAmount = 0
   @Published var isSuccessfullyPurchased = false
   @Published var isPaymentOpened = false
-  let GridColumns = [
-    GridItem(),
-    GridItem(),
-    GridItem(),
-    GridItem(),
-    GridItem(),
-    GridItem(),
-    GridItem(),
-    GridItem(),
-    GridItem(),
-    GridItem(),
-    GridItem(),
-    GridItem()
-  ]
+  @Published var isLightBoxVisible = false
+  @Published var selectedImage = ""
+  @Published var startingDate: Date = Date().addingTimeInterval(86400)
+  @Published var isCalendarShown = false
   
   init(
     firebaseManager: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService(),

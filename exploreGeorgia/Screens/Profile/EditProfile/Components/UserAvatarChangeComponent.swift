@@ -9,7 +9,7 @@ import SwiftUI
 import _PhotosUI_SwiftUI
 
 struct UserAvatarChangeComponent: View {
-  @ObservedObject var vm: EditProfileViewModel
+  @EnvironmentObject var vm: EditProfileViewModel
   
   var body: some View {
     VStack(spacing: 20) {
@@ -26,17 +26,8 @@ struct UserAvatarChangeComponent: View {
       
       PhotosPicker(selection: $vm.selectedAvatarFromPicker) {
         Text("Tap to upload profile photo")
-          .styledText(
-            .customBlue,
-            18,
-            .bold
-          )
+          .styledText(.customBlue, 18, .bold)
       }
     }
   }
-}
-
-#Preview {
-  @ObservedObject var vm = EditProfileViewModel()
-  UserAvatarChangeComponent(vm: vm)
 }

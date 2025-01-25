@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserPasswordChangeComponent: View {
-  @ObservedObject var vm: EditProfileViewModel
+  @EnvironmentObject var vm: EditProfileViewModel
   
   var body: some View {
     VStack(spacing: 20) {
@@ -27,9 +27,4 @@ struct UserPasswordChangeComponent: View {
       .customStyledButton()
     }
   }
-}
-
-#Preview {
-  @ObservedObject var vm = EditProfileViewModel()
-  UserPasswordChangeComponent(vm: vm)
 }

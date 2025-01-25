@@ -5,7 +5,6 @@
 //  Created by Despo on 23.01.25.
 //
 
-
 struct ResturantModel: Codable, IdentifiableAndBookmarkable, Identifiable, Equatable {
   var id: String?
   let name: String

@@ -14,7 +14,6 @@ final class AllPopularViewModel: ObservableObject {
   private let userManager: GetFirebaseUserProtocol
   private let firebaseManager: FirebaseFetchingServicePorotocol
   private var user: UserModel? = nil
-  private let collectionName = "placesFromApp"
   
   init(
     userManager: GetFirebaseUserProtocol = UserManager(),
@@ -45,7 +44,6 @@ final class AllPopularViewModel: ObservableObject {
           fetchedData = places
           isLoading = false
         }
-        
       } catch {
         await MainActor.run {
           isLoading = false

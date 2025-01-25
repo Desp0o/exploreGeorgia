@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct ProfileSettingsComponent: View {
-  @Binding var isPresented: Bool
-  @ObservedObject var vm = ProfileViewModel()
+  @EnvironmentObject var vm: ProfileViewModel
   
   var body: some View {
     ZStack {
@@ -11,9 +10,8 @@ struct ProfileSettingsComponent: View {
         .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
       
       VStack(spacing: 0) {
-        //edit profile
         Button(action: {
-          isPresented = true
+          vm.isPresented = true
         }) {
           HStack(spacing: 14) {
             Image("profile")
@@ -30,46 +28,43 @@ struct ProfileSettingsComponent: View {
           .frame(height: 56)
         }
         
-        //payment
         NavigationLink(destination: PaymentViewWrapper()
           .ignoresSafeArea()
           .navigationBarHidden(true)) {
-          HStack(spacing: 14) {
-            Image(systemName: "creditcard")
-              .defaultOptions()
-              .frame(width: 22, height: 16)
-              .tint(.customGray)
-            
-            Text("Payment methods")
-              .styledText(.customBlack, 16, .semibold)
-            
-            Spacer()
-            
-            Image("arrowRight")
+            HStack(spacing: 14) {
+              Image(systemName: "creditcard")
+                .defaultOptions()
+                .frame(width: 22, height: 16)
+                .tint(.customGray)
+              
+              Text("Payment methods")
+                .styledText(.customBlack, 16, .semibold)
+              
+              Spacer()
+              
+              Image("arrowRight")
+            }
+            .frame(height: 56)
           }
-          .frame(height: 56)
-        }
         
-        //purchased
         NavigationLink(destination: PurchaseHistoryView()
           .navigationBarHidden(true)) {
-          HStack(spacing: 14) {
-            Image(systemName: "purchased")
-              .defaultOptions()
-              .frame(width: 14, height: 14)
-              .tint(.customGray)
-            
-            Text("  Purchased tours")
-              .styledText(.customBlack, 16, .semibold)
-            
-            Spacer()
-            
-            Image("arrowRight")
+            HStack(spacing: 14) {
+              Image(systemName: "purchased")
+                .defaultOptions()
+                .frame(width: 14, height: 14)
+                .tint(.customGray)
+              
+              Text("  Purchased tours")
+                .styledText(.customBlack, 16, .semibold)
+              
+              Spacer()
+              
+              Image("arrowRight")
+            }
+            .frame(height: 56)
           }
-          .frame(height: 56)
-        }
         
-        //bookmarked
         NavigationLink(destination: AllBookmarkView().navigationBarHidden(true)) {
           HStack(spacing: 14) {
             Image("bookmark")
@@ -86,7 +81,6 @@ struct ProfileSettingsComponent: View {
           .frame(height: 56)
         }
         
-        //trip
         NavigationLink(
           destination: MyExploresViewControllerWrapper()
             .navigationBarHidden(true)
@@ -107,8 +101,6 @@ struct ProfileSettingsComponent: View {
           .frame(height: 56)
         }
         
-        
-        //contact
         Button(action: {
           
         }) {
@@ -126,9 +118,6 @@ struct ProfileSettingsComponent: View {
           }
           .frame(height: 56)
         }
-        
-        
-        
       }
       .frame(height: CGFloat(6) * 56)
       .padding(.leading, 16)

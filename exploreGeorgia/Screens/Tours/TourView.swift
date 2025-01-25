@@ -9,10 +9,6 @@ import SwiftUI
 
 struct TourView: View {
   @StateObject var vm = TourViewModel()
-  @State var selectedImage = ""
-  @State var isLightBoxVisible = false
-  @State var isCalendarShown = false
-  let startingDate: Date = Date().addingTimeInterval(86400)
   let tourId: String
   
   var body: some View {
@@ -22,15 +18,9 @@ struct TourView: View {
       ScrollViewReader { proxy in
         ScrollView {
           VStack(spacing: 24) {
-            TourCoverComponent(vm: vm)
-            
-            TourAlbumComponent(
-              vm: vm,
-              isLightBoxVisible: $isLightBoxVisible,
-              selectedImage: $selectedImage
-            )
-            
-            TourSummaryComponent(vm: vm)
+            TourCoverComponent()
+            TourAlbumComponent()
+            TourSummaryComponent()
             
             Spacer()
               .frame(minHeight: 50)
@@ -48,10 +38,10 @@ struct TourView: View {
               Button {
                 vm.fetchCreditCards()
                 withAnimation(.easeInOut(duration: 0.2)) {
-                  isCalendarShown.toggle()
+                  vm.isCalendarShown.toggle()
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                  if isCalendarShown {
+                  if vm.isCalendarShown {
                     withAnimation {
                       proxy.scrollTo("calendar", anchor: .bottom)
                     }
@@ -69,8 +59,8 @@ struct TourView: View {
           }
           .padding(.bottom, 30)
           
-          if isCalendarShown {
-            TourBookingComponent(vm: vm, startingDate: startingDate)
+          if vm.isCalendarShown {
+            TourBookingComponent()
           }
           
           Spacer()
@@ -93,26 +83,27 @@ struct TourView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
       
-      if isLightBoxVisible {
+      if vm.isLightBoxVisible {
         LightBoxViewReusable(
-          selectedImage: $selectedImage,
-          isLightBoxVisible: $isLightBoxVisible,
+          selectedImage: $vm.selectedImage,
+          isLightBoxVisible: $vm.isLightBoxVisible,
           album: vm.tour?.album ?? [""]
         )
         .ignoresSafeArea(.all)
       }
       
       if vm.isPaymentOpened {
-        TourPurchaseComponent(vm: vm)
+        TourPurchaseComponent()
       }
       
       if vm.isSuccessfullyPurchased {
-        TourSuccessComponent(vm: vm)
+        TourSuccessComponent()
       }
     }
     .ignoresSafeArea()
     .onAppear {
       vm.fetchSingleTour(with: tourId, and: .tours)
     }
+    .environmentObject(vm)
   }
 }

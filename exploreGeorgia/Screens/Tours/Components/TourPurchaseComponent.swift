@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TourPurchaseComponent: View {
-  @ObservedObject var vm: TourViewModel
+  @EnvironmentObject var vm: TourViewModel
   @State var selectedCardIndex = 0
   
   var body: some View {

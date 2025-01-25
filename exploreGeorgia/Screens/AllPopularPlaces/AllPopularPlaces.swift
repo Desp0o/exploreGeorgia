@@ -25,7 +25,7 @@ struct AllPopularPlaces: View {
             Button {
               dismiss.wrappedValue.dismiss()
             } label: {
-              OverlayActionButtonIcon(iconName: IconsEnum.backButton.rawValue, tint: .white)
+              OverlayActionButtonIcon(iconName: .backButton, tint: .white)
             }
             
             Spacer()

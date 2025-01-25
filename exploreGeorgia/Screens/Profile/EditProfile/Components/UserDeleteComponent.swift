@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct UserDeleteComponent: View {
-  @ObservedObject var vm: EditProfileViewModel
-  @Binding var showInput: Bool
+  @EnvironmentObject var vm: EditProfileViewModel
   
   var body: some View {
     VStack(spacing: 20) {
-      if showInput && !vm.isUserFromGoogle {
+      if vm.showInput && !vm.isUserFromGoogle {
         SecureField("Enter password for delete account", text: $vm.passwordForDelete)
           .styledSecureFIeld()
       }
@@ -21,8 +20,8 @@ struct UserDeleteComponent: View {
       HStack(spacing: 20) {
         Button {
           withAnimation(.linear(duration: 0.2)) {
-            if !showInput {
-              showInput = true
+            if !vm.showInput {
+              vm.showInput = true
             } else {
               vm.userAccountDelete()
             }
@@ -31,20 +30,16 @@ struct UserDeleteComponent: View {
           Text("Delete account")
             .styledText(.buttonPrimary)
         }
-        .customStyledButton(bg: showInput ? .red : .customBlue)
+        .customStyledButton(bg: vm.showInput ? .red : .customBlue)
         
-        if showInput {
+        if vm.showInput {
           Button {
             withAnimation(.linear(duration: 0.2)) {
-              showInput.toggle()
+              vm.showInput.toggle()
             }
           } label: {
             Text("Cancel")
-              .styledText(
-                .customBlack,
-                18,
-                .bold
-              )
+              .styledText(.customBlack, 18, .bold)
           }
           .customStyledButton()
         }
@@ -52,8 +47,3 @@ struct UserDeleteComponent: View {
     }
   }
 }
-
-//#Preview {
-//  @Previewable @State var isShow = true
-//  UserDeleteComponent(vm: $EditProfileViewModel(), showInput: $isShow)
-//}
