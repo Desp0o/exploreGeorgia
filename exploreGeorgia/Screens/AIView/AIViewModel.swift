@@ -21,6 +21,7 @@ final class AIViewModel: ObservableObject {
   }
   
   func fetchData() {
+    responseAI = ""
     let message = MessageModel(
       role: "user",
       content: """
