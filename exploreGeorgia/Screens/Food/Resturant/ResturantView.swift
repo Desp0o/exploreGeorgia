@@ -31,7 +31,6 @@ struct ResturantView: View {
         Spacer()
       }
       .padding(.horizontal, 20)
-      .zIndex(4)
       
       VStack {
         PlaceDetailsBGComponent(cover: vm.singleResturant?.cover ?? "")
@@ -155,14 +154,13 @@ struct ResturantView: View {
     .background(.primaryWhite)
     .overlay {
       VStack {
-//        PlaceDetailsNavigationBar(
-//          isBookMarked: $vm.isBookMarked,
-//          placeID: vm.singleResturant?.id ?? ""
-//        )
-//        .frame(maxHeight: .infinity, alignment: .top)
-//        .background(.red)
-//        
-//        Spacer()
+        PlaceDetailsNavigationBar(
+          isBookMarked: $vm.isBookMarked,
+          placeID: vm.singleResturant?.id ?? ""
+        )
+        .frame(maxHeight: .infinity, alignment: .top)
+        .offset(y: -10)
+        Spacer()
       }
     }
     .onAppear {

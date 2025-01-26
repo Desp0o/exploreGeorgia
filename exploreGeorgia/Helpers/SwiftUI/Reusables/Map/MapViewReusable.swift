@@ -103,6 +103,7 @@ struct MapViewReusable: View {
               .padding(.horizontal, 20)
           }
         }
+        .padding(.bottom, 10)
       }
     }
     .actionSheet(
