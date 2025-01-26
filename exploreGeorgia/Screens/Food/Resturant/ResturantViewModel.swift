@@ -19,6 +19,8 @@ final class ResturantViewModel: ObservableObject {
   @Published var usersReviweText = ""
   @Published var reviews: [String] = []
   @Published var successMessage = ""
+  @Published var isPresent = false
+  @Published var isReviewVisible = false
   
   init(
     firebaseManager: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService(),

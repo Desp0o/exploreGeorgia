@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ResturantMenuComponent: View {
-  @ObservedObject var vm: ResturantViewModel
+  @EnvironmentObject var vm: ResturantViewModel
   
   var body: some View {
     LazyVStack(spacing: 20) {

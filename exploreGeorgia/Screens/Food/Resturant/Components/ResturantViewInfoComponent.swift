@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct ResturantViewInfoComponent: View {
-  @ObservedObject var vm: ResturantViewModel
-  @Binding var isPresent: Bool
+  @EnvironmentObject var vm: ResturantViewModel
   @State private var showMoreReviews = 10
   @State private var showMoreButtonName = "Show more"
-  @Binding var isReviewVisible: Bool
   let collection: FirebaseCollectionEnum
   
   var body: some View {
@@ -39,7 +37,7 @@ struct ResturantViewInfoComponent: View {
           Image("locationPin")
           
           Button {
-            isPresent.toggle()
+            vm.isPresent.toggle()
           } label: {
             Text("See on map")
               .styledText(.customBlue, 14)
@@ -107,26 +105,21 @@ struct ResturantViewInfoComponent: View {
           
           Button {
             withAnimation(.easeInOut(duration: 0.2)) {
-              isReviewVisible.toggle()
+              vm.isReviewVisible.toggle()
             }
           } label: {
-            Text(isReviewVisible ? "Cancel review" : "Add review")
+            Text(vm.isReviewVisible ? "Cancel review" : "Add review")
               .styledText(.customBlue, 16, .semibold)
           }
         }
         
-        if isReviewVisible {
+        if vm.isReviewVisible {
           VStack {
             TextEditorComponent(textForEditor: $vm.usersReviweText, placeholder: "Write your review")
               .frame(height: 200)
             
             Button {
               vm.addUserReview(collection: collection)
-//              if showMoreReviews > vm.reviews.count {
-//                showMoreButtonName = "Show less"
-//              } else {
-//                showMoreButtonName = "Show more"
-//              }
             } label: {
               Text("Send review")
                 .styledText(.customBlue, 16, .semibold)
