@@ -31,13 +31,7 @@ struct AllToursView: View {
             dismiss.wrappedValue.dismiss()
           } label: {
             ZStack {
-              Circle()
-                .fill(.customBlue)
-                .frame(width: 40, height: 40)
-              
-              Image("backArrow")
-                .renderingMode(.template)
-                .foregroundStyle(.white)
+              OverlayActionButtonIcon(iconName: .backButton, tint: .white)
             }
           }
           
@@ -54,7 +48,7 @@ struct AllToursView: View {
           } label: {
             SingleTourFeedView(tour: currentTour, tourMaxWidth: .infinity, isBookButtonVisible: true)
           }
-
+          
           if index == vm.fetchedData.count - 4 {
             Color.white.opacity(0)
               .frame(width: 1, height: 0)

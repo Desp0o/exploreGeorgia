@@ -19,6 +19,8 @@ final class ResturantViewModel: ObservableObject {
   @Published var usersReviweText = ""
   @Published var reviews: [String] = []
   @Published var successMessage = ""
+  @Published var isPresent = false
+  @Published var isReviewVisible = false
   
   init(
     firebaseManager: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService(),
@@ -52,14 +54,14 @@ final class ResturantViewModel: ObservableObject {
     }
   }
   
-  func addUserReview() {
+  func addUserReview(collection: FirebaseCollectionEnum) {
     guard !usersReviweText.isEmpty else { return }
     
     Task {
       do {
         guard let restaurantId = singleResturant?.id else { return }
         try await updateReviews(
-          collectionName: .resturant,
+          collectionName: collection,
           restaurantId: restaurantId,
           newReview: usersReviweText
         )

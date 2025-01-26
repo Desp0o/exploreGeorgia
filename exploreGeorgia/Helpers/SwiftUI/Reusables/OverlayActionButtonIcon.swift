@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct OverlayActionButtonIcon: View {
-  let iconName: String
+  let iconName: IconsEnum
   let tint: Color
   let scale: CGFloat
   let bgColor: Color
   let opacity: CGFloat
   
   init(
-    iconName: String,
+    iconName: IconsEnum,
     tint: Color,
     scale: CGFloat = 1,
     bgColor: Color = .black,
@@ -29,7 +29,7 @@ struct OverlayActionButtonIcon: View {
   }
   
   var body: some View {
-    Image(systemName: iconName)
+    Image(systemName: iconName.rawValue)
       .tint(tint)
       .scaleEffect(scale)
       .frame(width: 36, height: 36)

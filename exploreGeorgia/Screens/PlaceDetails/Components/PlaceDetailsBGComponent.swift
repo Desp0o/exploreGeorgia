@@ -14,7 +14,6 @@ struct PlaceDetailsBGComponent: View {
     VStack {
       CachedAsyncImage(url: URL(string: cover))
         .frame(maxWidth: .infinity)
-        .frame(height: UIScreen.main.bounds.height < 800 ? 270 : 350)
     }
   }
 }

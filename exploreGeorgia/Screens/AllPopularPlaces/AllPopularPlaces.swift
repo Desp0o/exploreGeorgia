@@ -25,7 +25,7 @@ struct AllPopularPlaces: View {
             Button {
               dismiss.wrappedValue.dismiss()
             } label: {
-              OverlayActionButtonIcon(iconName: IconsEnum.backButton.rawValue, tint: .white)
+              OverlayActionButtonIcon(iconName: .backButton, tint: .white)
             }
             
             Spacer()
@@ -47,7 +47,8 @@ struct AllPopularPlaces: View {
               NavigationLink(
                 destination: PlaceDetailsView(
                   elementID: place.id ?? "",
-                  collectionName: .appPlace
+                  collectionName: .appPlace,
+                  isNavigationDisabled: true
                 ).navigationBarHidden(
                   true
                 )

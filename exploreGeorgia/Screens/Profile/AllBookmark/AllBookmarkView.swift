@@ -32,7 +32,7 @@ struct AllBookmarkView: View {
                 dismiss.wrappedValue.dismiss()
               } label: {
                 OverlayActionButtonIcon(
-                  iconName: IconsEnum.backButton.rawValue,
+                  iconName: .backButton,
                   tint: .white,
                   scale: 0.9,
                   bgColor: .customBlue,
@@ -41,20 +41,15 @@ struct AllBookmarkView: View {
               }
               Spacer()
             }
-          }.frame(maxWidth: .infinity, maxHeight: .infinity)
+          }
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .padding(.horizontal, 20)
+        .padding(.top, 20)
         
-        if vm.isLoading {
-          VStack {
-            ProgressView()
-              .scaleEffect(1.5)
-              .tint(.customBlue)
-          }
-          .frame(maxHeight: .infinity)
-        } else {
-          ScrollView {
-            HStack(spacing: 20) {
+        HStack() {
+          ScrollView(.horizontal) {
+            HStack {
               ForEach(vm.buttonsArray.indices, id: \.self) { index in
                 let currentButton = vm.buttonsArray[index]
                 
@@ -72,18 +67,37 @@ struct AllBookmarkView: View {
                 }
               }
             }
-            
+            .padding(.horizontal, 20)
+          }
+          .scrollIndicators(.hidden)
+        }
+        
+        if vm.isLoading {
+          VStack {
+            ProgressView()
+              .scaleEffect(1.5)
+              .tint(.customBlue)
+          }
+          .frame(maxHeight: .infinity)
+        } else {
+          ScrollView {
             Spacer()
               .frame(height: 20)
             
             VStack(spacing: 12) {
               switch vm.dataIndex {
               case 0:
-                PlacesBookmarkViewComponent(vm: vm, collectionName: .appPlace)
+                PlacesBookmarkViewComponent(collectionName: .appPlace)
               case 1:
-                PlacesBookmarkViewComponent(vm: vm, collectionName: .usersPlace)
+                PlacesBookmarkViewComponent(collectionName: .usersPlace)
               case 2:
-                ToursBookmarkViewComponent(vm: vm)
+                ToursBookmarkViewComponent()
+              case 3:
+                FoodBookmarksView(collection: .resturant)
+              case 4:
+                FoodBookmarksView(collection: .drinks)
+              case 5:
+                FoodBookmarksView(collection: .bakery)
               default:
                 NoBookmarksComponent()
               }
@@ -100,5 +114,6 @@ struct AllBookmarkView: View {
     .onChange(of: vm.dataIndex) { _ in
       vm.requestData()
     }
+    .environmentObject(vm)
   }
 }

@@ -11,6 +11,7 @@ import SwiftUI
 final class SingleUserProfileViewController: UIViewController {
   private let vm: SingleUserProfileViewModel
   private var pageSize = 10
+  let singleUserId: String
   
   private lazy var emptyView: UIView = {
     let view = UIView()
@@ -60,7 +61,7 @@ final class SingleUserProfileViewController: UIViewController {
     table.delegate = self
     table.separatorStyle = .none
     table.separatorColor = .clear
-    table.backgroundColor = .clear
+    table.backgroundColor = .primaryWhite
     table.register(SingleUserProfileCell.self, forCellReuseIdentifier: "SingleUserProfileCell")
     table.showsVerticalScrollIndicator = false
     table.alwaysBounceVertical = false
@@ -68,8 +69,12 @@ final class SingleUserProfileViewController: UIViewController {
     return table
   }()
   
-  init(vm: SingleUserProfileViewModel = SingleUserProfileViewModel()) {
+  init(
+    vm: SingleUserProfileViewModel = SingleUserProfileViewModel(),
+    singleUserId: String
+  ) {
     self.vm = vm
+    self.singleUserId = singleUserId
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -79,6 +84,7 @@ final class SingleUserProfileViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+
     setupUI()
   }
   
@@ -91,8 +97,9 @@ final class SingleUserProfileViewController: UIViewController {
   
   private func setupUI() {
     view.backgroundColor = .primaryWhite
-    vm.fetchUser(userId: "x4ldqrU6VMMFsBmFhH9SRGG16sJ3")
-    vm.fetchData(pageSize: pageSize, userId: "x4ldqrU6VMMFsBmFhH9SRGG16sJ3")
+
+    vm.fetchUser(userId: singleUserId)
+    vm.fetchData(pageSize: pageSize, userId: singleUserId)
     
     vm.userDelegate = self
     vm.loadingDelegate = self
@@ -109,7 +116,7 @@ final class SingleUserProfileViewController: UIViewController {
     view.addSubview(table)
     
     NSLayoutConstraint.activate([
-      backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+      backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
       backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
       
       profieStack.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
@@ -120,7 +127,7 @@ final class SingleUserProfileViewController: UIViewController {
       table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
       table.topAnchor.constraint(equalTo: profieStack.bottomAnchor, constant: 20),
       table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-      table.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -5)
+      table.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
     ])
   }
   
@@ -147,8 +154,6 @@ final class SingleUserProfileViewController: UIViewController {
   }
   
   func setupCachedImageHostinger(coverURL: String) {
-    view.backgroundColor = .white
-    
     let cachedAsyncImage = CachedAsyncImage(url: URL(string: coverURL))
     let hostingController = UIHostingController(rootView: cachedAsyncImage)
     hostingController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -177,7 +182,11 @@ extension SingleUserProfileViewController: SingleUserFetchDelegate {
 
 extension SingleUserProfileViewController: SingleUserLoadingDelegate {
   func didLoadingStopped() {
-    
+    if vm.isLoading {
+      showLoading(backgroundOpacity: 0)
+    } else {
+      hideLoading()
+    }
   }
 }
 
@@ -200,7 +209,7 @@ extension SingleUserProfileViewController: UITableViewDataSource, UITableViewDel
     
     if indexPath.row == vm.fetchedPlaces.count - 1 {
       pageSize += 10
-      vm.fetchData(pageSize: pageSize, userId: "x4ldqrU6VMMFsBmFhH9SRGG16sJ3")
+      vm.fetchData(pageSize: pageSize, userId: singleUserId)
     }
     
     return cell ?? SingleUserProfileCell()
@@ -208,7 +217,11 @@ extension SingleUserProfileViewController: UITableViewDataSource, UITableViewDel
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let place = vm.fetchedPlaces[indexPath.row]
-    let swiftUIView = PlaceDetailsView(elementID: place.id ?? "", collectionName: .usersPlace).navigationBarHidden(true)
+    let swiftUIView = PlaceDetailsView(
+      elementID: place.id ?? "",
+      collectionName: .usersPlace,
+      isNavigationDisabled: true
+    ).navigationBarHidden(true)
     let hostingController = UIHostingController(rootView: swiftUIView)
     
     navigationController?.pushViewController(hostingController, animated: true)
@@ -216,8 +229,10 @@ extension SingleUserProfileViewController: UITableViewDataSource, UITableViewDel
 }
 
 struct SIngleUserProfileWrapper: UIViewControllerRepresentable {
+  let singleUserId: String
+  
   func makeUIViewController(context: Context) -> SingleUserProfileViewController {
-    return SingleUserProfileViewController()
+    return SingleUserProfileViewController(singleUserId: singleUserId)
   }
   
   func updateUIViewController(_ uiViewController: SingleUserProfileViewController, context: Context) {}

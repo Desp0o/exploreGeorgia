@@ -9,8 +9,6 @@ import SwiftUI
 
 struct ProfileView: View {
   @StateObject var vm = ProfileViewModel()
-  @State var isPresented = false
-  @State var isSomethingChanged = false
 
   var body: some View {
     ZStack {
@@ -19,7 +17,7 @@ struct ProfileView: View {
       if vm.isLoading {
         VStack {
           ProgressView()
-            .scaleEffect(2.0)
+            .scaleEffect(1.5)
             .tint(.customBlue)
         }
         .frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height)
@@ -28,22 +26,14 @@ struct ProfileView: View {
           VStack(spacing: 40) {
             Spacer()
             
-            ProfileStatisticComponent(
-              user: vm.user,
-              statisticArray: vm.profileStatistic
-            )
-            
-            ProfileSettingsComponent(isPresented: $isPresented)
+            ProfileStatisticComponent()
+            ProfileSettingsComponent()
             
             Button{
               vm.logOut()
             } label: {
               Text("Log out")
-                .styledText(
-                  .customBlue,
-                  16,
-                  .semibold
-                )
+                .styledText(.customBlue, 16, .semibold)
             }
           }
           .padding(.horizontal, 20)
@@ -51,10 +41,10 @@ struct ProfileView: View {
         }
         .scrollIndicators(.hidden)
         .scrollBounceBehavior(.basedOnSize)
-        .sheet(isPresented: $isPresented) {
+        .sheet(isPresented: $vm.isPresented) {
           EditProfile()
         }
-        .onChange(of: isPresented) { newValue in
+        .onChange(of: vm.isPresented) { newValue in
           if !newValue {
             vm.fetchProfile()
           }
@@ -62,12 +52,8 @@ struct ProfileView: View {
       }
     }
     .onAppear {
-      isSomethingChanged.toggle()
       vm.fetchProfile()
     }
+    .environmentObject(vm)
   }
 }
-
-//#Preview {
-//  ProfileView()
-//}

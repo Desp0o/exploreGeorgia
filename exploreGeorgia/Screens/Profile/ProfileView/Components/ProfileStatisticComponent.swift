@@ -8,28 +8,20 @@
 import SwiftUI
 
 struct ProfileStatisticComponent: View {
-  var user: UserModel?
-  var statisticArray: [ProfileStatModel]
+  @EnvironmentObject var vm: ProfileViewModel
   
   var body: some View {
     VStack() {
-      CachedAsyncImage(url: URL(string: user?.avatar ?? ""))
+      CachedAsyncImage(url: URL(string: vm.user?.avatar ?? ""))
         .clipShape(Circle())
         .frame(width: 96, height: 96)
       
       VStack {
-        Text(user?.firstName ?? "")
-          .styledText(
-            .customBlack,
-            24,
-            .semibold
-          )
+        Text(vm.user?.firstName ?? "")
+          .styledText(.customBlack, 24, .semibold)
         
-        Text(user?.email ?? "")
-          .styledText(
-            .customGray,
-            14
-          )
+        Text(vm.user?.email ?? "")
+          .styledText(.customGray, 14)
       }
       
       ZStack {
@@ -38,28 +30,20 @@ struct ProfileStatisticComponent: View {
           .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
         
         HStack {
-          ForEach(0..<statisticArray.count, id: \.self) { index in
+          ForEach(0..<vm.profileStatistic.count, id: \.self) { index in
             Spacer()
             
             VStack(spacing: 10) {
-              Text(statisticArray[index].title)
-                .styledText(
-                  .customBlack,
-                  16,
-                  .semibold
-                )
+              Text(vm.profileStatistic[index].title)
+                .styledText(.customBlack, 16, .semibold)
               
-              Text("\(statisticArray[index].count)")
-                .styledText(
-                  .customBlue,
-                  14,
-                  .semibold
-                )
+              Text("\(vm.profileStatistic[index].count)")
+                .styledText(.customBlue, 14, .semibold)
             }
             
             Spacer()
             
-            if index != statisticArray.count - 1 {
+            if index != vm.profileStatistic.count - 1 {
               Divider()
             }
           }

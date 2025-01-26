@@ -30,6 +30,7 @@ final class EditProfileViewModel: ObservableObject {
   @Published var currentAvatar = ""
   @Published var completionMessage = ""
   @Published var choosenAvatar: UIImage? = nil
+  @Published var showInput = false
   @Published var selectedAvatarFromPicker: PhotosPickerItem? = nil {
     didSet {
       avatarUpload(from: selectedAvatarFromPicker)

@@ -17,7 +17,8 @@ final class ProfileViewModel: ObservableObject {
   @Published var user: UserModel?
   @Published var errorMessage: String?
   @Published var profileStatistic: [ProfileStatModel] = []
-  
+  @Published var isPresented = false
+
   init(
     fetchUser: GetFirebaseUserProtocol = UserManager(),
     authManager: LogOutProtocol = AuthManager()

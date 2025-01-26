@@ -8,18 +8,14 @@
 import SwiftUI
 
 struct PlacesFromUserComponent: View {
-  @ObservedObject var vm: MainViewModel
+  @EnvironmentObject var vm: MainViewModel
   @Binding var tabIndex: Int
   
   var body: some View {
     VStack(spacing: 16) {
       HStack {
         Text("Popular Destinations")
-          .styledText(
-            .customBlack,
-            20,
-            .bold
-          )
+          .styledText(.customBlack, 20, .bold)
         
         Spacer()
         
@@ -33,7 +29,15 @@ struct PlacesFromUserComponent: View {
       
       LazyVStack(spacing: 20) {
         ForEach(vm.usersAddedPlacesData, id: \.id) { place in
-          NavigationLink(destination: PlaceDetailsView(elementID: place.id ?? "", collectionName: .usersPlace).navigationBarHidden(true)) {
+          NavigationLink(
+            destination: PlaceDetailsView(
+              elementID: place.id ?? "",
+              collectionName: .usersPlace,
+              isNavigationDisabled: false
+            )
+            .navigationBarHidden(true)
+          )
+          {
             PlaceFromUserReusable(place: place)
           }
         }

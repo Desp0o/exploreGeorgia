@@ -11,6 +11,7 @@ import FirebaseAuth
 final class AllBookmarkViewModel: ObservableObject {
   @Published var bookmarkedPlaces: [SightSeenModel] = []
   @Published var bookmarkedTours: [TourModel] = []
+  @Published var bookmarkedFoods: [ResturantModel] = []
   @Published var isFetching = false
   @Published var isLoading = true
   @Published var errorMessages = ""
@@ -19,7 +20,7 @@ final class AllBookmarkViewModel: ObservableObject {
   private let bookmarkManager: BookmarkActivityProtocol
   private let fetchBookmarksManager: GetDocumetnsFromBucketListProtocol
   private var user: UserModel? = nil
-  var buttonsArray = ["app", "users", "tours"]
+  var buttonsArray = ["Sightseens", "User's Explored", "Tours", "Resturants", "Drinks", "Bakery"]
   
   init(
     bookmarkManager: BookmarkActivityProtocol = BookMarkManager(),
@@ -80,6 +81,31 @@ final class AllBookmarkViewModel: ObservableObject {
     }
   }
   
+  func fetchFoods(pageLimit: Int, collectionName: FirebaseCollectionEnum) {
+    Task {
+      do {
+        let userID = Auth.auth().currentUser?.uid
+        guard let id = userID else { return }
+        
+        let result: [ResturantModel] = try await fetchBookmarksManager.getDocumentsFromBucketList(
+          userId: id,
+          pageLimit: pageLimit,
+          collectionName: collectionName
+        )
+        await MainActor.run {
+          bookmarkedFoods = result
+          
+          isLoading = false
+        }
+      } catch {
+        await MainActor.run {
+          isLoading = false
+          errorMessages = error.localizedDescription
+        }
+      }
+    }
+  }
+
   func removeBookmark(index: IndexSet) {
     guard let firstIndex = index.first else { return }
     let place = bookmarkedPlaces[firstIndex]
@@ -112,6 +138,22 @@ final class AllBookmarkViewModel: ObservableObject {
     }
   }
   
+  func removeFoodBookmark(index: IndexSet) {
+    guard let firstIndex = index.first else { return }
+    let place = bookmarkedFoods[firstIndex]
+    bookmarkedFoods.remove(atOffsets: index)
+    
+    Task {
+      do {
+        try await bookmarkManager.toggleBookmark(placeId: place.id ?? "", isBookmarked: true)
+      } catch {
+        await MainActor.run {
+          errorMessages = error.localizedDescription
+        }
+      }
+    }
+  }
+  
   func requestData() {
     switch dataIndex {
     case 0:
@@ -123,6 +165,15 @@ final class AllBookmarkViewModel: ObservableObject {
     case 2:
       isLoading = true
       fetchToursData(pageLimit: pageSize)
+    case 3:
+      isLoading = true
+      fetchFoods(pageLimit: pageSize, collectionName: .resturant)
+    case 4:
+      isLoading = true
+      fetchFoods(pageLimit: pageSize, collectionName: .drinks)
+    case 5:
+      isLoading = true
+      fetchFoods(pageLimit: pageSize, collectionName: .bakery)
     default:
       isLoading = true
       fetchData(pageLimit: pageSize, collectionName: .appPlace)

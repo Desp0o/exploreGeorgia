@@ -5,8 +5,7 @@
 //  Created by Despo on 23.01.25.
 //
 
-
-struct ResturantModel: Codable, IdentifiableAndBookmarkable, Identifiable, Equatable {
+struct ResturantModel: Codable, IdentifiableAndBookmarkable, Identifiable, Equatable, Hashable {
   var id: String?
   let name: String
   let cover: String
@@ -24,7 +23,7 @@ struct ResturantModel: Codable, IdentifiableAndBookmarkable, Identifiable, Equat
   let type: String
 }
 
-struct FoodItem: Codable, Equatable {
+struct FoodItem: Codable, Equatable, Hashable {
     let foodCover: String
     let foodIngredients: String
     let foodName: String

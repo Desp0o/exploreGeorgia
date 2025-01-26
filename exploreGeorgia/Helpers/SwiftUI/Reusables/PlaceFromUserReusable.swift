@@ -35,10 +35,7 @@ struct PlaceFromUserReusable: View {
             .frame(width: 16, height: 16)
           
           Text(place.region)
-            .styledText(
-              .customGray,
-              15
-            )
+            .styledText(.customGray, 15)
         }
       }
       
@@ -52,6 +49,17 @@ struct PlaceFromUserReusable: View {
     .background(.customWhite)
     .roundedCorners(12)
     .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+    .overlay {
+      ZStack {
+        if place.isFood ?? false {
+          Image(systemName: "fork.knife.circle.fill")
+            .foregroundStyle(.customBlue)
+            .scaleEffect(1.2)
+            .offset(x: -10, y: 10)
+        }
+      }
+      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+    }
   }
 }
 

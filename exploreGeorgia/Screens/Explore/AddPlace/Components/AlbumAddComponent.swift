@@ -11,7 +11,6 @@ import _PhotosUI_SwiftUI
 struct AlbumAddComponent: View {
   @ObservedObject var vm: AddPlaceViewModel
   
-  
   var body: some View {
     VStack(spacing: 10) {
       PhotosPicker(selection: $vm.selectedAlbum, maxSelectionCount: 5) {

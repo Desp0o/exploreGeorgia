@@ -75,6 +75,7 @@ final class UserManager: GetFirebaseUserProtocol {
         return CreditCardModel(userId: id, number: number, expDate: expDate, holder: holder)
       }
       return UserModel(
+        id: id,
         avatar: avatar,
         firstName: firstName,
         lastName: lastName,

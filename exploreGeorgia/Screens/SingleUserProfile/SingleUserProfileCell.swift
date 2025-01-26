@@ -29,7 +29,7 @@ final class SingleUserProfileCell: UITableViewCell {
   }
   
   private func setupUI() {
-    contentView.backgroundColor = .clear
+    contentView.backgroundColor = .primaryWhite
     contentView.addSubview(stackView)
     
     setupConstraints()

@@ -9,20 +9,16 @@ import SwiftUI
 
 struct PlaceDetailsView: View {
   @StateObject var vm = PlaceDetailsViewModel()
-  @State var isLoaded = false
-  @State var selectedImage = ""
-  @State var isLightBoxVisible = false
-  @State var isPresented = false
-  @State var isBookmarked = false
   let elementID: String
-  var collectionName: FirebaseCollectionEnum
-
+  let collectionName: FirebaseCollectionEnum
+  let isNavigationDisabled: Bool
+  
   var body: some View {
     VStack(spacing: 0) {
       if vm.currentPlace == nil {
         VStack {
           PlaceDetailsNavigationBar(
-            isBookMarked: $isBookmarked,
+            isBookMarked: $vm.isBookmarked,
             placeID: ""
           )
           Spacer()
@@ -34,40 +30,44 @@ struct PlaceDetailsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else {
         PlaceDetailsBGComponent(cover: vm.currentPlace?.cover ?? "")
+          .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.50)
+          .clipped()
           .overlay {
             VStack {
               PlaceDetailsNavigationBar(
-                isBookMarked: $vm.isBookMarked,
+                isBookMarked: $vm.isBookmarked,
                 placeID: vm.currentPlace?.id ?? ""
               )
               
               Spacer()
             }
+            .padding(.top, 10)
           }
         
-        PlaceDetailsInfoComponent(
-          vm: vm,
-          selectedImage: $selectedImage,
-          isLightBoxVisible: $isLightBoxVisible,
-          isPresented: $isPresented,
-          author: vm.author
-        )
-        .offset(y: -20)
+        Spacer()
       }
     }
     .background(.customWhite)
     .ignoresSafeArea(.all)
     .overlay {
-      if isLightBoxVisible {
+      VStack {
+        Spacer()
+        PlaceDetailsInfoComponent(isNavigationDisabled: isNavigationDisabled)
+          .frame(maxWidth: .infinity)
+          .frame(height: UIScreen.main.bounds.height * 0.50)
+      }
+    }
+    .overlay {
+      if vm.isLightBoxVisible {
         LightBoxViewReusable(
-          selectedImage: $selectedImage,
-          isLightBoxVisible: $isLightBoxVisible,
+          selectedImage: $vm.selectedImage,
+          isLightBoxVisible: $vm.isLightBoxVisible,
           album: vm.currentPlace?.album ?? []
         )
         .ignoresSafeArea(.all)
       }
     }
-    .sheet(isPresented: $isPresented) {
+    .sheet(isPresented: $vm.isPresented) {
       MapViewReusable(
         latitudeProp: Double(vm.currentPlace?.latitude ?? 0),
         longitudeProp: Double(vm.currentPlace?.longitude ?? 0),
@@ -78,5 +78,6 @@ struct PlaceDetailsView: View {
     .onAppear {
       vm.fetchSinglePlaceByID(with: elementID, and: collectionName)
     }
+    .environmentObject(vm)
   }
 }

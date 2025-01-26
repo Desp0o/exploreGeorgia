@@ -42,13 +42,7 @@ struct PurchaseHistoryView: View {
                 dismiss.wrappedValue.dismiss()
               } label: {
                 ZStack {
-                  Circle()
-                    .fill(.customBlue)
-                    .frame(width: 40, height: 40)
-                  
-                  Image("backArrow")
-                    .renderingMode(.template)
-                    .foregroundStyle(.white)
+                  OverlayActionButtonIcon(iconName: .backButton, tint: .white)
                 }
               }
               Spacer()

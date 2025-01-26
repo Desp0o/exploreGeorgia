@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ResturantMenuComponent: View {
-  @ObservedObject var vm: ResturantViewModel
+  @EnvironmentObject var vm: ResturantViewModel
   
   var body: some View {
     LazyVStack(spacing: 20) {
@@ -22,7 +22,6 @@ struct ResturantMenuComponent: View {
           price: foodItem?.foodPrice ?? 0
         )
       }
-      
     }
     .padding(.vertical, 20)
   }

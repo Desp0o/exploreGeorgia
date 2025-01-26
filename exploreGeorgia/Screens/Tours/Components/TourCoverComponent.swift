@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TourCoverComponent: View {
-  @ObservedObject var vm: TourViewModel
+  @EnvironmentObject var vm: TourViewModel
   
   var body: some View {
     ZStack(alignment: .bottomLeading) {

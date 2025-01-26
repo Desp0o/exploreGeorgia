@@ -8,41 +8,32 @@
 import SwiftUI
 
 struct LanguageSelectorComponent: View {
-  @ObservedObject var vm: EditProfileViewModel
+  @EnvironmentObject var vm: EditProfileViewModel
   
-    var body: some View {
-      HStack {
-        Text("Language")
-          .styledText(
-            .customBlack,
-            16,
-            .semibold
-          )
-        
-        Spacer()
-        
-        Picker("Language", selection: $vm.selectedLanguage) {
-          ForEach(vm.languageArr, id: \.self) { gender in
-            Text(gender)
-          }
+  var body: some View {
+    HStack {
+      Text("Language")
+        .styledText(.customBlack, 16, .semibold)
+      
+      Spacer()
+      
+      Picker("Language", selection: $vm.selectedLanguage) {
+        ForEach(vm.languageArr, id: \.self) { gender in
+          Text(gender)
         }
-        .pickerStyle(.segmented)
-        .onAppear {
-          UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customBlue)
-          let attributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white
-          ]
-          UISegmentedControl.appearance().setTitleTextAttributes(attributes, for: .selected)
-          UISegmentedControl.appearance().isSpringLoaded = true
-          
-          UISegmentedControl.appearance().backgroundColor = .customWhite
-        }
-        .frame(width: 150)
       }
+      .pickerStyle(.segmented)
+      .onAppear {
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customBlue)
+        let attributes: [NSAttributedString.Key: Any] = [
+          .foregroundColor: UIColor.white
+        ]
+        UISegmentedControl.appearance().setTitleTextAttributes(attributes, for: .selected)
+        UISegmentedControl.appearance().isSpringLoaded = true
+        
+        UISegmentedControl.appearance().backgroundColor = .customWhite
+      }
+      .frame(width: 150)
     }
-}
-
-#Preview {
-  @ObservedObject var vm = EditProfileViewModel()
-  LanguageSelectorComponent(vm: vm)
+  }
 }

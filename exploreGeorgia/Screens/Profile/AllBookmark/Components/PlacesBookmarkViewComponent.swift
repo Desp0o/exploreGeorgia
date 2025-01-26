@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlacesBookmarkViewComponent: View {
-  @ObservedObject var vm: AllBookmarkViewModel
+  @EnvironmentObject var vm: AllBookmarkViewModel
   @State private var opacityPoint: CGFloat = 0
   let collectionName: FirebaseCollectionEnum
   
@@ -21,7 +21,8 @@ struct PlacesBookmarkViewComponent: View {
           NavigationLink(
             destination: PlaceDetailsView(
               elementID: place.id ?? "",
-              collectionName: collectionName
+              collectionName: collectionName,
+              isNavigationDisabled: false
             ).navigationBarHidden(true)
           ) {
             SightSeenReusableView(
@@ -38,7 +39,7 @@ struct PlacesBookmarkViewComponent: View {
                     vm.removeBookmark(index: indexSet)
                   }
                 } label: {
-                  OverlayActionButtonIcon(iconName: IconsEnum.trash.rawValue, tint: .white, scale: 0.8)
+                  OverlayActionButtonIcon(iconName: .trash, tint: .white, scale: 0.8)
                 }
                 .frame(width: 36, height: 36)
                 .padding(20)

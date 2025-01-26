@@ -12,12 +12,14 @@ import SwiftUI
 import FirebaseAuth
 
 final class PlaceDetailsViewModel: ObservableObject {
-  @Published var currentPlace: SightSeenModel? = nil
-  @Published var isBookMarked = false
-  @Published var author: UserModel? = nil
   private let userManager: GetFirebaseUserProtocol
   private let firebaseSinglePlaceFetcher: FirebaseSinglePlaceGenericProtocol
-  
+  @Published var currentPlace: SightSeenModel? = nil
+  @Published var isBookmarked = false
+  @Published var author: UserModel? = nil
+  @Published var selectedImage = ""
+  @Published var isLightBoxVisible = false
+  @Published var isPresented = false
   let gridItems = [
     GridItem(.fixed(50), spacing: 20),
     GridItem(.fixed(50), spacing: 20),
@@ -41,10 +43,6 @@ final class PlaceDetailsViewModel: ObservableObject {
         
         await MainActor.run {
           currentPlace = data
-          
-          if currentPlace?.user == nil {
-            print("🟢")
-          }
         }
         
         await checkIfBookmarked(placeId: id)
@@ -65,12 +63,11 @@ final class PlaceDetailsViewModel: ObservableObject {
     do {
       let userID = Auth.auth().currentUser?.uid
       guard let currentUser = try await userManager.getFirebaseUser(with: userID ?? "") else {
-        print("No user data available")
         return
       }
       
       await MainActor.run {
-        isBookMarked = currentUser.bucketList.contains(placeId)
+        isBookmarked = currentUser.bucketList.contains(placeId)
       }
     } catch {
       print("Error checking bookmark status: \(error.localizedDescription)")

@@ -46,16 +46,17 @@ struct AddPlaceView: View {
           Button {
             dismiss()
           } label: {
-            OverlayActionButtonIcon(iconName: "xmark", tint: .white, bgColor: .customBlue, opacity: 1)
+            OverlayActionButtonIcon(iconName: .xmark, tint: .white, bgColor: .customBlue, opacity: 1)
           }
           .padding(.horizontal, 20)
-          
+
           VStack {
             Text("Map Your Adventures")
               .styledText(.customBlue, 22, .bold)
               .frame(maxWidth: .infinity, alignment: .center)
           }
         }
+        .padding(.top, 20)
         
         VStack(spacing: 20) {
           CoverUploadComponent(vm: vm)

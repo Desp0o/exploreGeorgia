@@ -8,35 +8,29 @@
 import SwiftUI
 
 struct ThemeTogglerComponent: View {
-  @ObservedObject var vm: EditProfileViewModel
+  @EnvironmentObject var vm: EditProfileViewModel
   
   var body: some View {
     HStack {
       Text("Appereance")
-        .styledText(
-          .customBlack,
-          16,
-          .semibold
-        )
+        .styledText(.customBlack, 16, .semibold)
       
       Spacer()
       
       HStack {
         ZStack {
-          
           HStack {
             if vm.isDarkTheme {
-              Image(systemName: "sun.min")
+              Image(systemName: IconsEnum.sun.rawValue)
                 .foregroundStyle(.yellow)
               Spacer()
             } else {
               Spacer()
-              Image(systemName: "moon.fill")
+              Image(systemName: IconsEnum.moon.rawValue)
                 .foregroundStyle(.blue)
             }
           }
           .padding(.horizontal, 5)
-          
           
           HStack {
             if vm.isDarkTheme {
@@ -63,9 +57,4 @@ struct ThemeTogglerComponent: View {
       }
     }
   }
-}
-
-#Preview {
-  @ObservedObject var vm = EditProfileViewModel()
-  ThemeTogglerComponent(vm: vm)
 }

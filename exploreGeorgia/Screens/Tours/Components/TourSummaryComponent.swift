@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TourSummaryComponent: View {
-  @ObservedObject var vm: TourViewModel
+  @EnvironmentObject var vm: TourViewModel
   
   var body: some View {
     VStack(spacing: 12) {

@@ -13,11 +13,7 @@ struct ToastView: View {
   
     var body: some View {
       Text(message)
-        .styledText(
-          .white,
-          16,
-          .bold
-        )
+        .styledText(.white, 16, .bold, .center)
         .frame(maxWidth: .infinity)
         .frame(height: 50)
         .background(bgColor.backgroundColor)

@@ -13,8 +13,6 @@ struct ResturantView: View {
   @State private var isInfo = true
   @State private var infoOpacity: CGFloat = 1
   @State private var menuOpacity: CGFloat = 0
-  @State private var isPresent = false
-  @State var isReviewVisible = false
   @State var isError = false
   let place: ResturantModel
   let collection: FirebaseCollectionEnum
@@ -39,16 +37,6 @@ struct ResturantView: View {
         PlaceDetailsBGComponent(cover: vm.singleResturant?.cover ?? "")
           .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.40)
           .clipped()
-          .overlay {
-            VStack {
-              PlaceDetailsNavigationBar(
-                isBookMarked: $vm.isBookMarked,
-                placeID: vm.singleResturant?.id ?? ""
-              )
-              
-              Spacer()
-            }
-          }
         
         Spacer()
       }
@@ -87,7 +75,7 @@ struct ResturantView: View {
                       }
                       
                       if isInfo {
-                        ResturantViewInfoComponent(vm: vm, isPresent: $isPresent, isReviewVisible: $isReviewVisible)
+                        ResturantViewInfoComponent(collection: collection)
                           .opacity(infoOpacity)
                         
                         Spacer()
@@ -95,13 +83,13 @@ struct ResturantView: View {
                           .background(.red)
                           .id("scrollToDown")
                       } else {
-                        ResturantMenuComponent(vm: vm)
+                        ResturantMenuComponent()
                           .opacity(menuOpacity)
                       }
                     }
                     .padding(20)
                     .padding(.bottom, 10)
-                    .onChange(of: isReviewVisible) { _ in
+                    .onChange(of: vm.isReviewVisible) { _ in
                       DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         withAnimation(.easeInOut(duration: 0.3)) {
                           proxy.scrollTo("scrollToDown", anchor: .center)
@@ -155,7 +143,7 @@ struct ResturantView: View {
           toastManager.showToast()
         }
       })
-      .sheet(isPresented: $isPresent) {
+      .sheet(isPresented: $vm.isPresent) {
         MapViewReusable(
           latitudeProp: Double(vm.singleResturant?.latitude ?? 0),
           longitudeProp: Double(vm.singleResturant?.longitude ?? 0),
@@ -165,9 +153,20 @@ struct ResturantView: View {
       }
     }
     .background(.primaryWhite)
+    .overlay {
+      VStack {
+        PlaceDetailsNavigationBar(
+          isBookMarked: $vm.isBookMarked,
+          placeID: vm.singleResturant?.id ?? ""
+        )
+        
+        Spacer()
+      }
+    }
     .onAppear {
       vm.fetchData(id: place.id ?? "", collection: collection)
     }
+    .environmentObject(vm)
   }
 }
 
