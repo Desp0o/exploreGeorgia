@@ -155,12 +155,14 @@ struct ResturantView: View {
     .background(.primaryWhite)
     .overlay {
       VStack {
-        PlaceDetailsNavigationBar(
-          isBookMarked: $vm.isBookMarked,
-          placeID: vm.singleResturant?.id ?? ""
-        )
-        
-        Spacer()
+//        PlaceDetailsNavigationBar(
+//          isBookMarked: $vm.isBookMarked,
+//          placeID: vm.singleResturant?.id ?? ""
+//        )
+//        .frame(maxHeight: .infinity, alignment: .top)
+//        .background(.red)
+//        
+//        Spacer()
       }
     }
     .onAppear {

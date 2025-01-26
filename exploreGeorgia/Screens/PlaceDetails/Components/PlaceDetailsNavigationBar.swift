@@ -38,6 +38,6 @@ struct PlaceDetailsNavigationBar: View {
     }
     .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
     .frame(width: UIScreen.main.bounds.width - 20)
-    .zIndex(2)
+    .zIndex(10)
   }
 }
