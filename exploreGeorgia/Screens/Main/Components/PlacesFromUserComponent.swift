@@ -29,7 +29,15 @@ struct PlacesFromUserComponent: View {
       
       LazyVStack(spacing: 20) {
         ForEach(vm.usersAddedPlacesData, id: \.id) { place in
-          NavigationLink(destination: PlaceDetailsView(elementID: place.id ?? "", collectionName: .usersPlace).navigationBarHidden(true)) {
+          NavigationLink(
+            destination: PlaceDetailsView(
+              elementID: place.id ?? "",
+              collectionName: .usersPlace,
+              isNavigationDisabled: false
+            )
+            .navigationBarHidden(true)
+          )
+          {
             PlaceFromUserReusable(place: place)
           }
         }

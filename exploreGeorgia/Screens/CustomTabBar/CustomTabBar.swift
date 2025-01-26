@@ -30,7 +30,6 @@ struct CustomTabBar: View {
         case 1:
           NavigationStack {
             ExploreView()
-//              .ignoresSafeArea()
           }
         case 2:
           NavigationStack {

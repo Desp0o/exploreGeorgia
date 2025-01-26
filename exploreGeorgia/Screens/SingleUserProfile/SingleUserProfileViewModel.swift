@@ -49,6 +49,8 @@ final class SingleUserProfileViewModel {
           user = currentUser
           userDelegate?.didUserFetched()
         }
+      } catch {
+        print(error.localizedDescription)
       }
     }
   }

@@ -21,7 +21,8 @@ struct PlacesBookmarkViewComponent: View {
           NavigationLink(
             destination: PlaceDetailsView(
               elementID: place.id ?? "",
-              collectionName: collectionName
+              collectionName: collectionName,
+              isNavigationDisabled: false
             ).navigationBarHidden(true)
           ) {
             SightSeenReusableView(

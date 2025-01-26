@@ -195,7 +195,11 @@ extension MyExploresViewController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let place = vm.fetchedPlaces[indexPath.row]
-    let swiftUIView = PlaceDetailsView(elementID: place.id ?? "", collectionName: .usersPlace).navigationBarHidden(true)
+    let swiftUIView = PlaceDetailsView(
+      elementID: place.id ?? "",
+      collectionName: .usersPlace,
+      isNavigationDisabled: true
+    ).navigationBarHidden(true)
     let hostingController = UIHostingController(rootView: swiftUIView)
     
     navigationController?.pushViewController(hostingController, animated: true)

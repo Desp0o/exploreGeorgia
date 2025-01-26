@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PlaceDetailsInfoComponent: View {
   @EnvironmentObject var vm: PlaceDetailsViewModel
-  
+  let isNavigationDisabled: Bool?
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 20) {
@@ -25,15 +25,22 @@ struct PlaceDetailsInfoComponent: View {
           
           Spacer()
           
-          if vm.author != nil {
-            VStack {
-              CachedAsyncImage(url: URL(string: vm.author?.avatar ?? ""))
-                .frame(width: 30, height: 30)
-                .clipShape(Circle())
-              
-              Text(vm.author?.firstName ?? "")
-                .styledText(.customBlack, 12)
+          if vm.author?.id != nil {
+            NavigationLink {
+              SIngleUserProfileWrapper(singleUserId: vm.author?.id ?? "")
+                .toolbar(.hidden)
+                .ignoresSafeArea()
+            } label: {
+              VStack {
+                CachedAsyncImage(url: URL(string: vm.author?.avatar ?? ""))
+                  .frame(width: 30, height: 30)
+                  .clipShape(Circle())
+                
+                Text(vm.author?.firstName ?? "")
+                  .styledText(.customBlack, 12)
+              }
             }
+            .disabled(isNavigationDisabled ?? false)
           }
         }
         

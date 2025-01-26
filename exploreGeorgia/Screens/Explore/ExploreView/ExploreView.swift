@@ -34,7 +34,8 @@ struct ExploreView: View {
             NavigationLink(
               destination: PlaceDetailsView(
                 elementID: place.id ?? "",
-                collectionName: .usersPlace
+                collectionName: .usersPlace,
+                isNavigationDisabled: false
               ).navigationBarHidden(true)
             ) {
               PlaceFromUserReusable(place: place)

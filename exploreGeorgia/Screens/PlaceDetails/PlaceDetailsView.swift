@@ -11,7 +11,8 @@ struct PlaceDetailsView: View {
   @StateObject var vm = PlaceDetailsViewModel()
   let elementID: String
   let collectionName: FirebaseCollectionEnum
-
+  let isNavigationDisabled: Bool
+  
   var body: some View {
     VStack(spacing: 0) {
       if vm.currentPlace == nil {
@@ -50,7 +51,7 @@ struct PlaceDetailsView: View {
     .overlay {
       VStack {
         Spacer()
-        PlaceDetailsInfoComponent()
+        PlaceDetailsInfoComponent(isNavigationDisabled: isNavigationDisabled)
           .frame(maxWidth: .infinity)
           .frame(height: UIScreen.main.bounds.height * 0.50)
       }
