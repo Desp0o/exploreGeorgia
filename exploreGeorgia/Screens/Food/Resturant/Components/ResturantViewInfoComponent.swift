@@ -10,9 +10,10 @@ import SwiftUI
 struct ResturantViewInfoComponent: View {
   @ObservedObject var vm: ResturantViewModel
   @Binding var isPresent: Bool
-  @State private var showMoreReviews = 2
+  @State private var showMoreReviews = 10
   @State private var showMoreButtonName = "Show more"
   @Binding var isReviewVisible: Bool
+  let collection: FirebaseCollectionEnum
   
   var body: some View {
     VStack(spacing: 40) {
@@ -64,7 +65,7 @@ struct ResturantViewInfoComponent: View {
       
       VStack {
         HStack {
-          Text("Reviews")
+          Text(vm.reviews.isEmpty ? "No reviews" : "Reviews")
             .styledText(.customBlue, 19, .bold)
           
           Spacer()
@@ -85,23 +86,21 @@ struct ResturantViewInfoComponent: View {
         }
         
         HStack {
-          Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
-              if showMoreReviews == vm.reviews.count {
-                showMoreButtonName = "Show more"
-                showMoreReviews = 5
-              } else if showMoreReviews + 5 >= vm.reviews.count {
-                showMoreButtonName = "Show less"
-                showMoreReviews = vm.reviews.count
-              } else {
-                showMoreButtonName = "Show more"
-                showMoreReviews += 5
+          if vm.reviews.count > 10 {
+            Button {
+              withAnimation(.easeInOut(duration: 0.2)) {
+                if showMoreReviews > vm.reviews.count {
+                  showMoreReviews = 10
+                  print(showMoreReviews, showMoreButtonName, "🟢")
+                } else {
+                  showMoreReviews += 5
+                  print(showMoreReviews, showMoreButtonName, "🔴")
+                }
               }
+            } label: {
+              Text(showMoreButtonName)
+                .styledText(.customBlue, 16, .semibold)
             }
-            
-          } label: {
-            Text(showMoreButtonName)
-              .styledText(.customBlue, 16, .semibold)
           }
           
           Spacer()
@@ -119,14 +118,15 @@ struct ResturantViewInfoComponent: View {
         if isReviewVisible {
           VStack {
             TextEditorComponent(textForEditor: $vm.usersReviweText, placeholder: "Write your review")
+              .frame(height: 200)
             
             Button {
-              vm.addUserReview()
-              if showMoreReviews >= vm.reviews.count {
-                showMoreButtonName = "Show less"
-              } else {
-                showMoreButtonName = "Show more"
-              }
+              vm.addUserReview(collection: collection)
+//              if showMoreReviews > vm.reviews.count {
+//                showMoreButtonName = "Show less"
+//              } else {
+//                showMoreButtonName = "Show more"
+//              }
             } label: {
               Text("Send review")
                 .styledText(.customBlue, 16, .semibold)
@@ -144,6 +144,13 @@ struct ResturantViewInfoComponent: View {
       }
     }
     .padding(.vertical, 20)
+    .onChange(of: showMoreReviews) { _ in
+      if showMoreReviews > vm.reviews.count {
+        showMoreButtonName = "Show less"
+      } else {
+        showMoreButtonName = "Show more"
+      }
+    }
   }
 }
 

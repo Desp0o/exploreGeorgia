@@ -87,8 +87,12 @@ struct ResturantView: View {
                       }
                       
                       if isInfo {
-                        ResturantViewInfoComponent(vm: vm, isPresent: $isPresent, isReviewVisible: $isReviewVisible)
-                          .opacity(infoOpacity)
+                        ResturantViewInfoComponent(
+                          vm: vm,
+                          isPresent: $isPresent,
+                          isReviewVisible: $isReviewVisible,
+                          collection: collection
+                        ).opacity(infoOpacity)
                         
                         Spacer()
                           .frame(width: 0, height: 00)

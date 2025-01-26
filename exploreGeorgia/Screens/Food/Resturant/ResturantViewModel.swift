@@ -52,14 +52,14 @@ final class ResturantViewModel: ObservableObject {
     }
   }
   
-  func addUserReview() {
+  func addUserReview(collection: FirebaseCollectionEnum) {
     guard !usersReviweText.isEmpty else { return }
     
     Task {
       do {
         guard let restaurantId = singleResturant?.id else { return }
         try await updateReviews(
-          collectionName: .resturant,
+          collectionName: collection,
           restaurantId: restaurantId,
           newReview: usersReviweText
         )
