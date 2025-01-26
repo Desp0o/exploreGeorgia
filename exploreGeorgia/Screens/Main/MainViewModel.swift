@@ -57,12 +57,10 @@ final class MainViewModel: ObservableObject {
         
         await MainActor.run {
           placesFromApp = places
-          isLoading = false
         }
       } catch {
         await MainActor.run {
           errorMessage = error.localizedDescription
-          isLoading = false
         }
       }
     }
@@ -120,9 +118,13 @@ final class MainViewModel: ObservableObject {
         
         await MainActor.run {
           fetchedTours = places
+          isLoading = false
         }
       } catch {
         print(error.localizedDescription)
+        await MainActor.run {
+          isLoading = false
+        }
       }
     }
   }

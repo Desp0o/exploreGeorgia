@@ -26,8 +26,7 @@ struct CachedAsyncImage: View {
           .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else {
         if let url = url {
-          ProgressView()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+          ShimmerEffect()
             .task {
               await loadImage(from: url)
             }
@@ -53,7 +52,7 @@ struct CachedAsyncImage: View {
         self.image = downloadedImage
       }
     } catch {
-      print("Image loading failed: \(error)", "🔴🔴🔴🔴🔴")
+      print(error.localizedDescription)
     }
   }
 }

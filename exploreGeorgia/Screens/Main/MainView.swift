@@ -42,5 +42,11 @@ struct MainView: View {
     .scrollIndicators(.hidden)
     .background(.primaryWhite)
     .environmentObject(vm)
+    .overlay {
+      if vm.isLoading {
+        MainScreenShimmer()
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+      }
+    }
   }
 }
