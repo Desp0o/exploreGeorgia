@@ -45,16 +45,9 @@ struct AllBookmarkView: View {
         }
         .padding(.horizontal, 20)
         
-        if vm.isLoading {
-          VStack {
-            ProgressView()
-              .scaleEffect(1.5)
-              .tint(.customBlue)
-          }
-          .frame(maxHeight: .infinity)
-        } else {
-          ScrollView {
-            HStack(spacing: 20) {
+        HStack() {
+          ScrollView(.horizontal) {
+            HStack {
               ForEach(vm.buttonsArray.indices, id: \.self) { index in
                 let currentButton = vm.buttonsArray[index]
                 
@@ -72,7 +65,20 @@ struct AllBookmarkView: View {
                 }
               }
             }
-            
+            .padding(.horizontal, 20)
+          }
+          .scrollIndicators(.hidden)
+        }
+        
+        if vm.isLoading {
+          VStack {
+            ProgressView()
+              .scaleEffect(1.5)
+              .tint(.customBlue)
+          }
+          .frame(maxHeight: .infinity)
+        } else {
+          ScrollView {
             Spacer()
               .frame(height: 20)
             
@@ -84,6 +90,12 @@ struct AllBookmarkView: View {
                 PlacesBookmarkViewComponent(collectionName: .usersPlace)
               case 2:
                 ToursBookmarkViewComponent()
+              case 3:
+                FoodBookmarksView(collection: .resturant)
+              case 4:
+                FoodBookmarksView(collection: .drinks)
+              case 5:
+                FoodBookmarksView(collection: .bakery)
               default:
                 NoBookmarksComponent()
               }
