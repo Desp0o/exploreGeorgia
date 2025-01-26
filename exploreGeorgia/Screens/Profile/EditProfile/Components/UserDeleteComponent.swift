@@ -29,6 +29,7 @@ struct UserDeleteComponent: View {
         } label: {
           Text("Delete account")
             .styledText(.buttonPrimary)
+            .frame(maxWidth: .infinity)
         }
         .customStyledButton(bg: vm.showInput ? .red : .customBlue)
         
@@ -40,6 +41,7 @@ struct UserDeleteComponent: View {
           } label: {
             Text("Cancel")
               .styledText(.customBlack, 18, .bold)
+              .frame(maxWidth: .infinity)
           }
           .customStyledButton()
         }

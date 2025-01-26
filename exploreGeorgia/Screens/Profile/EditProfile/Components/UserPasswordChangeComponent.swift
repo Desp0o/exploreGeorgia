@@ -23,6 +23,7 @@ struct UserPasswordChangeComponent: View {
       } label: {
         Text("Update password")
           .styledText(.buttonPrimary, 16, .bold)
+          .frame(maxWidth: .infinity)
       }
       .customStyledButton()
     }

@@ -40,6 +40,7 @@ struct UserInfoUpdateComponent: View {
       } label: {
         Text("Update personal info")
           .styledText(.buttonPrimary, 16, .bold)
+          .frame(maxWidth: .infinity)
       }
       .customStyledButton()
     }
