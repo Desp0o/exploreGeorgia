@@ -23,20 +23,29 @@ struct MainScreenShimmer: View {
           
           Spacer()
         }
-                
+        
         VStack(alignment: .leading) {
           ShimmerEffect()
             .frame(width: 150, height: 30)
+            .roundedCorners(6)
           
           ShimmerEffect()
             .frame(width: 200, height: 30)
+            .roundedCorners(6)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         
         VStack {
-          ShimmerEffect()
-            .frame(maxWidth: .infinity, maxHeight: 20)
-            .frame(height: 20)
+          HStack {
+            ShimmerEffect()
+              .frame(width: 150, height: 20)
+              .roundedCorners(6)
+
+            Spacer()
+            ShimmerEffect()
+              .frame(width: 50, height: 20)
+              .roundedCorners(6)
+          }
           
           HStack(spacing: 20) {
             ShimmerEffect()
@@ -48,9 +57,17 @@ struct MainScreenShimmer: View {
         }
         
         VStack {
-          ShimmerEffect()
-            .frame(maxWidth: .infinity)
-            .frame(height: 20)
+          HStack {
+            ShimmerEffect()
+              .frame(width: 150, height: 20)
+              .roundedCorners(6)
+
+            Spacer()
+            
+            ShimmerEffect()
+              .frame(width: 50, height: 20)
+              .roundedCorners(6)
+          }
           
           ShimmerEffect()
             .frame(maxWidth: .infinity)
@@ -67,7 +84,6 @@ struct MainScreenShimmer: View {
       }
       .padding(.top, 40)
       .padding(.horizontal, 20)
-      
     }
   }
 }

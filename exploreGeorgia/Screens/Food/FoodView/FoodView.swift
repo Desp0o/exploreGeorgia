@@ -15,15 +15,9 @@ struct FoodView: View {
 
   var body: some View {
     VStack {
-      Button {
-        pushVM.pushRsturantToDB()
-      } label: {
-        Text("Add from here")
-      }
-      
       GeometryReader {geometry in
         ScrollView {
-          VStack(spacing: 50) {
+          VStack(spacing: 30) {
             Text("Food & Drinks")
               .styledText(.customBlue, 26, .bold)
             
