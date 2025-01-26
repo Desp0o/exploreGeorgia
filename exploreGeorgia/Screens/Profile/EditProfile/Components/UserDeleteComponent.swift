@@ -47,5 +47,6 @@ struct UserDeleteComponent: View {
         }
       }
     }
+    .padding(.vertical, 40)
   }
 }

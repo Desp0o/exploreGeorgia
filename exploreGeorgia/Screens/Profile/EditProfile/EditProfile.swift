@@ -74,7 +74,6 @@ struct EditProfile: View {
           .padding(.horizontal, 20)
         }
       }
-      .padding(.vertical, 50)
       .scrollBounceBehavior(.basedOnSize)
       .scrollIndicators(.hidden)
     }

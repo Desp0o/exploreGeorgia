@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PlaceDetailsInfoComponent: View {
   @EnvironmentObject var vm: PlaceDetailsViewModel
-  let isNavigationDisabled: Bool?
+  let isNavigationDisabled: Bool
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 20) {
@@ -40,7 +40,7 @@ struct PlaceDetailsInfoComponent: View {
                   .styledText(.customBlack, 12)
               }
             }
-            .disabled(isNavigationDisabled ?? false)
+            .disabled(isNavigationDisabled)
           }
         }
         

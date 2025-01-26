@@ -41,6 +41,7 @@ struct PlaceDetailsView: View {
               
               Spacer()
             }
+            .padding(.top, 10)
           }
         
         Spacer()

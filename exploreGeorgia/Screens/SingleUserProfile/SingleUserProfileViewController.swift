@@ -182,7 +182,11 @@ extension SingleUserProfileViewController: SingleUserFetchDelegate {
 
 extension SingleUserProfileViewController: SingleUserLoadingDelegate {
   func didLoadingStopped() {
-    
+    if vm.isLoading {
+      showLoading(backgroundOpacity: 0)
+    } else {
+      hideLoading()
+    }
   }
 }
 

@@ -37,16 +37,6 @@ struct ResturantView: View {
         PlaceDetailsBGComponent(cover: vm.singleResturant?.cover ?? "")
           .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.40)
           .clipped()
-          .overlay {
-            VStack {
-              PlaceDetailsNavigationBar(
-                isBookMarked: $vm.isBookMarked,
-                placeID: vm.singleResturant?.id ?? ""
-              )
-              
-              Spacer()
-            }
-          }
         
         Spacer()
       }
@@ -163,6 +153,16 @@ struct ResturantView: View {
       }
     }
     .background(.primaryWhite)
+    .overlay {
+      VStack {
+        PlaceDetailsNavigationBar(
+          isBookMarked: $vm.isBookMarked,
+          placeID: vm.singleResturant?.id ?? ""
+        )
+        
+        Spacer()
+      }
+    }
     .onAppear {
       vm.fetchData(id: place.id ?? "", collection: collection)
     }

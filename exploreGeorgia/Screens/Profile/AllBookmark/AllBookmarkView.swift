@@ -41,9 +41,11 @@ struct AllBookmarkView: View {
               }
               Spacer()
             }
-          }.frame(maxWidth: .infinity, maxHeight: .infinity)
+          }
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .padding(.horizontal, 20)
+        .padding(.top, 20)
         
         HStack() {
           ScrollView(.horizontal) {

@@ -58,7 +58,14 @@ final class SingleUserProfileViewModel {
   func fetchData(pageSize: Int, userId: String) {
     guard hasMoreData else { return }
     
+    
+    
     Task {
+      await MainActor.run {
+        isLoading = true
+        loadingDelegate?.didLoadingStopped()
+      }
+      
       do {
         let result = try await firebaseManager.fetchUserPlaces(
           userId: userId,
@@ -70,6 +77,7 @@ final class SingleUserProfileViewModel {
           lastDocument = result.lastDocument
           hasMoreData = result.hasMoreData
           fetchedPlaces.append(contentsOf: result.places)
+          isLoading = false
           loadingDelegate?.didLoadingStopped()
           dataDelegate?.didDataFetched()
         }

@@ -29,5 +29,6 @@ struct UserAvatarChangeComponent: View {
           .styledText(.customBlue, 18, .bold)
       }
     }
+    .padding(.top, 40)
   }
 }
