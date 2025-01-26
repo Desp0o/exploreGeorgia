@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct IntrestingFacts: View {
-  @ObservedObject var vm: MainViewModel
+  @EnvironmentObject var vm: MainViewModel
   @State private var currentFatc = 0
   
   var body: some View {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlacesFromAppComponents: View {
-  @ObservedObject var vm: MainViewModel
+  @EnvironmentObject var vm: MainViewModel
   @State private var lastSelectedID: String?
   @State private var isSomethingChanged = false
   
@@ -16,19 +16,13 @@ struct PlacesFromAppComponents: View {
     VStack(spacing: 5) {
       HStack {
         Text("Popular Destinations")
-          .styledText(
-            .customBlack,
-            20,
-            .bold
-          )
+          .styledText(.customBlack, 20, .bold)
         
         Spacer()
         
         NavigationLink {
           AllPopularPlaces()
-            .navigationBarHidden(
-              true
-            )
+            .navigationBarHidden(true)
         } label: {
           Text("View all")
             .styledText(.customBlue, 14)
@@ -49,8 +43,7 @@ struct PlacesFromAppComponents: View {
                   destination: PlaceDetailsView(
                     elementID: place.id ?? "",
                     collectionName: .appPlace
-                  )
-                  .navigationBarHidden(true)
+                  ).navigationBarHidden(true)
                 ) {
                   SightSeenReusableView(
                     place: place,
@@ -80,8 +73,3 @@ struct PlacesFromAppComponents: View {
     }
   }
 }
-
-//#Preview {
-//  let vm = MainViewModel()
-//  PlacesFromAppComponents(vm: vm)
-//}

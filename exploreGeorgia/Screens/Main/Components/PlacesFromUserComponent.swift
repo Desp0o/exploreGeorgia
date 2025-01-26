@@ -8,18 +8,14 @@
 import SwiftUI
 
 struct PlacesFromUserComponent: View {
-  @ObservedObject var vm: MainViewModel
+  @EnvironmentObject var vm: MainViewModel
   @Binding var tabIndex: Int
   
   var body: some View {
     VStack(spacing: 16) {
       HStack {
         Text("Popular Destinations")
-          .styledText(
-            .customBlack,
-            20,
-            .bold
-          )
+          .styledText(.customBlack, 20, .bold)
         
         Spacer()
         
