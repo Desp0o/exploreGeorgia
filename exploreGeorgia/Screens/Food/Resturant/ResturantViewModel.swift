@@ -21,6 +21,8 @@ final class ResturantViewModel: ObservableObject {
   @Published var successMessage = ""
   @Published var isPresent = false
   @Published var isReviewVisible = false
+  @Published var commentLoaderTrigger = false
+  @Published var infoHeight: CGFloat = 0.6
   
   init(
     firebaseManager: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService(),

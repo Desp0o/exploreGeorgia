@@ -27,144 +27,151 @@ struct ResturantView: View {
             ToastView(message: vm.successMessage, bgColor: .successfully)
           }
         }
-        
         Spacer()
       }
       .padding(.horizontal, 20)
       
       VStack {
         PlaceDetailsBGComponent(cover: vm.singleResturant?.cover ?? "")
-          .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.40)
+          .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.45)
           .clipped()
         
         Spacer()
       }
-      .overlay {
-        if vm.errorMessage == .fetchError {
-          FetchErrorComponentReusable()
-        } else {
-          GeometryReader { geometry in
+      
+      if vm.errorMessage == .fetchError {
+        FetchErrorComponentReusable()
+      } else {
+        GeometryReader { geometry in
+          VStack {
+            Spacer()
+            
             VStack {
-              Spacer()
+              Rectangle()
+                .fill(.customBlue)
+                .frame(width: 70, height: 10)
+                .roundedCorners(12)
               
-              VStack {
-                ScrollViewReader { proxy in
-                  ScrollView {
-                    VStack {
-                      HStack(spacing: 40) {
-                        Text("Info")
-                          .styledText(isInfo ? .customBlue : .customBlack, 18, .semibold)
-                          .onTapGesture {
-                            isInfo = true
-                            withAnimation {
-                              infoOpacity = 1
-                              menuOpacity = 0
-                            }
+              ScrollViewReader { proxy in
+                ScrollView {
+                  VStack {
+                    HStack(spacing: 40) {
+                      Text("Info")
+                        .styledText(isInfo ? .customBlue : .customBlack, 18, .semibold)
+                        .onTapGesture {
+                          isInfo = true
+                          withAnimation {
+                            infoOpacity = 1
+                            menuOpacity = 0
                           }
-                        
-                        Text("Menu")
-                          .styledText(!isInfo ? .customBlue : .customBlack, 18, .semibold)
-                          .onTapGesture {
-                            isInfo = false
-                            withAnimation {
-                              infoOpacity = 0
-                              menuOpacity = 1
-                            }
-                          }
-                      }
-                      
-                      if isInfo {
-                        ResturantViewInfoComponent(collection: collection)
-                          .opacity(infoOpacity)
-                        
-                        Spacer()
-                          .frame(width: 0, height: 00)
-                          .background(.red)
-                          .id("scrollToDown")
-                      } else {
-                        ResturantMenuComponent()
-                          .opacity(menuOpacity)
-                      }
-                    }
-                    .padding(20)
-                    .padding(.bottom, 10)
-                    .onChange(of: vm.isReviewVisible) { _ in
-                      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                          proxy.scrollTo("scrollToDown", anchor: .center)
                         }
+                      
+                      Text("Menu")
+                        .styledText(!isInfo ? .customBlue : .customBlack, 18, .semibold)
+                        .onTapGesture {
+                          isInfo = false
+                          withAnimation {
+                            infoOpacity = 0
+                            menuOpacity = 1
+                          }
+                        }
+                    }
+                    
+                    if isInfo {
+                      ResturantViewInfoComponent(collection: collection)
+                        .opacity(infoOpacity)
+                      
+                      Spacer()
+                        .frame(width: 0, height: 00)
+                        .background(.red)
+                        .id("scrollToDown")
+                    } else {
+                      ResturantMenuComponent()
+                        .opacity(menuOpacity)
+                    }
+                  }
+                  .padding(.horizontal, 20)
+                  .padding(.bottom, 10)
+                  .onChange(of: vm.isReviewVisible) { _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                      withAnimation(.easeInOut(duration: 0.3)) {
+                        proxy.scrollTo("scrollToDown", anchor: .center)
                       }
                     }
                   }
-                  .scrollBounceBehavior(.basedOnSize)
-                  .scrollIndicators(.hidden)
+                  .onChange(of: vm.commentLoaderTrigger) { _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                      withAnimation(.easeInOut(duration: 0.3)) {
+                        proxy.scrollTo("scrollToDown", anchor: .center)
+                      }
+                    }
+                  }
                 }
+                .scrollBounceBehavior(.basedOnSize)
+                .scrollIndicators(.hidden)
               }
-              .frame(maxWidth: .infinity, maxHeight: geometry.size.height * 0.60)
-              .background(
-                Image("foodBG")
-                  .frame(maxWidth: .infinity, maxHeight: .infinity)
-              )
-              .background(.primaryWhite)
-              .clipShape(
-                .rect(
-                  topLeadingRadius: 20,
-                  bottomLeadingRadius: 0,
-                  bottomTrailingRadius: 0,
-                  topTrailingRadius: 20
-                )
-              )
+              .padding(.top, 10)
             }
+            .frame(maxWidth: .infinity, maxHeight: geometry.size.height * vm.infoHeight)
+            .background(
+              Image("foodBG")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            )
+            .background(.primaryWhite)
+            .clipShape(
+              .rect(
+                topLeadingRadius: 20,
+                bottomLeadingRadius: 0,
+                bottomTrailingRadius: 0,
+                topTrailingRadius: 20
+              )
+            )
+            .gesture(
+              DragGesture()
+                .onChanged { value in
+                  let newHeight = vm.infoHeight - (value.translation.height / geometry.size.height)
+                  vm.infoHeight = min(max(newHeight, 0.6), 0.85)
+                }
+            )
           }
         }
       }
-      .overlay {
-        if vm.isLoading {
-          VStack {
-            ProgressView()
-              .scaleEffect(1.5)
-              .tint(.customBlue)
-          }
-          .frame(maxWidth: .infinity, maxHeight: .infinity)
-          .background(.primaryWhite)
-        }
-      }
-      .ignoresSafeArea()
-      .onReceive(vm.$successMessage, perform: { message in
-        if message != "" {
-          isError = false
-          toastManager.showToast()
-        }
-      })
-      .onReceive(vm.$errorMessage, perform: { message in
-        if message == .feedbackError {
-          isError = true
-          toastManager.showToast()
-        }
-      })
-      .sheet(isPresented: $vm.isPresent) {
-        MapViewReusable(
-          latitudeProp: Double(vm.singleResturant?.latitude ?? 0),
-          longitudeProp: Double(vm.singleResturant?.longitude ?? 0),
-          locationName: vm.singleResturant?.name ?? "",
-          isEditable: false
-        )
-      }
-    }
-    .background(.primaryWhite)
-    .overlay {
+      
       VStack {
         PlaceDetailsNavigationBar(
           isBookMarked: $vm.isBookMarked,
           placeID: vm.singleResturant?.id ?? ""
         )
-        .frame(maxHeight: .infinity, alignment: .top)
-        .offset(y: -10)
+        
         Spacer()
       }
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+    .ignoresSafeArea()
+    .background(.primaryWhite)
     .onAppear {
       vm.fetchData(id: place.id ?? "", collection: collection)
+    }
+    .animation(.easeInOut, value: vm.infoHeight )
+    .onReceive(vm.$successMessage, perform: { message in
+      if message != "" {
+        isError = false
+        toastManager.showToast()
+      }
+    })
+    .onReceive(vm.$errorMessage, perform: { message in
+      if message == .feedbackError {
+        isError = true
+        toastManager.showToast()
+      }
+    })
+    .sheet(isPresented: $vm.isPresent) {
+      MapViewReusable(
+        latitudeProp: Double(vm.singleResturant?.latitude ?? 0),
+        longitudeProp: Double(vm.singleResturant?.longitude ?? 0),
+        locationName: vm.singleResturant?.name ?? "",
+        isEditable: false
+      )
     }
     .environmentObject(vm)
   }

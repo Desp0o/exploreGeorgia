@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ResturantViewInfoComponent: View {
   @EnvironmentObject var vm: ResturantViewModel
-  @State private var showMoreReviews = 10
+  @State private var showMoreReviews = 2
   @State private var showMoreButtonName = "Show more"
   let collection: FirebaseCollectionEnum
   
@@ -35,12 +35,15 @@ struct ResturantViewInfoComponent: View {
         
         HStack {
           Image("locationPin")
+            .renderingMode(.template)
+            .foregroundStyle(.customBlue)
+            .scaleEffect(1.2)
           
           Button {
             vm.isPresent.toggle()
           } label: {
-            Text("See on map")
-              .styledText(.customBlue, 14)
+            Text("Show Location")
+              .styledText(.customBlue, 16, .bold)
           }
           
           Spacer()
@@ -86,13 +89,13 @@ struct ResturantViewInfoComponent: View {
         HStack {
           if vm.reviews.count > 10 {
             Button {
+              vm.commentLoaderTrigger.toggle()
               withAnimation(.easeInOut(duration: 0.2)) {
+                vm.infoHeight = 0.85
                 if showMoreReviews > vm.reviews.count {
                   showMoreReviews = 10
-                  print(showMoreReviews, showMoreButtonName, "🟢")
                 } else {
                   showMoreReviews += 5
-                  print(showMoreReviews, showMoreButtonName, "🔴")
                 }
               }
             } label: {
@@ -106,10 +109,13 @@ struct ResturantViewInfoComponent: View {
           Button {
             withAnimation(.easeInOut(duration: 0.2)) {
               vm.isReviewVisible.toggle()
+              if vm.isReviewVisible {
+                vm.infoHeight = 0.85
+              }
             }
           } label: {
             Text(vm.isReviewVisible ? "Cancel review" : "Add review")
-              .styledText(.customBlue, 16, .semibold)
+              .styledText(.customBlue, 16, .bold)
           }
         }
         
@@ -132,7 +138,7 @@ struct ResturantViewInfoComponent: View {
             }
           }
           .padding(.top, 20)
-          .transition(.move(edge: .bottom))
+          .transition(.move(edge: .bottom).combined(with: .move(edge: .bottom)))
         }
       }
     }
