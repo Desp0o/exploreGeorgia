@@ -5,6 +5,8 @@
 //  Created by Despo on 23.01.25.
 //
 
+import SwiftUI
+
 struct ResturantModel: Codable, IdentifiableAndBookmarkable, Identifiable, Equatable, Hashable {
   var id: String?
   let name: String
@@ -21,6 +23,7 @@ struct ResturantModel: Codable, IdentifiableAndBookmarkable, Identifiable, Equat
   var reviews: [String]
   let menu: [String: FoodItem]
   let type: String
+  var createdAt: Date?
 }
 
 struct FoodItem: Codable, Equatable, Hashable {
