@@ -43,13 +43,7 @@ struct SightSeenReusableView: View {
       
       HStack(spacing: 2) {
         Text(place.name)
-          .styledText(
-            .customBlack,
-            18,
-            .semibold,
-            .leading,
-            linesCount: 2
-          )
+          .styledText(.customBlack, 18, .semibold, .leading, linesCount: 2)
         
         Spacer()
         
@@ -60,11 +54,7 @@ struct SightSeenReusableView: View {
           .frame(width: 12, height: 12)
         
         Text(place.rating)
-          .styledText(
-            .customBlack,
-            13,
-            .semibold
-          )
+          .styledText(.customBlack, 13, .semibold)
       }
       
       HStack(spacing: 2) {
@@ -74,19 +64,13 @@ struct SightSeenReusableView: View {
           .frame(width: 16, height: 16)
         
         Text(place.region)
-          .styledText(
-            .customGray,
-            14
-          )
+          .styledText(.customGray, 14, linesCount: 1)
         
         Spacer()
         
         Text(place.price == 0 ? "Free" : "₾\(place.price)")
           .styledText(
-            .customBlue,
-            14,
-            .semibold
-          )
+            .customBlue, 14, .semibold)
       }
     }
     .padding(.all, 14)

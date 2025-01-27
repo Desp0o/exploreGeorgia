@@ -13,6 +13,7 @@ struct ProfileStatisticComponent: View {
   var body: some View {
     VStack() {
       UserAvatarChangeComponent()
+        .frame(width: 96, height: 96)
       
       VStack {
         Text(vm.user?.firstName ?? "")

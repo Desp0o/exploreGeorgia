@@ -45,7 +45,6 @@ struct MainView: View {
     .overlay {
       if vm.isLoading {
         MainScreenShimmer()
-          .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
     }
   }

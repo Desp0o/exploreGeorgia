@@ -90,6 +90,11 @@ struct FoodView: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
     }
+    .overlay {
+      if vm.isLoading {
+        FoodViewShimmer()
+      }
+    }
     .sheet(isPresented: $isPresented) {
       AIView()
     }

@@ -109,7 +109,6 @@ struct ExploreView: View {
       }
       if vm.isLoading {
         ExploreShimmer()
-          .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
     }
   }

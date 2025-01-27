@@ -18,6 +18,10 @@ final class AllToursViewModel: ObservableObject {
   
   func fetchTours(pageSize: Int) {
     Task {
+      await MainActor.run {
+        isLoading = true
+      }
+      
       do {
         let (places, _, _): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
           collectionName: .tours,

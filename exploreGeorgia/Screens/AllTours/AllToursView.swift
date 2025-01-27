@@ -61,6 +61,11 @@ struct AllToursView: View {
     }
     .padding(.horizontal, 20)
     .background(.primaryWhite)
+    .overlay {
+      if vm.isLoading {
+        AllToursShimmer()
+      }
+    }
     .onAppear {
       vm.fetchTours(pageSize: 10)
     }

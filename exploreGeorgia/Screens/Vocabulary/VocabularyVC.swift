@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import SwiftUI
 
 final class VocabularyVC: UIViewController {
+  private var hostingController: UIHostingController<VocabularyShimmer>?
+
   private let vm: VocabularyViewModel
   
   private lazy var searchBar: UISearchBar = {
@@ -178,9 +181,28 @@ extension VocabularyVC: VocabularyFetchDelegate {
 extension VocabularyVC: VocabularyLoadingDelegate {
   func didVocabularyLoaded() {
     if vm.isLoading {
-      showLoading(backgroundOpacity: 0)
+      if hostingController == nil {
+        let shimmerView = VocabularyShimmer()
+        hostingController = UIHostingController(rootView: shimmerView)
+        
+        if let hostView = hostingController {
+          addChild(hostView)
+          view.addSubview(hostView.view)
+          hostView.didMove(toParent: self)
+          hostView.view.backgroundColor = .primaryWhite
+          hostView.view.translatesAutoresizingMaskIntoConstraints = false
+          
+          NSLayoutConstraint.activate([
+            hostView.view.topAnchor.constraint(equalTo: view.topAnchor),
+            hostView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            hostView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+          ])
+        }
+      }
     } else {
-      hideLoading()
+      hostingController?.view.removeFromSuperview()
+      hostingController = nil
     }
   }
 }

@@ -97,23 +97,30 @@ class YourViewModel: ObservableObject {
   func addNewSight() {
     let newSight = SightSeenModel(
       id: nil,
-      cover: "https://picsum.photos/200/300?random=1",
-      name: "Eiffel Tower",
-      region: "Paris",
-      album: ["https://picsum.photos/200/300?random=2",
-              "https://picsum.photos/200/300?random=4"],
-      description: "Famous iron tower",
-      rating: "4.8",
-      price: 20,
-      adress: "Champ de Mars, Paris",
-      ratingCount: 1000,
-      latitude: 48.8584,
-      longitude: 2.2945,
+      cover: "https://cdn.georgiantravelguide.com/storage/files/petras-tsikhe-achara-petra-castle-adjara-1.jpg",
+      name: "Petra Fortress",
+      region: "Adjara",
+      album: [
+          "https://cdn.georgiantravelguide.com/storage/files/petras-tsikhe-achara-petra-castle-adjara.jpg",
+          "https://cdn.georgiantravelguide.com/storage/files/petras-tsikhe-kalaki-achara-petra-fortess-adjara-1.jpg",
+          "https://cdn.georgiantravelguide.com/storage/files/petras-tsikhe-kalaki-achara-petra-fortess-adjara-2.jpg",
+          "https://cdn.georgiantravelguide.com/storage/files/petras-tsikhe-achara-petra-castle-adjara-3.jpg",
+          "https://cdn.georgiantravelguide.com/storage/files/petras-tsikhe-achara-petra-castle-adjara-7.jpg",
+          "https://cdn.georgiantravelguide.com/storage/files/petras-tsikhe-achara-petra-castle-adjara-6.jpg",
+          "https://cdn.georgiantravelguide.com/storage/files/petras-tsikhe-achara-petra-castle-adjara-8.jpg"
+      ],
+      description: "Petra Fortress, located in the Adjara region, is a historic site that dates back to the 6th century. Built by the Byzantine Empire, this fortress served as a strategic point on the Silk Road, offering stunning views of the Black Sea. The ruins of Petra Fortress include remnants of ancient walls, towers, and a small chapel, which reveal the site’s rich history and architectural significance. Visitors can explore its captivating landscapes and imagine the fortress’s role as a vital defensive stronghold in Georgia's past. Petra Fortress is a must-visit for history enthusiasts and nature lovers alike.",
+      rating: "4.6",
+      price: 0,
+      adress: "Petra, Adjara",
+      ratingCount: 1200,
+      latitude: 41.9474,
+      longitude: 41.7739,
       isBookmarked: nil,
-      isSightseen: false,
+      isSightseen: true,
       isFood: false,
       createdAt: Date()
-    )
+  )
     
     Task {
       do {
@@ -125,3 +132,23 @@ class YourViewModel: ObservableObject {
     }
   }
 }
+
+
+//id: nil,
+//cover: "",
+//name: "",
+//region: "",
+//album: [
+//  
+//],
+//description: "",
+//rating: "",
+//price: 0,
+//adress: "",
+//ratingCount: 0,
+//latitude: 41.594215,
+//longitude: 44.124291,
+//isBookmarked: nil,
+//isSightseen: false,
+//isFood: false,
+//createdAt: Date()

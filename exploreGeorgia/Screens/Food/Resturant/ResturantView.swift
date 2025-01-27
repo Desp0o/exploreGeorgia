@@ -173,6 +173,11 @@ struct ResturantView: View {
         isEditable: false
       )
     }
+    .overlay {
+      if vm.isLoading {
+        PlaceDetailsShimmer()
+      }
+    }
     .environmentObject(vm)
   }
 }

@@ -73,14 +73,8 @@ struct TourView: View {
     }
     .overlay {
       if vm.isLoading {
-        ZStack {
-          Color.primaryWhite.ignoresSafeArea()
-          
-          ProgressView()
-            .scaleEffect(1.5)
-            .tint(.customBlue)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        PlaceDetailsShimmer()
+          .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
       }
       
       if vm.isLightBoxVisible {

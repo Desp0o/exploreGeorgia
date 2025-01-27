@@ -16,13 +16,7 @@ struct PurchaseHistoryView: View {
   var body: some View {
     VStack {
       if vm.isLoading {
-        VStack {
-          ProgressView()
-            .scaleEffect(1.5)
-            .tint(.customBlue)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.primaryWhite)
+        AllToursShimmer()
       } else {
         ScrollView {
           HStack {
