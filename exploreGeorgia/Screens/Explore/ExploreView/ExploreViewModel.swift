@@ -21,8 +21,6 @@ final class ExploreViewModel: ObservableObject {
   }
   
   func fetchData(pageSize: Int) {
-    isLoading = true
-    
     Task {
       do {
         let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(

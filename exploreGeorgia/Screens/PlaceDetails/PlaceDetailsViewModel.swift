@@ -11,6 +11,7 @@ import FirebaseFirestore
 import SwiftUI
 import FirebaseAuth
 
+@MainActor
 final class PlaceDetailsViewModel: ObservableObject {
   private let userManager: GetFirebaseUserProtocol
   private let firebaseSinglePlaceFetcher: FirebaseSinglePlaceGenericProtocol
@@ -42,12 +43,10 @@ final class PlaceDetailsViewModel: ObservableObject {
     Task {
       do {
         let data: SightSeenModel = try await firebaseSinglePlaceFetcher.fetchSinglePlaceGeneric(with: id, and: collection)
-
+        
         await MainActor.run {
-          print(isLoading, "🥸")
           currentPlace = data
           isLoading = false
-          print(isLoading, "🥸")
         }
         
         await checkIfBookmarked(placeId: id)
@@ -56,18 +55,13 @@ final class PlaceDetailsViewModel: ObservableObject {
         let currentAuthor = try await userManager.getFirebaseUser(with: userID)
         
         await MainActor.run {
-         
           author = currentAuthor
-          
-
         }
       } catch {
         print("Error fetching place: \(error.localizedDescription)")
         await MainActor.run {
           isLoading = false
           isError = true
-          print(isLoading, "🥸")
-
         }
       }
     }

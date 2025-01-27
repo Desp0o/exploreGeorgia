@@ -63,7 +63,8 @@ final class AddPlaceViewModel: ObservableObject {
       longitude: longitude,
       user: userID,
       isSightseen: selectedPlace == .sightSeen ? true : false,
-      isFood: selectedPlace == .food ? true : false
+      isFood: selectedPlace == .food ? true : false,
+      createdAt: Date()
     )
     
     guard choosenCover != nil else {

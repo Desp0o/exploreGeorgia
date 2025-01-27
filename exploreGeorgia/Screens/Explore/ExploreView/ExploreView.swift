@@ -50,7 +50,7 @@ struct ExploreView: View {
                     }
                 }
                 
-                if index == vm.fetchedPlaces.count - 4 {
+                if index == vm.fetchedPlaces.count - 1 {
                   Color.white.opacity(0)
                     .frame(width: 1, height: 0)
                     .onAppear {
@@ -97,10 +97,16 @@ struct ExploreView: View {
       AddPlaceView(isAppeared: $isAppeared)
         .background(.primaryWhite)
         .onDisappear {
+          vm.isFetching = true
           vm.fetchData(pageSize: pageSize)
         }
     }
     .overlay {
+      if vm.isFetching {
+        ProgressView()
+          .scaleEffect(1.5)
+          .tint(.customBlue)
+      }
       if vm.isLoading {
         ExploreShimmer()
           .frame(maxWidth: .infinity, maxHeight: .infinity)

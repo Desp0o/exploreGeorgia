@@ -111,7 +111,8 @@ class YourViewModel: ObservableObject {
       longitude: 2.2945,
       isBookmarked: nil,
       isSightseen: false,
-      isFood: false
+      isFood: false,
+      createdAt: Date()
     )
     
     Task {

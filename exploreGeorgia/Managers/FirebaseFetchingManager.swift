@@ -55,7 +55,9 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     lastDocument: DocumentSnapshot?,
     userBucketList: [String]
   ) async throws -> (places: [T], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
-    let collectionRef = db.collection(collectionName.rawValue).limit(to: pageSize + 1)
+    let collectionRef = db.collection(collectionName.rawValue)
+      .order(by: "createdAt", descending: true)
+      .limit(to: pageSize + 1)
     let query: Query
     
     if let lastDocument = lastDocument {

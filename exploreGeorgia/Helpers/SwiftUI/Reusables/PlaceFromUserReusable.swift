@@ -63,19 +63,3 @@ struct PlaceFromUserReusable: View {
   }
 }
 
-#Preview {
-  let place = SightSeenModel(
-    cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjgmH2fHlwIrF-tdyLBjr7m-cEO-ODvDZQCg&s",
-    name: "Maui",
-    region: "Hawaii",
-    album: [""],
-    description: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjgmH2fHlwIrF-tdyLBjr7m-cEO-ODvDZQCg&s",
-    rating: "",
-    price: 0,
-    adress: "Hawaii, maui 27/1",
-    ratingCount: 0,
-    latitude: 0,
-    longitude: 0
-  )
-  PlaceFromUserReusable(place: place)
-}
