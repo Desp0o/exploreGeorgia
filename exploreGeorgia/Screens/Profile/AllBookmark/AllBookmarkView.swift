@@ -59,7 +59,7 @@ struct AllBookmarkView: View {
                   }
                 } label: {
                   Text(currentButton)
-                    .styledText(.customBlack, 16, .semibold)
+                    .styledText(.buttonPrimary, 16, .semibold)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
                     .background(.customBlue.opacity(index == vm.dataIndex ? 1 : 0.3))

@@ -10,6 +10,7 @@ import SwiftUI
 
 final class MyExploresViewController: UIViewController {
   private let vm: MyExploresViewModel
+  private var hostingController: UIHostingController<ExploreShimmer>?
   private var PageSize = 10
   
   private lazy var backButton: UIButton = {
@@ -49,7 +50,7 @@ final class MyExploresViewController: UIViewController {
     table.register(MyExploresCell.self, forCellReuseIdentifier: "MyExploresCell")
     table.showsVerticalScrollIndicator = false
     table.alwaysBounceVertical = false
-
+    
     return table
   }()
   
@@ -209,9 +210,28 @@ extension MyExploresViewController: UITableViewDelegate, UITableViewDataSource {
 extension MyExploresViewController: MyExploresLoadingDelegate {
   func didLoadingStopped() {
     if vm.isLoading {
-      showLoading(backgroundOpacity: 0)
+      if hostingController == nil {
+        let shimmerView = ExploreShimmer()
+        hostingController = UIHostingController(rootView: shimmerView)
+        
+        if let hostView = hostingController {
+          addChild(hostView)
+          view.addSubview(hostView.view)
+          hostView.didMove(toParent: self)
+          hostView.view.backgroundColor = .primaryWhite
+          hostView.view.translatesAutoresizingMaskIntoConstraints = false
+          
+          NSLayoutConstraint.activate([
+            hostView.view.topAnchor.constraint(equalTo: view.topAnchor),
+            hostView.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            hostView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+          ])
+        }
+      }
     } else {
-      hideLoading()
+      hostingController?.view.removeFromSuperview()
+      hostingController = nil
     }
   }
 }

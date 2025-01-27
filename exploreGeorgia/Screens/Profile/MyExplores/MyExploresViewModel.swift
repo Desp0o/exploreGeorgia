@@ -29,7 +29,7 @@ final class MyExploresViewModel {
   weak var loadingDelegate: MyExploresLoadingDelegate?
   weak var errorDeleage: MyExploresErrorDelegate?
   var fetchedPlaces: [SightSeenModel] = []
-  var isLoading = true
+  var isLoading = false
   var errorMessage = ""
   private var userID = ""
   
@@ -43,6 +43,11 @@ final class MyExploresViewModel {
     
     Task {
       do {
+        await MainActor.run {
+          isLoading = true
+          loadingDelegate?.didLoadingStopped()
+        }
+        
         let userId = Auth.auth().currentUser?.uid
         
         let result = try await firebaseManager.fetchUserPlaces(
@@ -73,7 +78,7 @@ final class MyExploresViewModel {
       }
     }
   }
-    
+  
   func deletePlaceFromDataBase(placeId: String) async throws {
     let db = Firestore.firestore()
     let placesFromUserRef = db.collection("usersPlaces").document(placeId)
