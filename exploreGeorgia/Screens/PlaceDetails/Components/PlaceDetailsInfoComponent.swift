@@ -95,15 +95,33 @@ struct PlaceDetailsInfoComponent: View {
         }
         
         VStack(alignment: .leading) {
-          Text("About Destination")
-            .styledText(.customBlack, 20, .semibold)
+          HStack {
+            Text("About Destination")
+              .styledText(.customBlack, 20, .semibold)
+            
+            Spacer()
+            
+            HStack {
+              Image("locationPin")
+                .renderingMode(.template)
+                .foregroundStyle(.customBlue)
+                .scaleEffect(1.3)
+              
+              Button {
+                vm.isPresented = true
+              } label: {
+                Text("Show Location")
+                  .styledText(.customBlue, 16, .bold)
+              }
+            }
+          }
           
           Text(vm.currentPlace?.description ?? "")
             .styledText(.customGray, 14)
         }
         
         Button {
-          vm.isPresented.toggle()
+          vm.isPresented = true
         } label: {
           Text("Show on map")
             .styledText(.buttonPrimary, 16, .bold)
@@ -113,11 +131,10 @@ struct PlaceDetailsInfoComponent: View {
             .roundedCorners(12)
         }
       }
-      .padding(.bottom , 20)
+      .padding(.vertical, 20)
     }
     .scrollIndicators(.hidden)
     .scrollBounceBehavior(.basedOnSize)
-    .padding(.top, 20)
     .padding(.horizontal, 20)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(.customWhite)

@@ -20,6 +20,8 @@ final class PlaceDetailsViewModel: ObservableObject {
   @Published var selectedImage = ""
   @Published var isLightBoxVisible = false
   @Published var isPresented = false
+  @Published var isLoading = true
+  @Published var isError = false
   let gridItems = [
     GridItem(.fixed(50), spacing: 20),
     GridItem(.fixed(50), spacing: 20),
@@ -40,25 +42,37 @@ final class PlaceDetailsViewModel: ObservableObject {
     Task {
       do {
         let data: SightSeenModel = try await firebaseSinglePlaceFetcher.fetchSinglePlaceGeneric(with: id, and: collection)
-        
+
         await MainActor.run {
+          print(isLoading, "🥸")
           currentPlace = data
+          isLoading = false
+          print(isLoading, "🥸")
         }
         
         await checkIfBookmarked(placeId: id)
-
+        
         guard let userID = currentPlace?.user else { return }
         let currentAuthor = try await userManager.getFirebaseUser(with: userID)
         
         await MainActor.run {
+         
           author = currentAuthor
+          
+
         }
       } catch {
         print("Error fetching place: \(error.localizedDescription)")
+        await MainActor.run {
+          isLoading = false
+          isError = true
+          print(isLoading, "🥸")
+
+        }
       }
     }
   }
-    
+  
   private func checkIfBookmarked(placeId: String) async {
     do {
       let userID = Auth.auth().currentUser?.uid

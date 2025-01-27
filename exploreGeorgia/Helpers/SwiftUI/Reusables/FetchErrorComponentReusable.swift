@@ -15,22 +15,6 @@ struct FetchErrorComponentReusable: View {
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(.primaryWhite)
-    .overlay {
-      VStack {
-        HStack {
-          Button {
-            dismiss()
-          } label: {
-            OverlayActionButtonIcon(iconName: .backButton, tint: .white)
-          }
-          .padding(.horizontal, 20)
-          
-          Spacer()
-        }
-        
-        Spacer()
-      }
-    }
     .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
   }
 }
