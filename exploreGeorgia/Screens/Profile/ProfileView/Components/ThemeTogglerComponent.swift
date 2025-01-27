@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ThemeTogglerComponent: View {
-  @EnvironmentObject var vm: EditProfileViewModel
-  
+  @ObservedObject var vm = EditProfileViewModel()
+  @Environment(\.colorScheme) var colorScheme
+
   var body: some View {
     HStack {
       Text("Appereance")
@@ -56,5 +57,10 @@ struct ThemeTogglerComponent: View {
         vm.isDarkTheme.toggle()
       }
     }
+    .padding(.horizontal, 20)
+    .padding(.bottom, 20)
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(.primaryWhite)
+    .preferredColorScheme(vm.isDarkTheme ? .dark : .light)
   }
 }

@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUICore
 import FirebaseAuth
+import SwiftUI
 
 final class ProfileViewModel: ObservableObject {
   private let fetchUser: GetFirebaseUserProtocol
@@ -18,7 +19,9 @@ final class ProfileViewModel: ObservableObject {
   @Published var errorMessage: String?
   @Published var profileStatistic: [ProfileStatModel] = []
   @Published var isPresented = false
-
+  @Published var isPrivacyPresented = false
+  @Published var isAppereancePresented = false
+  
   init(
     fetchUser: GetFirebaseUserProtocol = UserManager(),
     authManager: LogOutProtocol = AuthManager()
@@ -31,7 +34,7 @@ final class ProfileViewModel: ObservableObject {
     Task {
       do {
         let userID = Auth.auth().currentUser?.uid
-
+        
         if let fetchedUser = try await fetchUser.getFirebaseUser(with: userID ?? "") {
           await MainActor.run {
             user = fetchedUser

@@ -26,6 +26,7 @@ struct CustomTabBar: View {
         case 0:
           NavigationStack {
             MainView(tabIndex: $currentIdenx)
+            ProfileView()
           }
         case 1:
           NavigationStack {
@@ -91,10 +92,3 @@ struct CustomTabBar: View {
     .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
   }
 }
-
-#Preview {
-  CustomTabBar()
-    .preferredColorScheme(.dark)
-}
-
-

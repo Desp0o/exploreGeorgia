@@ -10,6 +10,7 @@ struct ProfileSettingsComponent: View {
         .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
       
       VStack(spacing: 0) {
+        //profile edit
         Button(action: {
           vm.isPresented = true
         }) {
@@ -28,6 +29,49 @@ struct ProfileSettingsComponent: View {
           .frame(height: 56)
         }
         
+        // privacy
+        Button(action: {
+          vm.isPrivacyPresented = true
+        }) {
+          HStack(spacing: 14) {
+            Image(systemName: "lock")
+              .resizable()
+              .renderingMode(.template)
+              .foregroundStyle(.customGray)
+              .frame(width: 16, height: 24)
+            
+            Text("privacy")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
+        //appereance
+        Button(action: {
+          vm.isAppereancePresented = true
+        }) {
+          HStack(spacing: 14) {
+            Image(systemName: "sun.min")
+              .resizable()
+              .renderingMode(.template)
+              .foregroundStyle(.customGray)
+              .frame(width: 16, height: 16)
+            
+            Text("Appereance")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
+        
+        //payment
         NavigationLink(destination: PaymentViewWrapper()
           .ignoresSafeArea()
           .navigationBarHidden(true)) {
@@ -47,6 +91,7 @@ struct ProfileSettingsComponent: View {
             .frame(height: 56)
           }
         
+        //purchased tours
         NavigationLink(destination: PurchaseHistoryView()
           .navigationBarHidden(true)) {
             HStack(spacing: 14) {
@@ -65,6 +110,7 @@ struct ProfileSettingsComponent: View {
             .frame(height: 56)
           }
         
+        //bookmarks
         NavigationLink(destination: AllBookmarkView().navigationBarHidden(true)) {
           HStack(spacing: 14) {
             Image("bookmark")
@@ -81,6 +127,7 @@ struct ProfileSettingsComponent: View {
           .frame(height: 56)
         }
         
+        // my explores
         NavigationLink(
           destination: MyExploresViewControllerWrapper()
             .navigationBarHidden(true)
@@ -100,26 +147,8 @@ struct ProfileSettingsComponent: View {
           }
           .frame(height: 56)
         }
-        
-        Button(action: {
-          
-        }) {
-          HStack(spacing: 14) {
-            Image("support")
-              .defaultOptions()
-              .frame(width: 24, height: 24)
-            
-            Text("Contact")
-              .styledText(.customBlack, 16, .semibold)
-            
-            Spacer()
-            
-            Image("arrowRight")
-          }
-          .frame(height: 56)
-        }
       }
-      .frame(height: CGFloat(6) * 56)
+      .frame(height: CGFloat(7) * 56)
       .padding(.leading, 16)
       .padding(.trailing, 10)
     }

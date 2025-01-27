@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct UserInfoUpdateComponent: View {
-  @EnvironmentObject var vm: EditProfileViewModel
+  @ObservedObject var editViewModel: EditProfileViewModel
   
   var body: some View {
     VStack(spacing: 20) {
-      TextField("First name", text: $vm.firstName)
+      Text("Profile info")
+        .styledText(.customBlack, 18, .bold)
+      
+      TextField("First name", text: $editViewModel.firstName)
         .styledTextField()
       
-      TextField("Last name", text: $vm.lastName)
+      TextField("Last name", text: $editViewModel.lastName)
         .styledTextField()
       
-      Picker("Gender", selection: $vm.gender) {
-        ForEach(vm.genderOptions, id: \.self) { gender in
+      Picker("Gender", selection: $editViewModel.gender) {
+        ForEach(editViewModel.genderOptions, id: \.self) { gender in
           Text(gender)
         }
       }
@@ -31,12 +34,11 @@ struct UserInfoUpdateComponent: View {
         ]
         UISegmentedControl.appearance().setTitleTextAttributes(attributes, for: .selected)
         UISegmentedControl.appearance().isSpringLoaded = true
-        
-        UISegmentedControl.appearance().backgroundColor = .customWhite
+        UISegmentedControl.appearance().backgroundColor = UIColor.customWhite
       }
       
       Button {
-        vm.updateUser()
+        editViewModel.updateUser()
       } label: {
         Text("Update personal info")
           .styledText(.buttonPrimary, 16, .bold)
@@ -44,5 +46,8 @@ struct UserInfoUpdateComponent: View {
       }
       .customStyledButton()
     }
+    .padding(.horizontal, 20)
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(.primaryWhite)
   }
 }

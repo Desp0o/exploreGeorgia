@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UserDeleteComponent: View {
-  @EnvironmentObject var vm: EditProfileViewModel
+  @ObservedObject var vm = EditProfileViewModel()
   
   var body: some View {
     VStack(spacing: 20) {
@@ -31,7 +31,7 @@ struct UserDeleteComponent: View {
             .styledText(.buttonPrimary)
             .frame(maxWidth: .infinity)
         }
-        .customStyledButton(bg: vm.showInput ? .red : .customBlue)
+        .customStyledButton(bg: .red)
         
         if vm.showInput {
           Button {
@@ -40,13 +40,12 @@ struct UserDeleteComponent: View {
             }
           } label: {
             Text("Cancel")
-              .styledText(.customBlack, 18, .bold)
+              .styledText(.buttonPrimary, 18, .bold)
               .frame(maxWidth: .infinity)
           }
           .customStyledButton()
         }
       }
     }
-    .padding(.vertical, 40)
   }
 }

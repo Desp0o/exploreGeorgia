@@ -12,9 +12,7 @@ struct ProfileStatisticComponent: View {
   
   var body: some View {
     VStack() {
-      CachedAsyncImage(url: URL(string: vm.user?.avatar ?? ""))
-        .clipShape(Circle())
-        .frame(width: 96, height: 96)
+      UserAvatarChangeComponent()
       
       VStack {
         Text(vm.user?.firstName ?? "")
