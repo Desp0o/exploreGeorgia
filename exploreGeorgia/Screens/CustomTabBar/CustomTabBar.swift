@@ -25,30 +25,22 @@ struct CustomTabBar: View {
       ZStack {
         switch currentIdenx {
         case 0:
-          
-            MainView(tabIndex: $currentIdenx)
-          
+          MainView(tabIndex: $currentIdenx)
         case 1:
-          
-            ExploreView()
-          
+          ExploreView()
         case 2:
-          
-            FoodView()
-          
+          FoodView()
         case 3:
           VocabularyViewControllerWrapper()
         case 4:
-          
-            ProfileView()
-          
+          ProfileView()
         default:
           VStack {
             Text("Default Tab")
           }
         }
       }
-    
+      
       HStack {
         ForEach(0..<vm.tabItems.count, id: \.self) { index in
           let item = vm.tabItems[index]

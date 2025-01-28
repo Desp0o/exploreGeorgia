@@ -13,8 +13,6 @@ struct MainScreenShimmer: View {
       Color.primaryWhite.ignoresSafeArea()
       
       VStack(spacing: 30) {
-        Spacer()
-          .frame(height: 30)
         
         HStack {
           ShimmerEffect()
@@ -82,8 +80,9 @@ struct MainScreenShimmer: View {
         
         Spacer()
       }
-      .padding(.top, 40)
+      .padding(.top, 20)
       .padding(.horizontal, 20)
+      .ignoresSafeArea()
     }
   }
 }

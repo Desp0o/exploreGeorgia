@@ -15,6 +15,7 @@ final class ProfileViewModel: ObservableObject {
   private let fetchUser: GetFirebaseUserProtocol
   private let authManager: LogOutProtocol
   @Published var isLoading = true
+  @Published var isFirstLoad = true
   @Published var user: UserModel?
   @Published var errorMessage: String?
   @Published var profileStatistic: [ProfileStatModel] = []
@@ -40,17 +41,20 @@ final class ProfileViewModel: ObservableObject {
             user = fetchedUser
             updateProfileStatistic()
             isLoading = false
+            isFirstLoad = false
           }
         } else {
           await MainActor.run {
             errorMessage = "No user found."
             isLoading = false
+            isFirstLoad = false
           }
         }
       } catch {
         await MainActor.run {
           errorMessage = "Error fetching user: \(error.localizedDescription)"
           isLoading = false
+          isFirstLoad = false
         }
       }
     }

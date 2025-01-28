@@ -23,7 +23,7 @@ final class MainViewModel: ObservableObject {
   @Published var placesFromApp: [SightSeenModel] = []
   @Published var usersAddedPlacesData: [SightSeenModel] = []
   @Published var fetchedTours: [TourModel] = []
-  @Published var isLoading = false
+  @Published var isLoading = true
   
   init(
     userManager: GetFirebaseUserProtocol = UserManager(),

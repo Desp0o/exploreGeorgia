@@ -28,21 +28,12 @@ struct LoginViewControllerWrapper: UIViewControllerRepresentable {
 
 @main
 struct YourApp: App {
-//  @StateObject var vim = YourViewModel()
   @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
   @StateObject private var vm = RouterManager()
   @AppStorage("isDarkTheme") private var isDarkTheme = UITraitCollection.current.userInterfaceStyle == .dark
-
+  
   var body: some Scene {
     WindowGroup {
-      
-//      Button {
-//        vim.addNewSight()
-//      } label: {
-//       Text("add me")
-//      }
-//      
-
       if vm.isUserAuthenticated {
         NavigationStack {
           CustomTabBar()
@@ -55,7 +46,6 @@ struct YourApp: App {
             .preferredColorScheme(isDarkTheme ? .dark : .light)
             .ignoresSafeArea(edges: .all)
         }
-        
       }
     }
   }

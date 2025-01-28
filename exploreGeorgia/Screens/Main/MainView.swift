@@ -38,14 +38,14 @@ struct MainView: View {
         vm.fetchSingleFact()
         vm.fetchUsersAddedPlaces()
       }
+      .overlay {
+        if vm.isLoading {
+          MainScreenShimmer()
+        }
+      }
     }
     .scrollIndicators(.hidden)
     .background(.primaryWhite)
     .environmentObject(vm)
-    .overlay {
-      if vm.isLoading {
-        MainScreenShimmer()
-      }
-    }
   }
 }
