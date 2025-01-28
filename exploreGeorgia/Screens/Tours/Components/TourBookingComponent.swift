@@ -19,7 +19,7 @@ struct TourBookingComponent: View {
         in: vm.startingDate...,
         displayedComponents: [.date]
       )
-      .accentColor(.customBlue)
+      .accentColor(.customGreen)
       .datePickerStyle(GraphicalDatePickerStyle())
       .padding(.horizontal, 20)
       .background(.customWhite)
@@ -77,7 +77,7 @@ struct TourBookingComponent: View {
           Text("Pay")
             .styledText(.buttonPrimary, 20, .semibold)
             .frame(width: 95, height: 32)
-            .background(.customBlue)
+            .background(.customGreen)
             .roundedCorners(10)
         }
       }

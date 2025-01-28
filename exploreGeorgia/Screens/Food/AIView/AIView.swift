@@ -18,7 +18,7 @@ struct AIView: View {
         ScrollView {
           VStack(spacing: 20) {
             Text("Do you love cooking at home? Then ask for a recipe!")
-              .styledText(.customBlue, 16, .semibold, .center)
+              .styledText(.customGreen, 16, .semibold, .center)
               .frame(maxWidth: .infinity)
             
             if vm.responseAI != "" {
@@ -46,12 +46,12 @@ struct AIView: View {
           vm.fetchData()
         } label: {
           Text("Send")
-            .styledText(.customBlue, 16, .bold)
+            .styledText(.customGreen, 16, .bold)
             .frame(maxWidth: .infinity)
             .frame(height: 30)
             .overlay(
               RoundedRectangle(cornerRadius: 12)
-                .stroke(.customBlue, lineWidth: 1)
+                .stroke(.customGreen, lineWidth: 1)
             )
         }
       }
@@ -65,10 +65,10 @@ struct AIView: View {
           VStack {
             ProgressView()
               .scaleEffect(1.5)
-              .tint(.customBlue)
+              .tint(.customGreen)
             
             Text("We are processing the best answer for you. Please stand by.")
-              .styledText(.customBlue, 13, .semibold, .center)
+              .styledText(.customGreen, 13, .semibold, .center)
               .frame(maxWidth: 300)
           }
         }

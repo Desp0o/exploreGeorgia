@@ -53,7 +53,7 @@ struct PlaceFromUserReusable: View {
       ZStack {
         if place.isFood ?? false {
           Image(systemName: "fork.knife.circle.fill")
-            .foregroundStyle(.customBlue)
+            .foregroundStyle(.customGreen)
             .scaleEffect(1.2)
             .offset(x: -10, y: 10)
         }

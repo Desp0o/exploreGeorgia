@@ -43,7 +43,7 @@ struct ProfileView: View {
             vm.logOut()
           } label: {
             Text("Log out")
-              .styledText(.customBlue, 16, .semibold)
+              .styledText(.customGreen, 16, .semibold)
           }
         }
         .padding(.horizontal, 20)

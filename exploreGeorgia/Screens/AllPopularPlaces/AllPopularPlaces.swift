@@ -19,76 +19,62 @@ struct AllPopularPlaces: View {
     ZStack {
       Color.primaryWhite.ignoresSafeArea()
       
-      ScrollViewReader { proxy in
-        ScrollView {
-          HStack {
-            Button {
-              dismiss.wrappedValue.dismiss()
-            } label: {
-              OverlayActionButtonIcon(iconName: .backButton, tint: .white)
-            }
-            
-            Spacer()
-            
-            ScreenMainTitle(
-              mainTitle: "Popular Destinations",
-              subTitle: "Ready for travel?"
-            )
-            
-            Spacer()
+      ScrollView {
+        HStack {
+          Button {
+            dismiss.wrappedValue.dismiss()
+          } label: {
+            OverlayActionButtonIcon(iconName: .backButton, tint: .white)
           }
-          .padding(.vertical, 20)
-          .padding(.horizontal, 20)
           
-          LazyVGrid(columns:[GridItem(), GridItem()], spacing: 20) {
-            ForEach(vm.fetchedData.indices, id: \.self) { index in
-              let place = vm.fetchedData[index]
-              
-              NavigationLink(
-                destination: PlaceDetailsView(
-                  elementID: place.id ?? "",
-                  collectionName: .appPlace,
-                  isNavigationDisabled: true
-                ).navigationBarHidden(
-                  true
-                )
-              ) {
-                SightSeenReusableView(
-                  place: place,
-                  maxWidth: UIScreen.main.bounds.width / 2 - 40,
-                  height: 140,
-                  isBookmarkIconHidden: false
-                )
-                .opacity(startingOpacity)
-                .onAppear {
-                  withAnimation(.easeOut(duration: 0.3)) {
-                    startingOpacity = 1
-                  }
+          Spacer()
+          
+          ScreenMainTitle(
+            mainTitle: "Popular Destinations",
+            subTitle: "Ready for travel?"
+          )
+          
+          Spacer()
+        }
+        .padding(.vertical, 20)
+        .padding(.horizontal, 20)
+        
+        LazyVGrid(columns:[GridItem(), GridItem()], spacing: 20) {
+          ForEach(vm.fetchedData.indices, id: \.self) { index in
+            let place = vm.fetchedData[index]
+            
+            NavigationLink(
+              destination: PlaceDetailsView(
+                elementID: place.id ?? "",
+                collectionName: .appPlace,
+                isNavigationDisabled: true
+              ).navigationBarHidden(
+                true
+              )
+            ) {
+              SightSeenReusableView(
+                place: place,
+                maxWidth: UIScreen.main.bounds.width / 2 - 40,
+                height: 140,
+                isBookmarkIconHidden: false
+              )
+              .opacity(startingOpacity)
+              .onAppear {
+                withAnimation(.easeOut(duration: 0.3)) {
+                  startingOpacity = 1
+                }
+                
+                if index == vm.fetchedData.count - 2 {
+                  vm.fetchData()
                 }
               }
-              .onTapGesture {
-                lastSelectedID = place.id
-              }
-              if index == vm.fetchedData.count - 1 {
-                Color.clear
-                  .onAppear {
-                    pageSize += 10
-                  }
-              }
             }
           }
-          .padding(.horizontal, 20)
-          .padding(.bottom, 20)
-          .id(vm.fetchedData)
-          .id(isSomethingChanged)
         }
-        .scrollIndicators(.hidden)
-        .onAppear {
-          if let id = lastSelectedID {
-            proxy.scrollTo(id, anchor: .leading)
-          }
-        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 20)
       }
+      .scrollIndicators(.hidden)
     }
     .frame(maxWidth: .infinity)
     .overlay {
@@ -97,15 +83,7 @@ struct AllPopularPlaces: View {
       }
     }
     .onAppear {
-      isSomethingChanged.toggle()
-      vm.fetchData(pageSize: pageSize)
-    }
-    .onChange(of: pageSize) { _ in
-      vm.fetchData(pageSize: pageSize)
+      vm.fetchData()
     }
   }
-}
-
-#Preview {
-  AllPopularPlaces()
 }

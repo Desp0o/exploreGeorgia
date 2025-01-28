@@ -25,7 +25,7 @@ struct FoodViewSingleComponent: View {
         Text(type)
           .styledText(.white, 13, .semibold)
           .padding(4)
-          .background(.customBlue)
+          .background(.customGreen)
           .roundedCorners(5)
           .offset(x:-10, y: 10)
       }

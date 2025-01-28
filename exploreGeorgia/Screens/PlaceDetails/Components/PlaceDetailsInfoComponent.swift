@@ -25,23 +25,26 @@ struct PlaceDetailsInfoComponent: View {
           
           Spacer()
           
-          if vm.author?.id != nil {
-            NavigationLink {
-              SIngleUserProfileWrapper(singleUserId: vm.author?.id ?? "")
-                .toolbar(.hidden)
-                .ignoresSafeArea()
-            } label: {
-              VStack {
-                CachedAsyncImage(url: URL(string: vm.author?.avatar ?? ""))
-                  .frame(width: 30, height: 30)
-                  .clipShape(Circle())
-                
-                Text(vm.author?.firstName ?? "")
-                  .styledText(.customBlack, 12)
+          VStack{
+            if vm.author?.id != nil {
+              NavigationLink {
+                SIngleUserProfileWrapper(singleUserId: vm.author?.id ?? "")
+                  .toolbar(.hidden)
+                  .ignoresSafeArea()
+              } label: {
+                VStack {
+                  CachedAsyncImage(url: URL(string: vm.author?.avatar ?? ""))
+                    .frame(width: 30, height: 30)
+                    .clipShape(Circle())
+                  
+                  Text(vm.author?.firstName ?? "")
+                    .styledText(.customBlack, 12)
+                }
               }
+              .disabled(isNavigationDisabled)
             }
-            .disabled(isNavigationDisabled)
           }
+          .frame(height: 50)
         }
         
         HStack {
@@ -79,7 +82,7 @@ struct PlaceDetailsInfoComponent: View {
           Text(
             vm.currentPlace?.price ?? 0 > 0 ? "₾\(vm.currentPlace?.price ?? 0)" : "Free"
           )
-          .styledText(.customBlue, 15)
+          .styledText(.customGreen, 15)
         }
         
         LazyVGrid(columns: vm.gridItems, alignment: .leading, spacing: 20) {
@@ -104,14 +107,14 @@ struct PlaceDetailsInfoComponent: View {
             HStack {
               Image("locationPin")
                 .renderingMode(.template)
-                .foregroundStyle(.customBlue)
+                .foregroundStyle(.customGreen)
                 .scaleEffect(1.3)
               
               Button {
                 vm.isPresented = true
               } label: {
                 Text("Show Location")
-                  .styledText(.customBlue, 16, .bold)
+                  .styledText(.customGreen, 16, .bold)
               }
             }
           }
@@ -127,7 +130,7 @@ struct PlaceDetailsInfoComponent: View {
             .styledText(.buttonPrimary, 16, .bold)
             .frame(maxWidth: .infinity)
             .frame(height: 50)
-            .background(.customBlue)
+            .background(.customGreen)
             .roundedCorners(12)
         }
       }

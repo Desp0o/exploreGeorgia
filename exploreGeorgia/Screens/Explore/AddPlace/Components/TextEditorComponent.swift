@@ -32,7 +32,7 @@ struct TextEditorComponent: View {
         )
         .overlay(
           RoundedRectangle(cornerRadius: 12)
-            .stroke(Color.customBlue, lineWidth: 1)
+            .stroke(Color.customGreen, lineWidth: 1)
         )
     }
   }

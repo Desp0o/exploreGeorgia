@@ -21,7 +21,7 @@ struct AllBookmarkView: View {
       VStack(spacing: 30) {
         HStack {
           Text("Bookmarks")
-            .styledText(.customBlue, 20, .bold)
+            .styledText(.customGreen, 20, .bold)
         }
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity)
@@ -35,7 +35,7 @@ struct AllBookmarkView: View {
                   iconName: .backButton,
                   tint: .white,
                   scale: 0.9,
-                  bgColor: .customBlue,
+                  bgColor: .customGreen,
                   opacity: 1
                 )
               }
@@ -62,7 +62,7 @@ struct AllBookmarkView: View {
                     .styledText(.buttonPrimary, 16, .semibold)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
-                    .background(.customBlue.opacity(index == vm.dataIndex ? 1 : 0.3))
+                    .background(.customGreen.opacity(index == vm.dataIndex ? 1 : 0.3))
                     .roundedCorners(12)
                 }
               }
@@ -76,7 +76,7 @@ struct AllBookmarkView: View {
           VStack {
             ProgressView()
               .scaleEffect(1.5)
-              .tint(.customBlue)
+              .tint(.customGreen)
           }
           .frame(maxHeight: .infinity)
         } else {

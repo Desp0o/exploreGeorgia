@@ -23,7 +23,7 @@ struct ToursComponent: View {
             .navigationBarHidden(true)
         } label: {
           Text("View all")
-            .styledText(.customBlue, 14)
+            .styledText(.customGreen, 14)
         }
       }
       

@@ -26,7 +26,7 @@ final class SingleUserProfileViewController: UIViewController {
       image: UIImage(systemName: "arrow.left.circle.fill"),
       imageSize: 40,
       renderingMode: .alwaysTemplate,
-      tintColor: .customBlue
+      tintColor: .customGreen
     )
     button.addAction(UIAction(handler: { [weak self] _ in
       self?.navigationController?.popViewController(animated: true)

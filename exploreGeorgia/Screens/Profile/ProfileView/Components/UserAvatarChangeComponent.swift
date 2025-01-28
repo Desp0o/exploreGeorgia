@@ -30,7 +30,7 @@ struct UserAvatarChangeComponent: View {
           Image(systemName: "camera.fill")
             .renderingMode(.template)
             .scaleEffect(1.1)
-            .foregroundStyle(.customBlue)
+            .foregroundStyle(.customGreen)
             .offset(x: 5, y: 5)
         }
       }

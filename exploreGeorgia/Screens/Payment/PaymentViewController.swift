@@ -25,7 +25,7 @@ final class PaymentViewController: UIViewController {
       image: UIImage(systemName: "arrow.left.circle.fill"),
       imageSize: 40,
       renderingMode: .alwaysTemplate,
-      tintColor: .customBlue
+      tintColor: .customGreen
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
@@ -41,7 +41,7 @@ final class PaymentViewController: UIViewController {
       text: "Payment",
       fontSize: 26,
       fontWeight: .bold,
-      textColor: .customBlue
+      textColor: .customGreen
     )
     return label
   }()
@@ -52,7 +52,7 @@ final class PaymentViewController: UIViewController {
     table.dataSource = self
     table.delegate = self
     table.separatorStyle = .singleLine
-    table.separatorColor = .customBlue
+    table.separatorColor = .customGreen
     table.backgroundColor = .clear
     table.register(CreditCardCell.self, forCellReuseIdentifier: "CreditCardCell")
     table.showsVerticalScrollIndicator = false
@@ -65,7 +65,7 @@ final class PaymentViewController: UIViewController {
     let button = UIButton()
     button.createCustomButton(
       title: "Add payment",
-      titleColor: .customBlue
+      titleColor: .customGreen
     )
     button.addTapAnimation()
     button.addAction(UIAction(handler: {[weak self] _ in

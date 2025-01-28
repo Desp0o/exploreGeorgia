@@ -23,11 +23,11 @@ struct TourSuccessComponent: View {
             .frame(width: 36, height: 36)
         }
         .frame(width: 70, height: 70)
-        .background(.customBlue)
+        .background(.customGreen)
         .clipShape(Circle())
         
         Text("Congratulations, your adventure begins!")
-          .styledText(.customBlue, 20, .bold, .center)
+          .styledText(.customGreen, 20, .bold, .center)
           .padding(.horizontal, 18)
       }
     }

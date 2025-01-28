@@ -37,10 +37,13 @@ final class AuthManager: SignupProtocol {
   private let auth = Auth.auth()
   
   func createUser(user: RegisteredUserModel) async throws {
-    let authResult = try await auth.createUser(withEmail: user.email, password: user.password)
-    
     let db = Firestore.firestore()
+    
+    let authResult = try await auth.createUser(withEmail: user.email, password: user.password)
+    let userRef = db.collection("users").document(authResult.user.uid)
+    
     let userData: [String: Any] = [
+      "id": userRef.documentID,
       "photoURL" : noAvatarURL,
       "firstName": user.firstName,
       "lastName": user.lastName,
@@ -100,6 +103,7 @@ extension AuthManager: GoogleAuthProtocol {
       let documentSnapshot = try await userRef.getDocument()
       if !documentSnapshot.exists {
         let userData: [String: Any] = [
+          "id": documentSnapshot.documentID,
           "photoURL": firebaseUser.photoURL?.absoluteString ?? "",
           "firstName": user.profile?.givenName ?? "",
           "lastName": user.profile?.familyName ?? "",

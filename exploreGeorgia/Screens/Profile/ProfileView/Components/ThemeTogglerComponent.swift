@@ -39,7 +39,7 @@ struct ThemeTogglerComponent: View {
             }
             
             Circle()
-              .fill(.customBlue)
+              .fill(.customGreen)
               .frame(width: 30, height: 30)
             
             if !vm.isDarkTheme {

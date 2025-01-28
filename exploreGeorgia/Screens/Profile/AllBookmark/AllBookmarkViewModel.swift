@@ -15,7 +15,7 @@ final class AllBookmarkViewModel: ObservableObject {
   @Published var isFetching = false
   @Published var isLoading = true
   @Published var errorMessages = ""
-  @Published var pageSize = 4
+  @Published var pageSize = 10
   @Published var dataIndex = 0
   private let bookmarkManager: BookmarkActivityProtocol
   private let fetchBookmarksManager: GetDocumetnsFromBucketListProtocol
@@ -105,7 +105,7 @@ final class AllBookmarkViewModel: ObservableObject {
       }
     }
   }
-
+  
   func removeBookmark(index: IndexSet) {
     guard let firstIndex = index.first else { return }
     let place = bookmarkedPlaces[firstIndex]

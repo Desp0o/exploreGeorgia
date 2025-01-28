@@ -37,7 +37,7 @@ struct ProfileStatisticComponent: View {
                 .styledText(.customBlack, 16, .semibold)
               
               Text("\(vm.profileStatistic[index].count)")
-                .styledText(.customBlue, 14, .semibold)
+                .styledText(.customGreen, 14, .semibold)
             }
             
             Spacer()

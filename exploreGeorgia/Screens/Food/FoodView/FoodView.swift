@@ -19,7 +19,7 @@ struct FoodView: View {
         ScrollView {
           VStack(spacing: 30) {
             Text("Food & Drinks")
-              .styledText(.customBlue, 26, .bold)
+              .styledText(.customGreen, 26, .bold)
             
             VStack {
               HStack {
@@ -34,7 +34,7 @@ struct FoodView: View {
                     .ignoresSafeArea()
                 } label: {
                   Text("View more")
-                    .styledText(.customBlue, 14)
+                    .styledText(.customGreen, 14)
                 }
                 
               }
@@ -60,7 +60,7 @@ struct FoodView: View {
                     .ignoresSafeArea()
                 } label: {
                   Text("View more")
-                    .styledText(.customBlue, 14)
+                    .styledText(.customGreen, 14)
                 }
                 
               }

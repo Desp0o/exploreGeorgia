@@ -19,7 +19,7 @@ final class MyExploresViewController: UIViewController {
       image: UIImage(systemName: "arrow.left.circle.fill"),
       imageSize: 40,
       renderingMode: .alwaysTemplate,
-      tintColor: .customBlue
+      tintColor: .customGreen
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
@@ -35,7 +35,7 @@ final class MyExploresViewController: UIViewController {
       text: "My Explores",
       fontSize: 24,
       fontWeight: .semibold,
-      textColor: .customBlue
+      textColor: .customGreen
     )
     return label
   }()
@@ -71,7 +71,7 @@ final class MyExploresViewController: UIViewController {
     let image = UIImageView()
     image.translatesAutoresizingMaskIntoConstraints = false
     image.image = UIImage(systemName: "figure.walk.triangle")
-    image.tintColor = .customBlue
+    image.tintColor = .customGreen
     image.contentMode = .scaleAspectFit
     
     return image
@@ -83,7 +83,7 @@ final class MyExploresViewController: UIViewController {
       text: "No explored places yet. Start your adventure!",
       fontSize: 16,
       fontWeight: .semibold,
-      textColor: .customBlue
+      textColor: .customGreen
     )
     return label
   }()

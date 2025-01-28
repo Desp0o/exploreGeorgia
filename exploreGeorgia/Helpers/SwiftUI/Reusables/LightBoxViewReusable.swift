@@ -31,7 +31,7 @@ struct LightBoxViewReusable: View {
         } placeholder: {
           ProgressView()
             .scaleEffect(1.5)
-            .tint(.customBlue)
+            .tint(.customGreen)
             .frame(maxWidth: UIScreen.main.bounds.width - 20, maxHeight: .infinity)
             .background(Color.clear)
         }

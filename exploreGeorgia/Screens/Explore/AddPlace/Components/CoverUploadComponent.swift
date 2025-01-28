@@ -29,14 +29,14 @@ struct CoverUploadComponent: View {
         
         PhotosPicker(selection: $vm.selectedCoverFromPicker) {
           Text("Upload Cover")
-            .styledText(.customBlue, 16, .semibold)
+            .styledText(.customGreen, 16, .semibold)
             .frame(maxWidth: .infinity)
             .frame(height: 40)
             .background(.customWhite)
             .roundedCorners(12)
             .overlay(
               RoundedRectangle(cornerRadius: 12)
-                .stroke(.customBlue, lineWidth: 1)
+                .stroke(.customGreen, lineWidth: 1)
             )
         }
       }

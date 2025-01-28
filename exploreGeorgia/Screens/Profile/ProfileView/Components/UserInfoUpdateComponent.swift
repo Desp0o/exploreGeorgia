@@ -28,7 +28,7 @@ struct UserInfoUpdateComponent: View {
       }
       .pickerStyle(.segmented)
       .onAppear {
-        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customBlue)
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customGreen)
         let attributes: [NSAttributedString.Key: Any] = [
           .foregroundColor: UIColor.white
         ]

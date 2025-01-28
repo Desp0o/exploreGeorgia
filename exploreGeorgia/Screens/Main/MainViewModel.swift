@@ -34,6 +34,7 @@ final class MainViewModel: ObservableObject {
     self.firebaseManager = firebaseManager
     self.firebaseSimpleManager = firebaseSimpleManager
     fetchSingleFact()
+    fetchUsersAddedPlaces()
     fetchTours()
   }
   
@@ -123,8 +124,6 @@ final class MainViewModel: ObservableObject {
         }
       } catch {
         print(error.localizedDescription)
-        await MainActor.run {
-        }
       }
     }
   }

@@ -27,7 +27,7 @@ final class FoodCategoryViewController: UIViewController  {
       image: UIImage(systemName: "arrow.left.circle.fill"),
       imageSize: 40,
       renderingMode: .alwaysTemplate,
-      tintColor: .customBlue
+      tintColor: .customGreen
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
@@ -43,7 +43,7 @@ final class FoodCategoryViewController: UIViewController  {
       text: "",
       fontSize: 26,
       fontWeight: .bold,
-      textColor: .customBlue
+      textColor: .customGreen
     )
     return label
   }()

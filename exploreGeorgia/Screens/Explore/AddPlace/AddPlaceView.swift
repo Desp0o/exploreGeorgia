@@ -46,13 +46,13 @@ struct AddPlaceView: View {
           Button {
             dismiss()
           } label: {
-            OverlayActionButtonIcon(iconName: .xmark, tint: .white, bgColor: .customBlue, opacity: 1)
+            OverlayActionButtonIcon(iconName: .xmark, tint: .white, bgColor: .customGreen, opacity: 1)
           }
           .padding(.horizontal, 20)
 
           VStack {
             Text("Map Your Adventures")
-              .styledText(.customBlue, 22, .bold)
+              .styledText(.customGreen, 22, .bold)
               .frame(maxWidth: .infinity, alignment: .center)
           }
         }
@@ -83,13 +83,13 @@ struct AddPlaceView: View {
             isPresented.toggle()
           } label: {
             Text("Add Place on Map")
-              .styledText(.customBlue, 16, .semibold)
+              .styledText(.customGreen, 16, .semibold)
               .frame(maxWidth: .infinity)
               .frame(height: 40)
               .background(.customWhite)
               .roundedCorners(12)
           }
-          .customBorderedButton(height: 40, borderColor: .customBlue)
+          .customBorderedButton(height: 40, borderColor: .customGreen)
           
           PlaceTypePicker(vm: vm)
           
@@ -104,7 +104,7 @@ struct AddPlaceView: View {
               .styledText(.buttonPrimary, 18, .bold)
               .frame(maxWidth: .infinity)
               .padding()
-              .background(Color.customBlue)
+              .background(Color.customGreen)
               .roundedCorners(12)
           }
           .customStyledButton()

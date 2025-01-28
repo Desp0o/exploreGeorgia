@@ -22,10 +22,6 @@ final class PurchaseHistoryViewModel: ObservableObject {
   
   func fetchUserPurchases(pageSize: Int) {
     Task {
-      await MainActor.run {
-        isLoading = true
-      }
-      
       do {
         let userID = Auth.auth().currentUser?.uid ?? ""
         let (tours, _) = try await fetchPurchasedTours(userId: userID, pageSize: pageSize)

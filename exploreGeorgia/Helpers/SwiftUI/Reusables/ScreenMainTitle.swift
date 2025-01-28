@@ -14,10 +14,10 @@ struct ScreenMainTitle: View {
   var body: some View {
     VStack {
       Text(mainTitle)
-        .styledText(.customBlue, 24, .semibold)
+        .styledText(.customGreen, 24, .semibold)
       
       Text(subTitle)
-        .styledText(.customBlue, 16)
+        .styledText(.customGreen, 16)
     }
   }
 }

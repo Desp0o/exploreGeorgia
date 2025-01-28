@@ -21,29 +21,10 @@ struct SightSeenReusableView: View {
         .frame(height: height)
         .frame(maxWidth: maxWidth - 28)
         .roundedCorners(12)
-        .overlay(alignment: .topTrailing) {
-          if !isBookmarkIconHidden {
-            Button {
-              place.isBookmarked?.toggle()
-              bookmarkManager
-                .savePlaceInBookmark(
-                  placeId: place.id ?? "",
-                  isBookmarked: !(place.isBookmarked ?? false)
-                )
-            } label: {
-              OverlayActionButtonIcon(
-                iconName: place.isBookmarked ?? false ? .bookmarkActive : .bookmarkInactive,
-                tint: .gold
-              )
-            }
-            .offset(x: -10, y: 10)
-            .frame(width: 34, height: 34)
-          }
-        }
       
       HStack(spacing: 2) {
         Text(place.name)
-          .styledText(.customBlack, 18, .semibold, .leading, linesCount: 2)
+          .styledText(.customBlack, 18, .semibold, .leading, linesCount: 1)
         
         Spacer()
         
@@ -70,7 +51,7 @@ struct SightSeenReusableView: View {
         
         Text(place.price == 0 ? "Free" : "₾\(place.price)")
           .styledText(
-            .customBlue, 14, .semibold)
+            .customGreen, 14, .semibold)
       }
     }
     .padding(.all, 14)

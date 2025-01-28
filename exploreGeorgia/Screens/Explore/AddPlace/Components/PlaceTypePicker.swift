@@ -18,7 +18,7 @@ struct PlaceTypePicker: View {
     }
     .pickerStyle(SegmentedPickerStyle())
     .onAppear {
-      UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customBlue)
+      UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customGreen)
       UISegmentedControl.appearance().setTitleTextAttributes(
         [.foregroundColor: UIColor.white],
         for: .selected

@@ -59,16 +59,10 @@ struct ExploreView: View {
                 }
               }
               .id(vm.fetchedPlaces)
-              
-              if vm.isFetching {
-                ProgressView()
-                  .scaleEffect(1.2)
-                  .padding(.top, 20)
-                  .tint(.customBlue)
-              }
             }
           }
         }
+        .padding(.bottom, 20)
         .frame(maxWidth: .infinity)
       }
       .scrollIndicators(.hidden)
@@ -105,7 +99,7 @@ struct ExploreView: View {
       if vm.isFetching {
         ProgressView()
           .scaleEffect(1.5)
-          .tint(.customBlue)
+          .tint(.customGreen)
       }
       if vm.isLoading {
         ExploreShimmer()

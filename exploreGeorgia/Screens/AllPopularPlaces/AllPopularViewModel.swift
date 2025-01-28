@@ -14,6 +14,9 @@ final class AllPopularViewModel: ObservableObject {
   private let userManager: GetFirebaseUserProtocol
   private let firebaseManager: FirebaseFetchingServicePorotocol
   private var user: UserModel? = nil
+  var isFetching = false
+  var lastDocument: DocumentSnapshot? = nil
+  var hasMoreData = true
   
   init(
     userManager: GetFirebaseUserProtocol = UserManager(),
@@ -23,7 +26,10 @@ final class AllPopularViewModel: ObservableObject {
     self.firebaseManager = firebaseManager
   }
   
-  func fetchData(pageSize: Int) {
+  func fetchData() {
+    guard !isFetching && hasMoreData else { return }
+    isFetching = true
+    
     Task {
       do {
         let userID = Auth.auth().currentUser?.uid
@@ -33,20 +39,24 @@ final class AllPopularViewModel: ObservableObject {
           user = data
         }
         
-        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+        let (places, newLastDocument, hasMore): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
           collectionName: .appPlace,
-          pageSize: pageSize,
-          lastDocument: nil,
+          pageSize: 10,
+          lastDocument: lastDocument,
           userBucketList: user?.bucketList ?? [""]
         )
         
         await MainActor.run {
-          fetchedData = places
+          lastDocument = newLastDocument
+          hasMoreData = hasMore
+          fetchedData.append(contentsOf: places)
+          isFetching = false
           isLoading = false
         }
       } catch {
         await MainActor.run {
           isLoading = false
+          isFetching = false
         }
       }
     }

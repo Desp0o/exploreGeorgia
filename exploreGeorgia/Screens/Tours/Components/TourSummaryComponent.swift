@@ -27,7 +27,7 @@ struct TourSummaryComponent: View {
             ZStack {
               Image(element.icon)
                 .renderingMode(.template)
-                .foregroundStyle(.customBlue)
+                .foregroundStyle(.customGreen)
                 .onTapGesture {
                   print(index)
                 }

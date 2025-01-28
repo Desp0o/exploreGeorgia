@@ -57,7 +57,7 @@ struct CustomTabBar: View {
             }
             
             Text(item.title)
-              .styledText(currentIdenx == index ? Color.customBlue : Color.customGray, 12)
+              .styledText(currentIdenx == index ? Color.customGreen : Color.customGray, 12)
           }
           
           Spacer()

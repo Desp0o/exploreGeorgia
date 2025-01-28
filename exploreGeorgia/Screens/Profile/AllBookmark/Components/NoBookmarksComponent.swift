@@ -12,7 +12,7 @@ struct NoBookmarksComponent: View {
     VStack(alignment: .center){
       
       Text("Your Bucket List Awaits...")
-        .styledText(.customBlue, 16, .semibold)
+        .styledText(.customGreen, 16, .semibold)
         .padding(.bottom, 40)
     }
     .frame(height: UIScreen.main.bounds.height / 2 + 80)

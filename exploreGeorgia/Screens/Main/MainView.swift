@@ -35,8 +35,6 @@ struct MainView: View {
       .padding(.top, 10)
       .onAppear {
         vm.getPopularPlaces()
-        vm.fetchSingleFact()
-        vm.fetchUsersAddedPlaces()
       }
       .overlay {
         if vm.isLoading {

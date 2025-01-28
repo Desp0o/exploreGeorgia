@@ -12,11 +12,11 @@ struct AddPlaceLoadingComponent: View {
       ZStack (alignment: .center) {
         VStack(spacing: 12) {
           Text("Sharing your memories...")
-            .styledText(.customBlue, 18, .semibold)
+            .styledText(.customGreen, 18, .semibold)
           
           ProgressView()
             .scaleEffect(2)
-            .tint(.customBlue)
+            .tint(.customGreen)
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)

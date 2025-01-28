@@ -27,7 +27,7 @@ struct MenuItem: View {
           .styledText(.customBlack, 15, linesCount: 2)
         
         Text("₾ \(price)")
-          .styledText(.customBlue, 16, .bold)
+          .styledText(.customGreen, 16, .bold)
       }
       
       Spacer()

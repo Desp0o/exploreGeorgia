@@ -29,7 +29,7 @@ final class SignupVC: UIViewController {
       image: UIImage(systemName: "arrow.left.circle.fill"),
       imageSize: 40,
       renderingMode: .alwaysTemplate,
-      tintColor: .customBlue
+      tintColor: .customGreen
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
@@ -44,7 +44,7 @@ final class SignupVC: UIViewController {
       text: "Sign Up",
       fontSize: 26,
       fontWeight: .bold,
-      textColor: .customBlue
+      textColor: .customGreen
     )
     return label
   }()
@@ -100,7 +100,7 @@ final class SignupVC: UIViewController {
     let button = UIButton()
     button.createCustomButton(
       title: "Sign up",
-      backgroundColor: .customBlue
+      backgroundColor: .customGreen
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
@@ -136,7 +136,7 @@ final class SignupVC: UIViewController {
       title: "Sign in",
       fontSize: 14,
       fontWeight: .medium,
-      titleColor: .customBlue
+      titleColor: .customGreen
     )
     button.addAction(UIAction(handler: {[weak self] _ in
       self?.navigationController?.popViewController(animated: true)

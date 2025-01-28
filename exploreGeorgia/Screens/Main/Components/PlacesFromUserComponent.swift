@@ -14,7 +14,7 @@ struct PlacesFromUserComponent: View {
   var body: some View {
     VStack(spacing: 16) {
       HStack {
-        Text("Popular Destinations")
+        Text("Explored Places")
           .styledText(.customBlack, 20, .bold)
         
         Spacer()
@@ -23,11 +23,11 @@ struct PlacesFromUserComponent: View {
           tabIndex = 1
         } label: {
           Text("View all")
-            .styledText(.customBlue, 14)
+            .styledText(.customGreen, 14)
         }
       }
       
-      LazyVStack(spacing: 20) {
+      VStack(spacing: 20) {
         ForEach(vm.usersAddedPlacesData, id: \.id) { place in
           NavigationLink(
             destination: PlaceDetailsView(

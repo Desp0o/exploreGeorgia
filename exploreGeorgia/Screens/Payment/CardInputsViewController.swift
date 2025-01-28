@@ -21,7 +21,7 @@ final class CardInputsViewController: UIViewController {
       image: UIImage(systemName: "xmark.circle.fill"),
       imageSize: 30,
       renderingMode: .alwaysTemplate,
-      tintColor: .customBlue
+      tintColor: .customGreen
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
@@ -77,7 +77,7 @@ final class CardInputsViewController: UIViewController {
     let button = UIButton()
     button.createCustomButton(
       title: "Add card",
-      backgroundColor: .customBlue
+      backgroundColor: .customGreen
     )
     button.addTapAnimation()
     

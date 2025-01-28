@@ -30,7 +30,7 @@ final class VocabularyVC: UIViewController {
       text: "Words That Will Save You",
       fontSize: 26,
       fontWeight: .bold,
-      textColor: .customBlue
+      textColor: .customGreen
     )
     return label
   }()
@@ -136,7 +136,7 @@ extension VocabularyVC: UITableViewDataSource, UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
     let headerView = UIView()
-    headerView.backgroundColor = .customBlue
+    headerView.backgroundColor = .customGreen
     
     let label = UILabel()
     label.createLabel(

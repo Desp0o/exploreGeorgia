@@ -51,7 +51,7 @@ struct TourView: View {
                 Text("Book now")
                   .styledText(.buttonPrimary, 20, .semibold)
                   .frame(width: 170, height: 42)
-                  .background(.customBlue)
+                  .background(.customGreen)
                   .roundedCorners(12)
               }
             }

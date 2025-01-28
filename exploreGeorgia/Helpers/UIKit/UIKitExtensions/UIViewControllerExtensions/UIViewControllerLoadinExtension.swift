@@ -22,7 +22,7 @@ extension UIViewController {
         
         let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.color = .customBlue
+        activityIndicator.color = .customGreen
         activityIndicator.startAnimating()
 
         loadingView.addSubview(activityIndicator)

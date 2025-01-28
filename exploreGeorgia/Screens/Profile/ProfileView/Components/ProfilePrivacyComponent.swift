@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ProfilePrivacyComponent: View {
   @ObservedObject var editViewModel: EditProfileViewModel
+  @State private var isPasswordVisible = false
+  @State private var isRePasswordVisible = false
   
   var body: some View {
     VStack(spacing: 20) {
@@ -17,11 +19,43 @@ struct ProfilePrivacyComponent: View {
       
       if !editViewModel.isUserFromGoogle {
         VStack(spacing: 20) {
-          SecureField("Enter your password", text: $editViewModel.password)
-            .styledSecureFIeld()
+          ZStack {
+            if isPasswordVisible {
+              TextField("Enter your password", text: $editViewModel.password)
+                .styledTextField()
+            } else {
+              SecureField("Enter your password", text: $editViewModel.password)
+                .styledSecureFIeld()
+            }
+          }
+          .overlay(alignment: .trailing) {
+            Image(systemName: isPasswordVisible ? "eye" : "eye.slash")
+              .foregroundColor(.gray)
+              .padding(8)
+              .contentShape(Rectangle())
+              .onTapGesture {
+                isPasswordVisible.toggle()
+              }
+          }
           
-          SecureField("Repeat password", text: $editViewModel.rePassword)
-            .styledSecureFIeld()
+          ZStack {
+            if isRePasswordVisible {
+              TextField("Enter your password", text: $editViewModel.rePassword)
+                .styledTextField()
+            } else {
+              SecureField("Repeat password", text: $editViewModel.rePassword)
+                .styledSecureFIeld()
+            }
+          }
+          .overlay(alignment: .trailing) {
+            Image(systemName: isRePasswordVisible ? "eye" : "eye.slash")
+              .foregroundColor(.gray)
+              .padding(8)
+              .contentShape(Rectangle())
+              .onTapGesture {
+                isRePasswordVisible.toggle()
+              }
+          }
           
           Button {
             editViewModel.updatePassword()
