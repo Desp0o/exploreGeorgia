@@ -27,8 +27,9 @@ struct ThemeTogglerComponent: View {
               Spacer()
             } else {
               Spacer()
-              Image(systemName: IconsEnum.moon.rawValue)
-                .foregroundStyle(.blue)
+              Image(IconsEnum.moon.rawValue)
+                .defaultOptions(color: .blue)
+                .frame(width: 18, height: 18)
             }
           }
           .padding(.horizontal, 5)

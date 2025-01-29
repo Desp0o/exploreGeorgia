@@ -86,7 +86,7 @@ struct FoodView: View {
     .background(Color.primaryWhite)
     .overlay {
       ZStack(alignment: .bottomTrailing) {
-        AddButtonComponent(addButtonScale: $addButtonScale, isPresented: $isPresented, icon: .aiIcon)
+        AddButtonComponent(addButtonScale: $addButtonScale, isPresented: $isPresented, icon: .food)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
     }

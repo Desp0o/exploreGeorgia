@@ -15,7 +15,7 @@ struct ProfileSettingsComponent: View {
           vm.isPresented = true
         }) {
           HStack(spacing: 14) {
-            Image("profile")
+            Image(IconsEnum.profile.rawValue)
               .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
@@ -24,7 +24,7 @@ struct ProfileSettingsComponent: View {
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
@@ -34,7 +34,7 @@ struct ProfileSettingsComponent: View {
           vm.isSecurotyPresented = true
         }) {
           HStack(spacing: 14) {
-            Image("password")
+            Image(IconsEnum.password.rawValue)
               .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
@@ -43,7 +43,7 @@ struct ProfileSettingsComponent: View {
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
@@ -53,7 +53,7 @@ struct ProfileSettingsComponent: View {
           vm.isAppereancePresented = true
         }) {
           HStack(spacing: 14) {
-            Image("moon")
+            Image(IconsEnum.moonProfile.rawValue)
               .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
@@ -62,7 +62,7 @@ struct ProfileSettingsComponent: View {
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
@@ -72,7 +72,7 @@ struct ProfileSettingsComponent: View {
           .ignoresSafeArea()
           .navigationBarHidden(true)) {
             HStack(spacing: 14) {
-              Image("creditcard")
+              Image(IconsEnum.creditcard.rawValue)
                 .defaultOptions(color: .customGray)
                 .frame(width: 24, height: 24)
               
@@ -81,7 +81,7 @@ struct ProfileSettingsComponent: View {
               
               Spacer()
               
-              Image("arrowRight")
+              Image(IconsEnum.arrowRight.rawValue)
             }
             .frame(height: 56)
           }
@@ -90,7 +90,7 @@ struct ProfileSettingsComponent: View {
         NavigationLink(destination: PurchaseHistoryView()
           .navigationBarHidden(true)) {
             HStack(spacing: 14) {
-              Image("ticket")
+              Image(IconsEnum.ticket.rawValue)
                 .defaultOptions(color: .customGray)
                 .frame(width: 24, height: 24)
               
@@ -99,7 +99,7 @@ struct ProfileSettingsComponent: View {
               
               Spacer()
               
-              Image("arrowRight")
+              Image(IconsEnum.arrowRight.rawValue)
             }
             .frame(height: 56)
           }
@@ -107,16 +107,16 @@ struct ProfileSettingsComponent: View {
         //bookmarks
         NavigationLink(destination: AllBookmarkView().navigationBarHidden(true)) {
           HStack(spacing: 14) {
-            Image("bookmark")
+            Image(IconsEnum.bookmarkTab.rawValue)
               .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
-            Text("Bookmarked")
+            Text(IconsEnum.arrowRight.rawValue)
               .styledText(.customBlack, 16, .semibold)
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
@@ -128,7 +128,7 @@ struct ProfileSettingsComponent: View {
             .ignoresSafeArea()
         ) {
           HStack(spacing: 14) {
-            Image("location")
+            Image(IconsEnum.location.rawValue)
               .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
@@ -137,7 +137,7 @@ struct ProfileSettingsComponent: View {
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
@@ -147,7 +147,7 @@ struct ProfileSettingsComponent: View {
           vm.isDeleteAccPresented = true
         }) {
           HStack(spacing: 14) {
-            Image("privacy")
+            Image(IconsEnum.privacy.rawValue)
               .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
@@ -156,7 +156,7 @@ struct ProfileSettingsComponent: View {
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
