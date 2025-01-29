@@ -16,10 +16,12 @@ struct AddButtonComponent: View {
     Button {
       isPresented.toggle()
     } label: {
-      Image(systemName: icon.rawValue)
-        .resizable()
-        .scaledToFit()
-        .tint(.customGreen)
+      Image(icon.rawValue)
+        .defaultOptions(color: .white)
+        .frame(width: 32, height: 32)
+        .padding(8)
+        .background(.customGreen)
+        .clipShape(Circle())
     }
     .frame(width: 40, height: 40)
     .offset(x: -20, y: -20)
