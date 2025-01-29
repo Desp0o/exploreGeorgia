@@ -11,9 +11,8 @@ struct ExploreView: View {
   @StateObject var vm = ExploreViewModel()
   @State private var isPresented = false
   @State private var addButtonScale: CGFloat = 0
-  @State private var isAppeared = false
-  @State private var pageSize = 10
   @State private var startingOpacity: CGFloat = 0
+  @State var isNewPlaceAdded = false
   
   var body: some View {
     ZStack(alignment: .bottomTrailing) {
@@ -47,14 +46,10 @@ struct ExploreView: View {
                       withAnimation(.easeOut(duration: 0.5)) {
                         startingOpacity = 1
                       }
-                    }
-                }
-                
-                if index == vm.fetchedPlaces.count - 1 {
-                  Color.white.opacity(0)
-                    .frame(width: 1, height: 0)
-                    .onAppear {
-                      pageSize += 10
+                      
+                      if index == vm.fetchedPlaces.count - 2 {
+                        vm.fetchData()
+                      }
                     }
                 }
               }
@@ -73,26 +68,16 @@ struct ExploreView: View {
         isPresented: $isPresented,
         icon: .pluIcon
       )
-      .scaleEffect(addButtonScale)
-      .onAppear {
-        withAnimation(.spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0)) {
-          addButtonScale = 1.0
-        }
-      }
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-    .onAppear {
-      vm.fetchData(pageSize: pageSize)
-    }
-    .onChange(of: pageSize) { _ in
-      vm.fetchData(pageSize: pageSize)
-    }
     .fullScreenCover(isPresented: $isPresented) {
-      AddPlaceView(isAppeared: $isAppeared)
+      AddPlaceView(isNewPlaceAdded: $isNewPlaceAdded)
         .background(.primaryWhite)
         .onDisappear {
-          vm.isFetching = true
-          vm.fetchData(pageSize: pageSize)
+          if isNewPlaceAdded {
+            vm.reFetchData()
+          }
+          isNewPlaceAdded =  false
         }
     }
     .overlay {

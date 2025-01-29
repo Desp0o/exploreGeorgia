@@ -20,13 +20,12 @@ struct ProfilePrivacyComponent: View {
       if !editViewModel.isUserFromGoogle {
         VStack(spacing: 20) {
           ZStack {
-            if isPasswordVisible {
-              TextField("Enter your password", text: $editViewModel.password)
-                .styledTextField()
-            } else {
-              SecureField("Enter your password", text: $editViewModel.password)
-                .styledSecureFIeld()
-            }
+            TextField("Enter your password", text: $editViewModel.password)
+              .styledTextField()
+              .opacity(isPasswordVisible ? 1 : 0)
+            SecureField("Enter your password", text: $editViewModel.password)
+              .styledSecureFIeld()
+              .opacity(isPasswordVisible ? 0 : 1)
           }
           .overlay(alignment: .trailing) {
             Image(systemName: isPasswordVisible ? "eye" : "eye.slash")
@@ -39,13 +38,12 @@ struct ProfilePrivacyComponent: View {
           }
           
           ZStack {
-            if isRePasswordVisible {
-              TextField("Enter your password", text: $editViewModel.rePassword)
-                .styledTextField()
-            } else {
-              SecureField("Repeat password", text: $editViewModel.rePassword)
-                .styledSecureFIeld()
-            }
+            TextField("Enter your password", text: $editViewModel.rePassword)
+              .styledTextField()
+              .opacity(isRePasswordVisible ? 1 : 0)
+            SecureField("Repeat password", text: $editViewModel.rePassword)
+              .styledSecureFIeld()
+              .opacity(isRePasswordVisible ? 0 : 1)
           }
           .overlay(alignment: .trailing) {
             Image(systemName: isRePasswordVisible ? "eye" : "eye.slash")
@@ -67,9 +65,8 @@ struct ProfilePrivacyComponent: View {
           .customStyledButton()
         }
       }
-      
-      UserDeleteComponent()
     }
+    .ignoresSafeArea(.keyboard, edges: .bottom)
     .padding(.horizontal, 20)
     .padding(.bottom, 10)
     .frame(maxWidth: .infinity, maxHeight: .infinity)

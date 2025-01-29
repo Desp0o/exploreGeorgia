@@ -44,7 +44,7 @@ final class CardInputsViewController: UIViewController {
   private lazy var cardPlaceholder = CustomTextField(
     placeholderName: "Full Name",
     isPassword: false,
-    keyboardType: .numberPad,
+    keyboardType: .default,
     delegate: self,
     inputHeight: 40
   )

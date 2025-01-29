@@ -11,6 +11,7 @@ import SwiftUICore
 import FirebaseAuth
 import SwiftUI
 
+@MainActor
 final class ProfileViewModel: ObservableObject {
   private let fetchUser: GetFirebaseUserProtocol
   private let authManager: LogOutProtocol
@@ -20,8 +21,9 @@ final class ProfileViewModel: ObservableObject {
   @Published var errorMessage: String?
   @Published var profileStatistic: [ProfileStatModel] = []
   @Published var isPresented = false
-  @Published var isPrivacyPresented = false
+  @Published var isSecurotyPresented = false
   @Published var isAppereancePresented = false
+  @Published var isDeleteAccPresented = false
   
   init(
     fetchUser: GetFirebaseUserProtocol = UserManager(),
@@ -37,25 +39,19 @@ final class ProfileViewModel: ObservableObject {
         let userID = Auth.auth().currentUser?.uid
         
         if let fetchedUser = try await fetchUser.getFirebaseUser(with: userID ?? "") {
-          await MainActor.run {
-            user = fetchedUser
-            updateProfileStatistic()
-            isLoading = false
-            isFirstLoad = false
-          }
+          user = fetchedUser
+          updateProfileStatistic()
+          isLoading = false
+          isFirstLoad = false
         } else {
-          await MainActor.run {
-            errorMessage = "No user found."
-            isLoading = false
-            isFirstLoad = false
-          }
-        }
-      } catch {
-        await MainActor.run {
-          errorMessage = "Error fetching user: \(error.localizedDescription)"
+          errorMessage = "No user found."
           isLoading = false
           isFirstLoad = false
         }
+      } catch {
+        errorMessage = "Error fetching user: \(error.localizedDescription)"
+        isLoading = false
+        isFirstLoad = false
       }
     }
   }

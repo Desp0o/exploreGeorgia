@@ -12,6 +12,7 @@ import FirebaseFirestore
 final class ResturantViewModel: ObservableObject {
   private let firebaseManager: FirebaseSinglePlaceGenericProtocol
   private let userManager: GetFirebaseUserProtocol
+  
   @Published var singleResturant:  ResturantModel? = nil
   @Published var errorMessage: CustomErrorsMessage? = nil
   @Published var isBookMarked = false

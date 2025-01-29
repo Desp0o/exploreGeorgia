@@ -28,7 +28,7 @@ struct ToursBookmarkViewComponent: View {
                       vm.removeTourBookmark(index: indexSet)
                     }
                   } label: {
-                    OverlayActionButtonIcon(iconName: .trash, tint: .white, scale: 0.8)
+                    OverlayActionButtonIcon(iconName: .trash, scale: 0.8)
                   }
                   .frame(width: 36, height: 36)
                   .padding(10)
@@ -39,8 +39,7 @@ struct ToursBookmarkViewComponent: View {
           }
           .onAppear {
             if index == vm.bookmarkedPlaces.count - 1 {
-              vm.pageSize = 10
-              vm.fetchToursData(pageLimit: vm.pageSize)
+              vm.fetchToursData(pageLimit: 10)
             }
           }
         }

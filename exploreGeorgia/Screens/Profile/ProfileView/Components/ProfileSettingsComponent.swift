@@ -31,7 +31,7 @@ struct ProfileSettingsComponent: View {
         
         // privacy
         Button(action: {
-          vm.isPrivacyPresented = true
+          vm.isSecurotyPresented = true
         }) {
           HStack(spacing: 14) {
             Image(systemName: "lock")
@@ -147,8 +147,29 @@ struct ProfileSettingsComponent: View {
           }
           .frame(height: 56)
         }
+        
+        // delete acc
+        Button(action: {
+          vm.isDeleteAccPresented = true
+        }) {
+          HStack(spacing: 14) {
+            Image(systemName: "sun.min")
+              .resizable()
+              .renderingMode(.template)
+              .foregroundStyle(.customGray)
+              .frame(width: 16, height: 16)
+            
+            Text("Delete account")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image("arrowRight")
+          }
+          .frame(height: 56)
+        }
       }
-      .frame(height: CGFloat(7) * 56)
+      .frame(height: CGFloat(8) * 56)
       .padding(.leading, 16)
       .padding(.trailing, 10)
     }

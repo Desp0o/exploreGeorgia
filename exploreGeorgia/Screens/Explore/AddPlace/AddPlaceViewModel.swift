@@ -10,10 +10,13 @@ import FirebaseFirestore
 import _PhotosUI_SwiftUI
 import FirebaseAuth
 
+@MainActor
 final class AddPlaceViewModel: ObservableObject {
   private let firebasePhotoManager: FirebasePhotoUrlGeneratorProtocol
   private let db = Firestore.firestore()
+  
   let placeType: [AddPlaceTypes] = [.sightSeen, .food]
+  
   @Published var placeName = ""
   @Published var placeCity = ""
   @Published var placeAdress = ""
@@ -98,33 +101,25 @@ final class AddPlaceViewModel: ObservableObject {
     }
     
     Task {
-      await MainActor.run {
-        isSuccessfullyAdded = false
-        isLoading = true
-      }
+      isSuccessfullyAdded = false
+      isLoading = true
       
       do {
         try await addSightSeenToFirestore(sightSeen: place)
         
-        await MainActor.run {
-          isLoading = false
-          isSuccessfullyAdded = true
-          placeName = ""
-          placeDescription = ""
-          placeAdress = ""
-          placeCity = ""
-          choosenCover = nil
-          choosenAlbum = []
-          placePrice = ""
-        }
+        isLoading = false
+        isSuccessfullyAdded = true
+        placeName = ""
+        placeDescription = ""
+        placeAdress = ""
+        placeCity = ""
+        choosenCover = nil
+        choosenAlbum = []
+        placePrice = ""
       } catch {
-        await MainActor.run {
-          isLoading = false
-          isSuccessfullyAdded = false
-        }
-        await MainActor.run {
-          errorMessage = error.localizedDescription
-        }
+        isLoading = false
+        isSuccessfullyAdded = false
+        errorMessage = error.localizedDescription
       }
     }
   }
@@ -181,9 +176,7 @@ final class AddPlaceViewModel: ObservableObject {
     Task {
       if let data = try await selection.loadTransferable(type: Data.self) {
         if let uiImage = UIImage(data: data) {
-          await MainActor.run {
-            choosenCover = uiImage
-          }
+          choosenCover = uiImage
         }
       }
     }
@@ -198,9 +191,7 @@ final class AddPlaceViewModel: ObservableObject {
       for image in selection {
         if let data = try await image.loadTransferable(type: Data.self) {
           if let uiImage = UIImage(data: data) {
-            await MainActor.run {
-              choosenAlbum.append(uiImage)
-            }
+            choosenAlbum.append(uiImage)
           }
         }
       }

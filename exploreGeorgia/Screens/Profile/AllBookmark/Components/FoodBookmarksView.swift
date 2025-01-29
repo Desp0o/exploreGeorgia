@@ -37,7 +37,7 @@ struct FoodBookmarksView: View {
                       vm.removeFoodBookmark(index: indexSet)
                     }
                   } label: {
-                    OverlayActionButtonIcon(iconName: .trash, tint: .white, scale: 0.8)
+                    OverlayActionButtonIcon(iconName: .trash, scale: 0.8)
                   }
                   .frame(width: 36, height: 36)
                   .padding(10)
@@ -47,9 +47,9 @@ struct FoodBookmarksView: View {
               .opacity(opacityPoint)
           }
           .onAppear {
-            if index == vm.bookmarkedFoods.count - 1 {
-              vm.pageSize = 10
-              vm.fetchFoods(pageLimit: vm.pageSize, collectionName: collection)
+            if index == vm.bookmarkedFoods.count {
+              
+              vm.fetchFoods(pageLimit: 10, collectionName: collection)
             }
           }
         }

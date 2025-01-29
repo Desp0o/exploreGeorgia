@@ -17,7 +17,7 @@ struct AddPlaceView: View {
   @State var isPresented = false
   @State var currentLocationForUse: Location?
   @State private var alertBoxMessage = ""
-  @Binding var isAppeared: Bool
+  @Binding var isNewPlaceAdded: Bool
   
   var body: some View {
     ZStack(alignment: .top) {
@@ -46,10 +46,10 @@ struct AddPlaceView: View {
           Button {
             dismiss()
           } label: {
-            OverlayActionButtonIcon(iconName: .xmark, tint: .white, bgColor: .customGreen, opacity: 1)
+            OverlayActionButtonIcon(iconName: .xmark)
           }
           .padding(.horizontal, 20)
-
+          
           VStack {
             Text("Map Your Adventures")
               .styledText(.customGreen, 22, .bold)
@@ -76,7 +76,6 @@ struct AddPlaceView: View {
               .keyboardType(.numberPad)
             
             TextEditorComponent(textForEditor: $vm.placeDescription, placeholder: "Write place description...")
-              .frame(height: 200)
           }
           
           Button {
@@ -116,9 +115,9 @@ struct AddPlaceView: View {
       }
       .scrollBounceBehavior(.basedOnSize)
       .scrollIndicators(.hidden)
-      .onDisappear {
-        isAppeared.toggle()
-      }
+    }
+    .onTapGesture {
+      hideKeyboard()
     }
     .onReceive(vm.$errorMessage) { error in
       if !error.isEmpty {
@@ -129,6 +128,7 @@ struct AddPlaceView: View {
     .onReceive(vm.$isSuccessfullyAdded) { isSuccessed in
       if isSuccessed {
         toastManager.showToast()
+        isNewPlaceAdded = true
       }
     }
     .sheet(isPresented: $isPresented) {

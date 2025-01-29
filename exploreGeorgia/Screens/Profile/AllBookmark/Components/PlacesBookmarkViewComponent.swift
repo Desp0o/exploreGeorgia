@@ -16,7 +16,7 @@ struct PlacesBookmarkViewComponent: View {
     if vm.bookmarkedPlaces.isEmpty {
       NoBookmarksComponent()
     } else {
-      LazyVStack(spacing: 20) {
+      VStack(spacing: 20) {
         ForEach(Array(vm.bookmarkedPlaces.enumerated()), id: \.element) { index, place in
           NavigationLink(
             destination: PlaceDetailsView(
@@ -39,7 +39,7 @@ struct PlacesBookmarkViewComponent: View {
                     vm.removeBookmark(index: indexSet)
                   }
                 } label: {
-                  OverlayActionButtonIcon(iconName: .trash, tint: .white, scale: 0.8)
+                  OverlayActionButtonIcon(iconName: .trash, scale: 0.8)
                 }
                 .frame(width: 36, height: 36)
                 .padding(20)
@@ -50,9 +50,8 @@ struct PlacesBookmarkViewComponent: View {
           }
           .onAppear {
             if index == vm.bookmarkedPlaces.count - 1 {
-              vm.pageSize += 10
-              vm.fetchData(pageLimit: vm.pageSize, collectionName: collectionName)
-              print(vm.bookmarkedPlaces.count)
+              
+              vm.fetchData(pageLimit: 10, collectionName: collectionName)
             }
           }
         }

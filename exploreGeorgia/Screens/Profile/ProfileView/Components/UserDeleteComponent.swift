@@ -12,14 +12,16 @@ struct UserDeleteComponent: View {
   
   var body: some View {
     VStack(spacing: 20) {
-      if vm.showInput && !vm.isUserFromGoogle {
+      if !vm.isUserFromGoogle {
         SecureField("Enter password for delete account", text: $vm.passwordForDelete)
           .styledSecureFIeld()
+          .opacity(vm.showInput ? 1 : 0)
+          .animation(.easeIn(duration: 0.2), value: vm.showInput)
       }
       
       HStack(spacing: 20) {
         Button {
-          withAnimation(.linear(duration: 0.2)) {
+          withAnimation(.easeIn(duration: 0.2)) {
             if !vm.showInput {
               vm.showInput = true
             } else {
@@ -35,7 +37,7 @@ struct UserDeleteComponent: View {
         
         if vm.showInput {
           Button {
-            withAnimation(.linear(duration: 0.2)) {
+            withAnimation(.easeIn(duration: 0.2)) {
               vm.showInput.toggle()
             }
           } label: {
@@ -47,5 +49,7 @@ struct UserDeleteComponent: View {
         }
       }
     }
+    .ignoresSafeArea(.keyboard, edges: .bottom)
+    .padding(.horizontal, 20)
   }
 }

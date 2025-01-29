@@ -29,7 +29,7 @@ final class MyExploresViewModel {
   weak var loadingDelegate: MyExploresLoadingDelegate?
   weak var errorDeleage: MyExploresErrorDelegate?
   var fetchedPlaces: [SightSeenModel] = []
-  var isLoading = false
+  var isLoading = true
   var errorMessage = ""
   private var userID = ""
   
@@ -44,7 +44,6 @@ final class MyExploresViewModel {
     Task {
       do {
         await MainActor.run {
-          isLoading = true
           loadingDelegate?.didLoadingStopped()
         }
         

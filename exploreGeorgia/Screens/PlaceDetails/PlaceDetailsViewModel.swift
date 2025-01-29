@@ -42,27 +42,22 @@ final class PlaceDetailsViewModel: ObservableObject {
   func fetchSinglePlaceByID(with id: String, and collection: FirebaseCollectionEnum) {
     Task {
       do {
+        print(id, collection)
         let data: SightSeenModel = try await firebaseSinglePlaceFetcher.fetchSinglePlaceGeneric(with: id, and: collection)
         
-        await MainActor.run {
-          currentPlace = data
-          isLoading = false
-        }
+        currentPlace = data
+        isLoading = false
         
         await checkIfBookmarked(placeId: id)
         
         guard let userID = currentPlace?.user else { return }
         let currentAuthor = try await userManager.getFirebaseUser(with: userID)
         
-        await MainActor.run {
-          author = currentAuthor
-        }
+        author = currentAuthor
       } catch {
-        print("Error fetching place: \(error.localizedDescription)")
-        await MainActor.run {
-          isLoading = false
-          isError = true
-        }
+        print("Error fetching place: \(error)")
+        isLoading = false
+        isError = true
       }
     }
   }
@@ -73,10 +68,8 @@ final class PlaceDetailsViewModel: ObservableObject {
       guard let currentUser = try await userManager.getFirebaseUser(with: userID ?? "") else {
         return
       }
-      
-      await MainActor.run {
-        isBookmarked = currentUser.bucketList.contains(placeId)
-      }
+
+      isBookmarked = currentUser.bucketList.contains(placeId)
     } catch {
       print("Error checking bookmark status: \(error.localizedDescription)")
     }

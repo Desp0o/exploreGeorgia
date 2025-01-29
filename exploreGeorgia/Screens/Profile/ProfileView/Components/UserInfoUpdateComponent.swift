@@ -46,6 +46,7 @@ struct UserInfoUpdateComponent: View {
       }
       .customStyledButton()
     }
+    .ignoresSafeArea(.keyboard, edges: .bottom)
     .padding(.horizontal, 20)
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(.primaryWhite)

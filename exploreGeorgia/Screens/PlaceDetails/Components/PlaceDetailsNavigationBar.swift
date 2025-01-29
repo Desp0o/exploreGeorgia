@@ -19,7 +19,7 @@ struct PlaceDetailsNavigationBar: View {
         presentationMode.wrappedValue.dismiss()
       } label: {
         ZStack {
-          OverlayActionButtonIcon(iconName: .backButton, tint: .white, scale: 0.9)
+          OverlayActionButtonIcon(iconName: .backButton, scale: 0.9)
         }
       }
       
@@ -31,7 +31,6 @@ struct PlaceDetailsNavigationBar: View {
       } label: {
         OverlayActionButtonIcon(
           iconName: isBookMarked ? .bookmarkActive : .bookmarkInactive,
-          tint: .white,
           scale: 0.9
         )
       }

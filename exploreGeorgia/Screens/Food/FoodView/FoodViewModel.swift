@@ -7,6 +7,7 @@
 
 import Combine
 
+@MainActor
 final class FoodViewModel: ObservableObject {
   private let firebaseManager: FirebaseSimpleCollectionFetchProtocol
   @Published var resturantsData: [ResturantModel] = []
@@ -31,14 +32,10 @@ final class FoodViewModel: ObservableObject {
       do {
         let result: [ResturantModel] = try await firebaseManager.fetchCollection(collectionName: collectionName, limit: limit)
         
-        await MainActor.run {
-          self[keyPath: keyPath] = result
-          isLoading = false
-        }
+        self[keyPath: keyPath] = result
+        isLoading = false
       } catch {
-        await MainActor.run {
-          isLoading = false
-        }
+        isLoading = false
       }
     }
   }

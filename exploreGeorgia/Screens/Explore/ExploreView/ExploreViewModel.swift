@@ -8,8 +8,13 @@
 import Combine
 import FirebaseFirestore
 
+@MainActor
 final class ExploreViewModel: ObservableObject {
   private let firebaseManager: FirebaseFetchingServicePorotocol
+  private var lastDocument: DocumentSnapshot? = nil
+  
+  var hasMoreData = true
+  
   @Published var fetchedPlaces: [SightSeenModel] = []
   @Published var isLoading = true
   @Published var isFetching = false
@@ -18,29 +23,51 @@ final class ExploreViewModel: ObservableObject {
     firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService()
   ) {
     self.firebaseManager = firebaseManager
+    
+    fetchData()
   }
   
-  func fetchData(pageSize: Int) {
+  func fetchData() {
+    guard !isFetching && hasMoreData else { return }
+    isFetching = true
+    
+    Task {
+      do {
+        let (places, newLastDocument, hasMore): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+          collectionName: .usersPlace,
+          pageSize: 10,
+          lastDocument: lastDocument,
+          userBucketList: [""]
+        )
+        
+        lastDocument = newLastDocument
+        hasMoreData = hasMore
+        fetchedPlaces.append(contentsOf: places)
+        isLoading = false
+        isFetching = false
+      } catch {
+        print(error.localizedDescription)
+        isLoading = false
+        isFetching = false
+      }
+    }
+  }
+  
+  func reFetchData() {
     Task {
       do {
         let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
           collectionName: .usersPlace,
-          pageSize: pageSize,
+          pageSize: 10,
           lastDocument: nil,
           userBucketList: [""]
         )
         
-        await MainActor.run {
-          fetchedPlaces = places
-          isLoading = false
-          isFetching = false
-        }
+        fetchedPlaces = places
       } catch {
         print(error.localizedDescription)
-        await MainActor.run {
-          isLoading = false
-          isFetching = false
-        }
+        isLoading = false
+        isFetching = false
       }
     }
   }

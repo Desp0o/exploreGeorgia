@@ -29,18 +29,27 @@ struct AIView: View {
                   }
                 }
             }
+            
+            Spacer()
+              .frame(height: 50)
+              .id("bottom")
           }
           .frame(maxWidth: .infinity, alignment: .leading)
-          .id("bottom")
+          
+          
+          
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .scrollBounceBehavior(.basedOnSize)
         .scrollIndicators(.hidden)
         .padding(.bottom, 20)
       }
+      .onTapGesture {
+        hideKeyboard()
+      }
       
       VStack(spacing: 10) {
         TextEditorComponent(textForEditor: $vm.prompt, placeholder: "Example: Give me a recipe for Georgian food Khinkali.")
-          .frame(height: 150)
         
         Button {
           vm.fetchData()
@@ -55,8 +64,9 @@ struct AIView: View {
             )
         }
       }
+      .frame(maxHeight: 150)
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .frame(maxWidth: .infinity)
     .padding(20)
     .background(.primaryWhite)
     .overlay {
@@ -70,7 +80,9 @@ struct AIView: View {
             Text("We are processing the best answer for you. Please stand by.")
               .styledText(.customGreen, 13, .semibold, .center)
               .frame(maxWidth: 300)
+              
           }
+          .offset(y: -50)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       }

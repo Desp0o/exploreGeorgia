@@ -33,9 +33,6 @@ struct MainView: View {
         Spacer()
       }
       .padding(.top, 10)
-      .onAppear {
-        vm.getPopularPlaces()
-      }
       .overlay {
         if vm.isLoading {
           MainScreenShimmer()

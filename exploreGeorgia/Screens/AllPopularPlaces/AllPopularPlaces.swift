@@ -10,10 +10,7 @@ import SwiftUI
 struct AllPopularPlaces: View {
   @Environment(\.presentationMode) var dismiss
   @ObservedObject var vm = AllPopularViewModel()
-  @State private var isSomethingChanged = false
   @State private var startingOpacity: CGFloat = 0
-  @State private var lastSelectedID: String?
-  @State private var pageSize = 10
   
   var body: some View {
     ZStack {
@@ -24,7 +21,7 @@ struct AllPopularPlaces: View {
           Button {
             dismiss.wrappedValue.dismiss()
           } label: {
-            OverlayActionButtonIcon(iconName: .backButton, tint: .white)
+            OverlayActionButtonIcon(iconName: .backButton)
           }
           
           Spacer()
@@ -81,9 +78,6 @@ struct AllPopularPlaces: View {
       if vm.isLoading {
         AllPopularPlacesShimmer()
       }
-    }
-    .onAppear {
-      vm.fetchData()
     }
   }
 }

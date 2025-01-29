@@ -8,6 +8,7 @@
 import FirebaseFirestore
 import FirebaseAuth
 
+@MainActor
 final class AllBookmarkViewModel: ObservableObject {
   @Published var bookmarkedPlaces: [SightSeenModel] = []
   @Published var bookmarkedTours: [TourModel] = []
@@ -15,7 +16,6 @@ final class AllBookmarkViewModel: ObservableObject {
   @Published var isFetching = false
   @Published var isLoading = true
   @Published var errorMessages = ""
-  @Published var pageSize = 10
   @Published var dataIndex = 0
   private let bookmarkManager: BookmarkActivityProtocol
   private let fetchBookmarksManager: GetDocumetnsFromBucketListProtocol
@@ -28,31 +28,23 @@ final class AllBookmarkViewModel: ObservableObject {
   ) {
     self.bookmarkManager = bookmarkManager
     self.fetchBookmarksManager = fetchBookmarksManager
-    
-    fetchData(pageLimit: pageSize, collectionName: .appPlace)
   }
   
   func fetchData(pageLimit: Int, collectionName: FirebaseCollectionEnum) {
     Task {
       do {
-        let userID = Auth.auth().currentUser?.uid
-        guard let id = userID else { return }
-        
+        let userID = Auth.auth().currentUser?.uid ?? ""
         let result: [SightSeenModel] = try await fetchBookmarksManager.getDocumentsFromBucketList(
-          userId: id,
+          userId: userID,
           pageLimit: pageLimit,
           collectionName: collectionName
         )
-        await MainActor.run {
-          bookmarkedPlaces = result
-          
-          isLoading = false
-        }
+        
+        bookmarkedPlaces = result
+        isLoading = false
       } catch {
-        await MainActor.run {
-          isLoading = false
-          errorMessages = error.localizedDescription
-        }
+        isLoading = false
+        errorMessages = error.localizedDescription
       }
     }
   }
@@ -68,15 +60,12 @@ final class AllBookmarkViewModel: ObservableObject {
           pageLimit: pageLimit,
           collectionName: .tours
         )
-        await MainActor.run {
-          bookmarkedTours = result
-          isLoading = false
-        }
+        
+        bookmarkedTours = result
+        isLoading = false
       } catch {
-        await MainActor.run {
-          isLoading = false
-          errorMessages = error.localizedDescription
-        }
+        isLoading = false
+        errorMessages = error.localizedDescription
       }
     }
   }
@@ -92,16 +81,12 @@ final class AllBookmarkViewModel: ObservableObject {
           pageLimit: pageLimit,
           collectionName: collectionName
         )
-        await MainActor.run {
-          bookmarkedFoods = result
-          
-          isLoading = false
-        }
+        
+        bookmarkedFoods = result
+        isLoading = false
       } catch {
-        await MainActor.run {
-          isLoading = false
-          errorMessages = error.localizedDescription
-        }
+        isLoading = false
+        errorMessages = error.localizedDescription
       }
     }
   }
@@ -115,9 +100,7 @@ final class AllBookmarkViewModel: ObservableObject {
       do {
         try await bookmarkManager.toggleBookmark(placeId: place.id ?? "", isBookmarked: true)
       } catch {
-        await MainActor.run {
-          errorMessages = error.localizedDescription
-        }
+        errorMessages = error.localizedDescription
       }
     }
   }
@@ -131,9 +114,7 @@ final class AllBookmarkViewModel: ObservableObject {
       do {
         try await bookmarkManager.toggleBookmark(placeId: place.id ?? "", isBookmarked: true)
       } catch {
-        await MainActor.run {
-          errorMessages = error.localizedDescription
-        }
+        errorMessages = error.localizedDescription
       }
     }
   }
@@ -147,9 +128,7 @@ final class AllBookmarkViewModel: ObservableObject {
       do {
         try await bookmarkManager.toggleBookmark(placeId: place.id ?? "", isBookmarked: true)
       } catch {
-        await MainActor.run {
-          errorMessages = error.localizedDescription
-        }
+        errorMessages = error.localizedDescription
       }
     }
   }
@@ -158,25 +137,25 @@ final class AllBookmarkViewModel: ObservableObject {
     switch dataIndex {
     case 0:
       isLoading = true
-      fetchData(pageLimit: pageSize, collectionName: .appPlace)
+      fetchData(pageLimit: 10, collectionName: .appPlace)
     case 1:
       isLoading = true
-      fetchData(pageLimit: pageSize, collectionName: .usersPlace)
+      fetchData(pageLimit: 10, collectionName: .usersPlace)
     case 2:
       isLoading = true
-      fetchToursData(pageLimit: pageSize)
+      fetchToursData(pageLimit: 10)
     case 3:
       isLoading = true
-      fetchFoods(pageLimit: pageSize, collectionName: .resturant)
+      fetchFoods(pageLimit: 10, collectionName: .resturant)
     case 4:
       isLoading = true
-      fetchFoods(pageLimit: pageSize, collectionName: .drinks)
+      fetchFoods(pageLimit: 10, collectionName: .drinks)
     case 5:
       isLoading = true
-      fetchFoods(pageLimit: pageSize, collectionName: .bakery)
+      fetchFoods(pageLimit: 10, collectionName: .bakery)
     default:
       isLoading = true
-      fetchData(pageLimit: pageSize, collectionName: .appPlace)
+      fetchData(pageLimit: 10, collectionName: .appPlace)
     }
   }
 }

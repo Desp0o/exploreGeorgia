@@ -5,20 +5,16 @@
 //  Created by Despo on 12.01.25.
 //
 
-struct FactModel: Codable {
-  let fact: String
-}
-
 import FirebaseFirestore
 import FirebaseAuth
 
+@MainActor
 final class MainViewModel: ObservableObject {
-  private let db = Firestore.firestore()
   private let userManager: GetFirebaseUserProtocol
   private let firebaseManager: FirebaseFetchingServicePorotocol
   private let firebaseSimpleManager: FirebaseSimpleCollectionFetchProtocol
+  
   @Published var user: UserModel? = nil
-  @Published var errorMessage = ""
   @Published var intrestingFacts: [FactModel] = []
   @Published var placesFromApp: [SightSeenModel] = []
   @Published var usersAddedPlacesData: [SightSeenModel] = []
@@ -33,98 +29,71 @@ final class MainViewModel: ObservableObject {
     self.userManager = userManager
     self.firebaseManager = firebaseManager
     self.firebaseSimpleManager = firebaseSimpleManager
-    fetchSingleFact()
-    fetchUsersAddedPlaces()
-    fetchTours()
+    fetchFeedData()
   }
   
-  func getPopularPlaces() {
-    isLoading = true
-    Task {
-      do {
-        let userID = Auth.auth().currentUser?.uid
-        let data = try await userManager.getFirebaseUser(with: userID ?? "")
-        
-        await MainActor.run {
-          user = data
-        }
-        
-        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
-          collectionName: .appPlace,
-          pageSize: 5,
-          lastDocument: nil,
-          userBucketList: user?.bucketList ?? [""]
-        )
-        
-        await MainActor.run {
-          placesFromApp = places
-          isLoading = false
-        }
-      } catch {
-        await MainActor.run {
-          errorMessage = error.localizedDescription
-          isLoading = false
-        }
-      }
-    }
-  }
-  
-  func fetchSingleFact() {
-    Task {
-      do {
-        let result: [FactModel] = try await firebaseSimpleManager.fetchCollection(collectionName: .fatcs, limit: 100)
-        await MainActor.run {
-          intrestingFacts = result
-        }
-      } catch {
-        print(error.localizedDescription)
-      }
-    }
-  }
-  
-  func fetchUsersAddedPlaces() {
+  private func fetchFeedData() {
     Task {
       do {
         let userID = Auth.auth().currentUser?.uid
         
-        let userData = try await userManager.getFirebaseUser(with: userID ?? "")
+        async let userTask = try userManager.getFirebaseUser(with: userID ?? "")
+        async let placesTask = try getPopularPlaces()
+        async let factsTask = try fetchSingleFact()
+        async let usersPlacesTask = try fetchUsersAddedPlaces()
+        async let toursTask = try fetchTours()
         
-        await MainActor.run {
-          user = userData
-        }
+        let userResult = try? await userTask
+        let placesFromAppResult = try? await placesTask
+        let interestingFactsResult = try? await factsTask
+        let usersAddedPlacesDataResult = try? await usersPlacesTask
+        let fetchedToursResult = try? await toursTask
         
-        let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
-          collectionName: .usersPlace,
-          pageSize: 3,
-          lastDocument: nil,
-          userBucketList: user?.bucketList ?? [""]
-        )
+        user = userResult
+        placesFromApp = placesFromAppResult ?? []
+        intrestingFacts = interestingFactsResult ?? []
+        usersAddedPlacesData = usersAddedPlacesDataResult ?? []
+        fetchedTours = fetchedToursResult ?? []
+        isLoading = false
         
-        await MainActor.run {
-          usersAddedPlacesData = places
-        }
       } catch {
-        print(error.localizedDescription)
+        print(error.localizedDescription, "❌")
+        isLoading = false
       }
     }
   }
   
-  func fetchTours() {
-    Task {
-      do {
-        let (places, _, _): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
-          collectionName: .tours,
-          pageSize: 3,
-          lastDocument: nil,
-          userBucketList: user?.bucketList ?? [""]
-        )
-        
-        await MainActor.run {
-          fetchedTours = places
-        }
-      } catch {
-        print(error.localizedDescription)
-      }
-    }
+  private func getPopularPlaces() async throws -> [SightSeenModel] {
+    let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+      collectionName: .appPlace,
+      pageSize: 5,
+      lastDocument: nil,
+      userBucketList: [""]
+    )
+    return places
+  }
+  
+  private func fetchSingleFact() async throws -> [FactModel] {
+    return try await firebaseSimpleManager.fetchCollection(collectionName: .fatcs, limit: 100)
+  }
+  
+  private func fetchUsersAddedPlaces() async throws -> [SightSeenModel] {
+    let (places, _, _): ([SightSeenModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+      collectionName: .usersPlace,
+      pageSize: 3,
+      lastDocument: nil,
+      userBucketList: [""]
+    )
+    return places
+  }
+  
+  private func fetchTours() async throws -> [TourModel] {
+    let (places, _, _): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+      collectionName: .tours,
+      pageSize: 3,
+      lastDocument: nil,
+      userBucketList: [""]
+    )
+    return places
   }
 }

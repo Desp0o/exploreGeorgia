@@ -28,14 +28,16 @@ struct SightSeenReusableView: View {
         
         Spacer()
         
-        Image(systemName: "star.fill")
-          .resizable()
-          .renderingMode(.template)
-          .foregroundStyle(.yellow)
-          .frame(width: 12, height: 12)
-        
-        Text(place.rating)
-          .styledText(.customBlack, 13, .semibold)
+        if place.user == nil {
+          Image(systemName: "star.fill")
+            .resizable()
+            .renderingMode(.template)
+            .foregroundStyle(.yellow)
+            .frame(width: 12, height: 12)
+          
+          Text(place.rating)
+            .styledText(.customBlack, 13, .semibold)
+        }
       }
       
       HStack(spacing: 2) {

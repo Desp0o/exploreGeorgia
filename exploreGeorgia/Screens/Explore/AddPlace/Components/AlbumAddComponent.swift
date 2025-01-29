@@ -36,6 +36,6 @@ struct AlbumAddComponent: View {
         }
       }
     }
-    .frame(height: 110, alignment: .top)
+    .frame(height: 80, alignment: .top)
   }
 }

@@ -11,10 +11,11 @@ struct ProfileView: View {
   @StateObject var vm = ProfileViewModel()
   @StateObject var editViewModel = EditProfileViewModel()
   @ObservedObject private var toastManager = ToastManager()
-  private let isSmallSize = UIScreen.main.bounds.height <= 700
   @State private var toastMessage = ""
   @State private var toastBgColor = ToastTypes.successfully
-  
+
+  private let isSmallSize = UIScreen.main.bounds.height <= 700
+
   var body: some View {
     ZStack {
       Color.primaryWhite.ignoresSafeArea()
@@ -53,15 +54,13 @@ struct ProfileView: View {
       .scrollBounceBehavior(.basedOnSize)
       .sheet(isPresented: $vm.isPresented) {
         UserInfoUpdateComponent(editViewModel: editViewModel)
-          .ignoresSafeArea()
           .presentationDetents([.fraction(isSmallSize ? 0.52 : 0.42)])
       }
-      .sheet(isPresented: $vm.isPrivacyPresented) {
+      .sheet(isPresented: $vm.isSecurotyPresented) {
         ProfilePrivacyComponent(editViewModel: editViewModel)
-          .ignoresSafeArea()
           .presentationDetents(
             [.fraction(
-              editViewModel.isUserFromGoogle ? 0.22 : (isSmallSize ? 0.7 : 0.53)
+              editViewModel.isUserFromGoogle ? 0.22 : (isSmallSize ? 0.7 : 0.7)
             )]
           )
       }
@@ -69,6 +68,10 @@ struct ProfileView: View {
         ThemeTogglerComponent()
           .ignoresSafeArea()
           .presentationDetents([.fraction(isSmallSize ? 0.15 : 0.1)])
+      }
+      .sheet(isPresented: $vm.isDeleteAccPresented) {
+        UserDeleteComponent()
+          .presentationDetents([.fraction(isSmallSize ? 0.25 : 0.2)])
       }
     }
     .overlay {

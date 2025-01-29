@@ -40,9 +40,11 @@ struct TourView: View {
                 withAnimation(.easeInOut(duration: 0.2)) {
                   vm.isCalendarShown.toggle()
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                
+                Task { @MainActor in
+                  try? await Task.sleep(for: .seconds(0.1))
                   if vm.isCalendarShown {
-                    withAnimation {
+                    withAnimation(.easeInOut) {
                       proxy.scrollTo("calendar", anchor: .bottom)
                     }
                   }

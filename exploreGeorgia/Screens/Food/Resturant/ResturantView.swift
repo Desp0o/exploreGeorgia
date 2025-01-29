@@ -51,6 +51,13 @@ struct ResturantView: View {
                 .fill(.customGreen)
                 .frame(width: 70, height: 10)
                 .roundedCorners(12)
+                .gesture(
+                  DragGesture()
+                    .onChanged { value in
+                      let newHeight = vm.infoHeight - (value.translation.height / geometry.size.height)
+                      vm.infoHeight = min(max(newHeight, 0.6), 0.85)
+                    }
+                )
               
               ScrollViewReader { proxy in
                 ScrollView {
@@ -82,7 +89,7 @@ struct ResturantView: View {
                         .opacity(infoOpacity)
                       
                       Spacer()
-                        .frame(width: 0, height: 00)
+                        .frame(width: 0, height: 20)
                         .background(.red)
                         .id("scrollToDown")
                     } else {
@@ -91,17 +98,19 @@ struct ResturantView: View {
                     }
                   }
                   .padding(.horizontal, 20)
-                  .padding(.bottom, 10)
+                  .padding(.bottom, 20)
                   .onChange(of: vm.isReviewVisible) { _ in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                      withAnimation(.easeInOut(duration: 0.3)) {
+                    Task { @MainActor in
+                      try? await Task.sleep(for: .seconds(0.1))
+                      withAnimation(.easeInOut(duration: 0.2)) {
                         proxy.scrollTo("scrollToDown", anchor: .center)
                       }
                     }
                   }
                   .onChange(of: vm.commentLoaderTrigger) { _ in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                      withAnimation(.easeInOut(duration: 0.3)) {
+                    Task { @MainActor in
+                      try? await Task.sleep(for: .seconds(0.1))
+                      withAnimation(.easeInOut(duration: 0.2)) {
                         proxy.scrollTo("scrollToDown", anchor: .center)
                       }
                     }
@@ -109,6 +118,7 @@ struct ResturantView: View {
                 }
                 .scrollBounceBehavior(.basedOnSize)
                 .scrollIndicators(.hidden)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
               }
               .padding(.top, 10)
             }
@@ -126,13 +136,6 @@ struct ResturantView: View {
                 topTrailingRadius: 20
               )
             )
-            .gesture(
-              DragGesture()
-                .onChanged { value in
-                  let newHeight = vm.infoHeight - (value.translation.height / geometry.size.height)
-                  vm.infoHeight = min(max(newHeight, 0.6), 0.85)
-                }
-            )
           }
         }
       }
@@ -147,7 +150,10 @@ struct ResturantView: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    .ignoresSafeArea()
+    .onTapGesture {
+      hideKeyboard()
+    }
+    .ignoresSafeArea(.container, edges: .top)
     .background(.primaryWhite)
     .onAppear {
       vm.fetchData(id: place.id ?? "", collection: collection)
@@ -179,6 +185,7 @@ struct ResturantView: View {
       }
     }
     .environmentObject(vm)
+    
   }
 }
 

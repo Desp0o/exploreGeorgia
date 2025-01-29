@@ -33,10 +33,7 @@ struct AllBookmarkView: View {
               } label: {
                 OverlayActionButtonIcon(
                   iconName: .backButton,
-                  tint: .white,
-                  scale: 0.9,
-                  bgColor: .customGreen,
-                  opacity: 1
+                  scale: 0.9
                 )
               }
               Spacer()
