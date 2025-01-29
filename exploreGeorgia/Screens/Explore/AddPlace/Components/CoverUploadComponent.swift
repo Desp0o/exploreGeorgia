@@ -15,12 +15,14 @@ struct CoverUploadComponent: View {
       HStack(spacing: 20) {
         if let image = vm.choosenCover {
           Image(uiImage: image)
-            .defaultOptions()
+            .resizable()
+            .scaledToFill()
             .frame(width: 40, height: 40)
             .clipShape(RoundedRectangle(cornerRadius: 12))
         } else {
           Image("imagePlaceholder")
-            .defaultOptions()
+            .resizable()
+            .scaledToFill()
             .frame(width: 40, height: 40)
             .clipShape(RoundedRectangle(cornerRadius: 12))
         }

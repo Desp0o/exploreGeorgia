@@ -23,9 +23,8 @@ struct ResturantViewInfoComponent: View {
           
           HStack {
             Image("bill")
-              .renderingMode(.template)
-              .foregroundStyle(.customBlack)
-              .scaleEffect(0.7)
+              .defaultOptions(color: .customGreen)
+              .frame(width: 18, height: 18)
             
             Text("\(String(format: "%.2f", vm.singleResturant?.minCost ?? 0)) min Cost")
               .styledText(.customBlack, 14)
@@ -33,10 +32,9 @@ struct ResturantViewInfoComponent: View {
         }
         
         HStack {
-          Image("locationPin")
-            .renderingMode(.template)
-            .foregroundStyle(.customGreen)
-            .scaleEffect(1.2)
+          Image("location")
+            .defaultOptions(color: .customGreen)
+            .frame(width: 18, height: 18)
           
           Button {
             vm.isPresent.toggle()

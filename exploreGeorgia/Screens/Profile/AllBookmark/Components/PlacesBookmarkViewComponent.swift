@@ -28,8 +28,7 @@ struct PlacesBookmarkViewComponent: View {
             SightSeenReusableView(
               place: place,
               maxWidth: UIScreen.main.bounds.width - 40,
-              height: 130,
-              isBookmarkIconHidden: true
+              height: 130
             )
             .overlay {
               ZStack {

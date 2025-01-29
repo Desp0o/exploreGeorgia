@@ -18,7 +18,8 @@ struct UserAvatarChangeComponent: View {
           
           if let image = vm.choosenAvatar {
             Image(uiImage: image)
-              .defaultOptions()
+              .resizable()
+              .scaledToFill()
               .clipShape(Circle())
               .frame(width: 96, height: 96)
           } else {

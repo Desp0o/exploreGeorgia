@@ -16,7 +16,7 @@ struct ProfileSettingsComponent: View {
         }) {
           HStack(spacing: 14) {
             Image("profile")
-              .defaultOptions()
+              .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
             Text("Edit Profile")
@@ -34,13 +34,11 @@ struct ProfileSettingsComponent: View {
           vm.isSecurotyPresented = true
         }) {
           HStack(spacing: 14) {
-            Image(systemName: "lock")
-              .resizable()
-              .renderingMode(.template)
-              .foregroundStyle(.customGray)
-              .frame(width: 16, height: 24)
+            Image("password")
+              .defaultOptions(color: .customGray)
+              .frame(width: 24, height: 24)
             
-            Text("privacy")
+            Text("Change password")
               .styledText(.customBlack, 16, .semibold)
             
             Spacer()
@@ -55,13 +53,11 @@ struct ProfileSettingsComponent: View {
           vm.isAppereancePresented = true
         }) {
           HStack(spacing: 14) {
-            Image(systemName: "sun.min")
-              .resizable()
-              .renderingMode(.template)
-              .foregroundStyle(.customGray)
-              .frame(width: 16, height: 16)
+            Image("moon")
+              .defaultOptions(color: .customGray)
+              .frame(width: 24, height: 24)
             
-            Text("Appereance")
+            Text("Aappearance")
               .styledText(.customBlack, 16, .semibold)
             
             Spacer()
@@ -76,10 +72,9 @@ struct ProfileSettingsComponent: View {
           .ignoresSafeArea()
           .navigationBarHidden(true)) {
             HStack(spacing: 14) {
-              Image(systemName: "creditcard")
-                .defaultOptions()
-                .frame(width: 22, height: 16)
-                .tint(.customGray)
+              Image("creditcard")
+                .defaultOptions(color: .customGray)
+                .frame(width: 24, height: 24)
               
               Text("Payment methods")
                 .styledText(.customBlack, 16, .semibold)
@@ -95,12 +90,11 @@ struct ProfileSettingsComponent: View {
         NavigationLink(destination: PurchaseHistoryView()
           .navigationBarHidden(true)) {
             HStack(spacing: 14) {
-              Image(systemName: "purchased")
-                .defaultOptions()
-                .frame(width: 14, height: 14)
-                .tint(.customGray)
+              Image("ticket")
+                .defaultOptions(color: .customGray)
+                .frame(width: 24, height: 24)
               
-              Text("  Purchased tours")
+              Text("Purchased tours")
                 .styledText(.customBlack, 16, .semibold)
               
               Spacer()
@@ -114,7 +108,7 @@ struct ProfileSettingsComponent: View {
         NavigationLink(destination: AllBookmarkView().navigationBarHidden(true)) {
           HStack(spacing: 14) {
             Image("bookmark")
-              .defaultOptions()
+              .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
             Text("Bookmarked")
@@ -134,8 +128,8 @@ struct ProfileSettingsComponent: View {
             .ignoresSafeArea()
         ) {
           HStack(spacing: 14) {
-            Image("trip")
-              .defaultOptions()
+            Image("location")
+              .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
             Text("My Explored")
@@ -153,11 +147,9 @@ struct ProfileSettingsComponent: View {
           vm.isDeleteAccPresented = true
         }) {
           HStack(spacing: 14) {
-            Image(systemName: "sun.min")
-              .resizable()
-              .renderingMode(.template)
-              .foregroundStyle(.customGray)
-              .frame(width: 16, height: 16)
+            Image("privacy")
+              .defaultOptions(color: .customGray)
+              .frame(width: 24, height: 24)
             
             Text("Delete account")
               .styledText(.customBlack, 16, .semibold)

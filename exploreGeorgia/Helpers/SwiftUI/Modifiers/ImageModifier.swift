@@ -8,9 +8,11 @@
 import SwiftUI
 
 extension Image {
-  func defaultOptions() -> some View {
+  func defaultOptions(color: Color) -> some View {
     self
+      .renderingMode(.template)
       .resizable()
       .scaledToFill()
+      .foregroundStyle(color)
   }
 }

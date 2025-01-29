@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct SightSeenReusableView: View {
-  @StateObject var bookmarkManager = BookMarkManager()
   @State private var isSaved = false
   @State var place: SightSeenModel
   let maxWidth: CGFloat
   let height: CGFloat
-  let isBookmarkIconHidden: Bool
   
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
@@ -41,7 +39,8 @@ struct SightSeenReusableView: View {
       }
       
       HStack(spacing: 2) {
-        Image("locationPin")
+        Image("location")
+          .resizable()
           .renderingMode(.template)
           .foregroundStyle(.customGray)
           .frame(width: 16, height: 16)

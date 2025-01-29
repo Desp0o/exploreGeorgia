@@ -46,8 +46,7 @@ struct PlacesFromAppComponents: View {
                 SightSeenReusableView(
                   place: place,
                   maxWidth: 268,
-                  height: 250,
-                  isBookmarkIconHidden: false
+                  height: 250
                 )
               }
             }

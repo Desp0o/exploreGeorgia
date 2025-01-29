@@ -27,7 +27,7 @@ struct PlaceFromUserReusable: View {
         Spacer()
         
         HStack {
-          Image("locationPin")
+          Image("location")
             .renderingMode(.template)
             .resizable()
             .scaledToFill()

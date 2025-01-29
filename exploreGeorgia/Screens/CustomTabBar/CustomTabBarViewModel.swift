@@ -9,10 +9,10 @@ import SwiftUI
 
 final class CustomTabBarViewModel: ObservableObject {
   let tabItems = [
-    TabBarItemModel(title: "Home", activeIcon: "homeActive", inactiveIcon: "homeInactive"),
-    TabBarItemModel(title: "Explore", activeIcon: "locationActive", inactiveIcon: "locationInactive"),
-    TabBarItemModel(title: "Food", activeIcon: "foodActive", inactiveIcon: "foodInactive"),
-    TabBarItemModel(title: "Board", activeIcon: "boardActive", inactiveIcon: "boardInactive"),
-    TabBarItemModel(title: "Profile", activeIcon: "profileActive", inactiveIcon: "profileInactive")
+    TabBarItemModel(title: "Home", icon: "home"),
+    TabBarItemModel(title: "Explore", icon: "location"),
+    TabBarItemModel(title: "Food", icon: "food"),
+    TabBarItemModel(title: "Board", icon: "book"),
+    TabBarItemModel(title: "Profile", icon: "profile")
   ]
 }

@@ -49,11 +49,8 @@ struct PlaceDetailsInfoComponent: View {
         
         HStack {
           HStack {
-            Image("locationPin")
-              .renderingMode(.template)
-              .resizable()
-              .scaledToFill()
-              .foregroundColor(.customGray)
+            Image("location")
+              .defaultOptions(color: .customGray)
               .frame(width: 16, height: 16)
             
             Text(vm.currentPlace?.region ?? "")
@@ -105,10 +102,9 @@ struct PlaceDetailsInfoComponent: View {
             Spacer()
             
             HStack {
-              Image("locationPin")
-                .renderingMode(.template)
-                .foregroundStyle(.customGreen)
-                .scaleEffect(1.3)
+              Image("location")
+                .defaultOptions(color: .customGreen)
+                .frame(width: 18, height: 18)
               
               Button {
                 vm.isPresented = true

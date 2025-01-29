@@ -20,7 +20,8 @@ struct CustomAlert: View {
       VStack(spacing: 20) {
         
         Image(systemName: "exclamationmark.triangle.fill")
-          .defaultOptions()
+          .resizable()
+          .scaledToFill()
           .foregroundStyle(errorType == .error ? .red : .yellow)
           .frame(width: 40, height: 40)
         

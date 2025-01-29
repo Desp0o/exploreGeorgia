@@ -21,7 +21,7 @@ struct TourCoverComponent: View {
           .styledText(.white, 24, .semibold)
         
         HStack {
-          Image("locationPin")
+          Image("location")
             .renderingMode(.template)
             .foregroundStyle(.white)
           

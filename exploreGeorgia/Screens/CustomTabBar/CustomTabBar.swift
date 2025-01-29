@@ -50,9 +50,11 @@ struct CustomTabBar: View {
             Button {
               currentIdenx = index
             } label: {
-              Image(currentIdenx == index ? item.activeIcon : item.inactiveIcon)
+              Image(item.icon)
                 .resizable()
+                .renderingMode(.template)
                 .scaledToFill()
+                .foregroundStyle(index == currentIdenx ? .customGreen : .customGray)
                 .frame(width: 24, height: 24)
             }
             
