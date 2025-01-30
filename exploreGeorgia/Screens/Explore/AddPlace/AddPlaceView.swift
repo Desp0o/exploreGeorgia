@@ -76,6 +76,7 @@ struct AddPlaceView: View {
               .keyboardType(.numberPad)
             
             TextEditorComponent(textForEditor: $vm.placeDescription, placeholder: "Write place description...")
+              .frame(minHeight: 50)
           }
           
           Button {
@@ -97,6 +98,7 @@ struct AddPlaceView: View {
           Button {
             vm.latitude = currentLocationForUse?.coordinate.latitude ?? 0
             vm.longitude = currentLocationForUse?.coordinate.longitude ?? 0
+            hideKeyboard()
             vm.addPlace()
           } label: {
             Text("Add Place")
