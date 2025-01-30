@@ -84,7 +84,7 @@ struct LightBoxViewReusable: View {
                   },
                 TapGesture(count: 1)
                   .onEnded { _ in
-                    withAnimation(.spring()) {
+                    withAnimation(.easeIn) {
                       resetImagePosition()
                       scale = 1.0
                       lastScale = 1.0

@@ -14,10 +14,11 @@ struct ProfilePrivacyComponent: View {
   
   var body: some View {
     VStack(spacing: 20) {
-      Text(editViewModel.isUserFromGoogle ? "Delete account" : "Change password or delete account")
-        .styledText(.customBlack, 18, .bold)
       
-      if !editViewModel.isUserFromGoogle {
+      
+      if !editViewModel.isUserFromGoogle {Text("Change password or delete account")
+          .styledText(.customBlack, 18, .bold)
+        
         VStack(spacing: 20) {
           ZStack {
             TextField("Enter your password", text: $editViewModel.password)
@@ -64,6 +65,9 @@ struct ProfilePrivacyComponent: View {
           }
           .customStyledButton()
         }
+      } else {
+        Text("Google users can't change passwords")
+          .styledText(.customBlack, 16)
       }
     }
     .ignoresSafeArea(.keyboard, edges: .bottom)

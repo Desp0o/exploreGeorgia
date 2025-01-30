@@ -42,7 +42,6 @@ final class PlaceDetailsViewModel: ObservableObject {
   func fetchSinglePlaceByID(with id: String, and collection: FirebaseCollectionEnum) {
     Task {
       do {
-        print(id, collection)
         let data: SightSeenModel = try await firebaseSinglePlaceFetcher.fetchSinglePlaceGeneric(with: id, and: collection)
         
         currentPlace = data
@@ -55,7 +54,6 @@ final class PlaceDetailsViewModel: ObservableObject {
         
         author = currentAuthor
       } catch {
-        print("Error fetching place: \(error)")
         isLoading = false
         isError = true
       }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct FoodView: View {
   @StateObject var vm = FoodViewModel()
-  @ObservedObject var pushVM = SightSeenRepository()
   @State private var isPresented = false
   @State private var addButtonScale: CGFloat = 0
 

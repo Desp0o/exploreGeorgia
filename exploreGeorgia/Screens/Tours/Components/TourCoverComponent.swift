@@ -21,9 +21,9 @@ struct TourCoverComponent: View {
           .styledText(.white, 24, .semibold)
         
         HStack {
-          Image("location")
-            .renderingMode(.template)
-            .foregroundStyle(.white)
+          Image(IconsEnum.location.rawValue)
+            .defaultOptions(color: .white)
+            .frame(width: 18, height: 18)
           
           Text(vm.tour?.adress ?? "")
             .styledText(.white, 18)

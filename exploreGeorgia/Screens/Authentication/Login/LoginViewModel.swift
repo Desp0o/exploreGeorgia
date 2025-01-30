@@ -79,9 +79,7 @@ final class LoginViewModel {
               isLoading = false
               loginLoadingDelegate?.didLoginLoaded()
             }
-          default:
-            print("Error: \(error.localizedDescription)")
-            
+          default:            
             await MainActor.run {
               loginErrorMsg = "Error: \(error.localizedDescription)"
               loginErrorDelegate?.didErrorDuringLogin()

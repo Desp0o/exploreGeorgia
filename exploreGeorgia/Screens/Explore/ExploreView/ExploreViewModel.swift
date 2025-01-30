@@ -46,7 +46,6 @@ final class ExploreViewModel: ObservableObject {
         isLoading = false
         isFetching = false
       } catch {
-        print(error.localizedDescription)
         isLoading = false
         isFetching = false
       }
@@ -65,7 +64,6 @@ final class ExploreViewModel: ObservableObject {
         
         fetchedPlaces = places
       } catch {
-        print(error.localizedDescription)
         isLoading = false
         isFetching = false
       }

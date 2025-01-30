@@ -111,7 +111,7 @@ struct ProfileSettingsComponent: View {
               .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
-            Text(IconsEnum.arrowRight.rawValue)
+            Text("Bookmarks")
               .styledText(.customBlack, 16, .semibold)
             
             Spacer()

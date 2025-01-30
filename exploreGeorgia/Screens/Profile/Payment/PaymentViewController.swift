@@ -89,6 +89,8 @@ final class PaymentViewController: UIViewController {
     super.viewDidLoad()
     
     vm.dataDelegate = self
+    vm.cardAddDelegate = self
+
     setupUI()
   }
   
@@ -180,6 +182,12 @@ extension PaymentViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension PaymentViewController: PaymentDataDelegate {
   func didDataFetched() {
+    if vm.isLoading {
+      showLoading(backgroundOpacity: 1, bgColor: .primaryWhite)
+    } else {
+      hideLoading()
+    }
+    
     table.reloadData()
     adjustTableViewHeight()
   }
@@ -192,3 +200,4 @@ extension PaymentViewController: CardAddedDelegate {
     adjustTableViewHeight()
   }
 }
+

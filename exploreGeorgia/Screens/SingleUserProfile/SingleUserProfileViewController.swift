@@ -84,7 +84,7 @@ final class SingleUserProfileViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    
     setupUI()
   }
   
@@ -97,7 +97,7 @@ final class SingleUserProfileViewController: UIViewController {
   
   private func setupUI() {
     view.backgroundColor = .primaryWhite
-
+    
     vm.fetchUser(userId: singleUserId)
     vm.fetchData(pageSize: pageSize, userId: singleUserId)
     
@@ -183,9 +183,24 @@ extension SingleUserProfileViewController: SingleUserFetchDelegate {
 extension SingleUserProfileViewController: SingleUserLoadingDelegate {
   func didLoadingStopped() {
     if vm.isLoading {
-      showLoading(backgroundOpacity: 0)
+      let shimmer = SingleUserShimmer()
+      let hostingController = UIHostingController(rootView: shimmer)
+      
+      hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+      addChild(hostingController)
+      view.addSubview(hostingController.view)
+      hostingController.didMove(toParent: self)
+      
+      NSLayoutConstraint.activate([
+        hostingController.view.widthAnchor.constraint(equalTo: view.widthAnchor),
+        hostingController.view.heightAnchor.constraint(equalTo: view.heightAnchor)
+      ])
+      
+      hostingController.view.tag = 998
     } else {
-      hideLoading()
+      if let shimmerView = view.viewWithTag(998) {
+        shimmerView.removeFromSuperview()
+      }
     }
   }
 }

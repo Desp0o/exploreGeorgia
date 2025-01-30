@@ -80,13 +80,11 @@ final class VocabularyViewModel {
         
         guard let category = data["category"] as? String,
               let words = data["words"] as? [String] else {
-          print("Error: Data format is incorrect for document \(document.documentID)")
           continue
         }
         phrases[category] = words
       }
     } catch {
-      print("Error fetching vocabulary: \(error.localizedDescription)")
       throw error
     }
   }

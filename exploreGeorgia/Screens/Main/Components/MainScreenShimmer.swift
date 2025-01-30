@@ -80,7 +80,7 @@ struct MainScreenShimmer: View {
         
         Spacer()
       }
-      .padding(.top, 20)
+      .padding(.top, 70)
       .padding(.horizontal, 20)
       .ignoresSafeArea()
     }

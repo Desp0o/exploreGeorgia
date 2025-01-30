@@ -60,7 +60,7 @@ struct ProfileView: View {
         ProfilePrivacyComponent(editViewModel: editViewModel)
           .presentationDetents(
             [.fraction(
-              editViewModel.isUserFromGoogle ? 0.22 : (isSmallSize ? 0.7 : 0.7)
+              editViewModel.isUserFromGoogle ? 0.22 : (isSmallSize ? 0.55 : 0.45)
             )]
           )
       }

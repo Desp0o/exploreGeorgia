@@ -40,9 +40,7 @@ final class PurchaseHistoryViewModel: ObservableObject {
           historyData = updatedHistory
           isLoading = false
         }
-      } catch {
-        print("Error fetching tours: \(error)")
-        
+      } catch {        
         await MainActor.run {
           isLoading = false
         }

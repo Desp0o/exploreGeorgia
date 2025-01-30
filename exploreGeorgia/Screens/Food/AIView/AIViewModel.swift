@@ -50,16 +50,12 @@ final class AIViewModel: ObservableObject {
         
         guard let res = response.choices.first?.message.content else {return}
         
-        
-          responseAI = res
-          isLoading = false
-          prompt = ""
+        responseAI = res
+        isLoading = false
+        prompt = ""
         
       } catch {
-        print("Error fetching data: \(error)")
-        
-          isLoading = false
-        
+        isLoading = false
       }
     }
   }

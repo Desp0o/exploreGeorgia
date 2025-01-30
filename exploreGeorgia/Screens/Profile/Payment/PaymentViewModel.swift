@@ -21,10 +21,15 @@ protocol PaymentLoadingDelegate: AnyObject {
   func didProcessFinished()
 }
 
+protocol CardAddedDelegate: AnyObject {
+  func cardAddedSuccessfully()
+}
+
 final class PaymentViewModel {
   weak var dataDelegate: PaymentDataDelegate?
   weak var errorDelegate: PaymentErrorDelegate?
   weak var loadingDelegate: PaymentLoadingDelegate?
+  weak var cardAddDelegate: CardAddedDelegate?
   private let userManager: GetFirebaseUserProtocol
   private let db = Firestore.firestore()
   var creditCards: [CreditCardModel] = []
@@ -99,9 +104,7 @@ final class PaymentViewModel {
         "payments": FieldValue.arrayUnion([cardData])
       ])
       
-      print("Credit card successfully added to user's payments")
     } catch {
-      print("Error adding credit card: \(error)")
       throw error
     }
   }
@@ -140,11 +143,13 @@ final class PaymentViewModel {
       return
     }
     
-    isLoading = true
-    loadingDelegate?.didProcessFinished()
-    
     Task {
       do {
+        await MainActor.run {
+          isLoading = true
+          loadingDelegate?.didProcessFinished()
+        }
+        
         let userID = Auth.auth().currentUser?.uid
         
         let payment = CreditCardModel(userId: userID ?? "", number: cardNumber, expDate: cardExpireDate, holder: cardholder)
@@ -153,6 +158,7 @@ final class PaymentViewModel {
         await MainActor.run {
           isLoading = false
           loadingDelegate?.didProcessFinished()
+          cardAddDelegate?.cardAddedSuccessfully()
         }
       } catch {
         await MainActor.run {
@@ -166,9 +172,13 @@ final class PaymentViewModel {
     }
   }
   
-  
   func fetchAllUserPayments() {
     Task {
+      await MainActor.run {
+        isLoading = true
+        dataDelegate?.didDataFetched()
+      }
+      
       do {
         let userID = Auth.auth().currentUser?.uid ?? ""
         
@@ -176,6 +186,7 @@ final class PaymentViewModel {
         
         await MainActor.run {
           creditCards = data?.payments ?? []
+          isLoading = false
           dataDelegate?.didDataFetched()
         }
         

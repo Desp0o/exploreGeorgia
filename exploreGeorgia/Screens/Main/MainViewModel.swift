@@ -57,7 +57,6 @@ final class MainViewModel: ObservableObject {
         isLoading = false
         
       } catch {
-        print(error.localizedDescription, "❌")
         isLoading = false
       }
     }

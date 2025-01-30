@@ -146,7 +146,6 @@ final class TourViewModel: ObservableObject {
         "purchasedTours": FieldValue.arrayUnion([purchasedTour.id])
       ])
     } catch {
-      print(error.localizedDescription)
       throw error
     }
   }

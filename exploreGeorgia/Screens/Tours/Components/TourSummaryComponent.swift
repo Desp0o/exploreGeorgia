@@ -28,9 +28,6 @@ struct TourSummaryComponent: View {
               Image(element.icon)
                 .renderingMode(.template)
                 .foregroundStyle(.customGreen)
-                .onTapGesture {
-                  print(index)
-                }
             }
             .frame(width: 40, height: 40)
             .background(.customWhite)

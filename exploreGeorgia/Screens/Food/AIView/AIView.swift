@@ -31,13 +31,10 @@ struct AIView: View {
             }
             
             Spacer()
-              .frame(height: 50)
+              .frame(height: 20)
               .id("bottom")
           }
           .frame(maxWidth: .infinity, alignment: .leading)
-          
-          
-          
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .scrollBounceBehavior(.basedOnSize)

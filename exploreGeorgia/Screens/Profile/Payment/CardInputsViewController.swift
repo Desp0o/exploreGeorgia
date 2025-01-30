@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol CardAddedDelegate: AnyObject {
-  func cardAddedSuccessfully()
-}
-
 final class CardInputsViewController: UIViewController {
   private let vm: PaymentViewModel
   weak var delegate: CardAddedDelegate?
