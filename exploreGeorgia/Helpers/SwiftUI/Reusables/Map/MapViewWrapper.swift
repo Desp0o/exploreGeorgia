@@ -13,7 +13,7 @@ struct MapViewWrapper: UIViewRepresentable {
   @Binding var location: Location
   @Binding var locationName: String
   var mapType: MKMapType
-
+  
   let isEditable: Bool
   
   func makeUIView(context: Context) -> MKMapView {
@@ -61,10 +61,10 @@ class Coordinator: NSObject, MKMapViewDelegate {
     let tappedPoint = gesture.location(in: mapView)
     let coordinate = mapView.convert(tappedPoint, toCoordinateFrom: mapView)
     
-    DispatchQueue.main.async {
+    Task { @MainActor in
       withAnimation(.easeIn) {
-        self.parent.location = Location(coordinate: coordinate)
-        self.parent.region.center = coordinate
+        parent.location = Location(coordinate: coordinate)
+        parent.region.center = coordinate
       }
     }
   }

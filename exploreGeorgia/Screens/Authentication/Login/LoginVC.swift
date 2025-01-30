@@ -30,7 +30,7 @@ final class LoginVC: UIViewController {
       text: "Sign In",
       fontSize: 26,
       fontWeight: .bold,
-      textColor: .customBlue
+      textColor: .customGreen
     )
     return label
   }()
@@ -64,7 +64,7 @@ final class LoginVC: UIViewController {
     let button = UIButton()
     button.createCustomButton(
       title: "Log In",
-      backgroundColor: .customBlue
+      backgroundColor: .customGreen
     )
     
     button.addTapAnimation()
@@ -81,7 +81,7 @@ final class LoginVC: UIViewController {
       title: "Forget Password?",
       fontSize: 14,
       fontWeight: .medium,
-      titleColor: .customVine
+      titleColor: .customGreen
     )
     
     button.addAction(UIAction(handler: { [weak self] _ in
@@ -117,7 +117,7 @@ final class LoginVC: UIViewController {
       title: "Sign Up",
       fontSize: 14,
       fontWeight: .medium,
-      titleColor: .customVine
+      titleColor: .customGreen
     )
     button.addAction(UIAction(handler: {[weak self] _ in
       self?.navigateToSignupVC()
@@ -139,11 +139,11 @@ final class LoginVC: UIViewController {
     let button = UIButton()
     button.createCustomButton(
       title: "    Sign in with Google",
-      titleColor: .customBlue,
+      titleColor: .customGreen,
       image: UIImage(named: "googleIcon"),
       imageSize: 24,
       cornerRadius: 12,
-      borderColor: .customBlue,
+      borderColor: .customGreen,
       borderWidth: 1
     )
     button.addTapAnimation()

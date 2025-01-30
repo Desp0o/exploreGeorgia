@@ -12,7 +12,7 @@ extension SecureField {
     height: CGFloat = 50,
     bg: Color = .customWhite,
     corners: CGFloat = 12,
-    borderColor: Color = .customBlue,
+    borderColor: Color = .customGreen,
     borderWidth: CGFloat = 1
   ) -> some View {
     self.padding()

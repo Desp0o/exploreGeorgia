@@ -12,7 +12,7 @@ extension TextField {
     height: CGFloat = 50,
     bg: Color = .customWhite,
     corners: CGFloat = 12,
-    borderColor: Color = .customBlue,
+    borderColor: Color = .customGreen,
     borderWidth: CGFloat = 1
   ) -> some View {
     self.padding()
@@ -26,4 +26,15 @@ extension TextField {
       )
     .autocorrectionDisabled()
   }
+}
+
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil,
+            from: nil,
+            for: nil
+        )
+    }
 }

@@ -20,27 +20,21 @@ struct CustomAlert: View {
       VStack(spacing: 20) {
         
         Image(systemName: "exclamationmark.triangle.fill")
-          .defaultOptions()
+          .resizable()
+          .scaledToFill()
           .foregroundStyle(errorType == .error ? .red : .yellow)
           .frame(width: 40, height: 40)
         
         Text(alertMessage)
           .styledText(
-            .customBlack,
-            16,
-            .bold,
-            .center
-          )
+            .customBlack, 16, .bold, .center)
         
         Button {
           alertManager.hideAlert()
         } label: {
           Text("OK")
-            .styledText(
-              .buttonPrimary,
-              16,
-              .bold
-            )
+            .styledText(.buttonPrimary, 16, .bold)
+            .frame(maxWidth: .infinity)
         }
         .customStyledButton(height: 40)
       }

@@ -19,7 +19,7 @@ struct PlaceDetailsNavigationBar: View {
         presentationMode.wrappedValue.dismiss()
       } label: {
         ZStack {
-          OverlayActionButtonIcon(iconName: IconsEnum.backButton.rawValue, tint: .white, scale: 0.9)
+          OverlayActionButtonIcon(iconName: .backButton, scale: 0.9)
         }
       }
       
@@ -30,14 +30,13 @@ struct PlaceDetailsNavigationBar: View {
         isBookMarked.toggle()
       } label: {
         OverlayActionButtonIcon(
-          iconName: isBookMarked ? IconsEnum.bookmarkActive.rawValue : IconsEnum.bookmarkInactive.rawValue,
-          tint: .white,
+          iconName: isBookMarked ? .bookmarkActive : .bookmarkInactive,
           scale: 0.9
         )
       }
     }
     .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
     .frame(width: UIScreen.main.bounds.width - 20)
-    .zIndex(2)
+    .zIndex(10)
   }
 }

@@ -9,10 +9,6 @@ import SwiftUI
 
 struct TourView: View {
   @StateObject var vm = TourViewModel()
-  @State var selectedImage = ""
-  @State var isLightBoxVisible = false
-  @State var isCalendarShown = false
-  let startingDate: Date = Date().addingTimeInterval(86400)
   let tourId: String
   
   var body: some View {
@@ -22,15 +18,9 @@ struct TourView: View {
       ScrollViewReader { proxy in
         ScrollView {
           VStack(spacing: 24) {
-            TourCoverComponent(vm: vm)
-            
-            TourAlbumComponent(
-              vm: vm,
-              isLightBoxVisible: $isLightBoxVisible,
-              selectedImage: $selectedImage
-            )
-            
-            TourSummaryComponent(vm: vm)
+            TourCoverComponent()
+            TourAlbumComponent()
+            TourSummaryComponent()
             
             Spacer()
               .frame(minHeight: 50)
@@ -48,11 +38,13 @@ struct TourView: View {
               Button {
                 vm.fetchCreditCards()
                 withAnimation(.easeInOut(duration: 0.2)) {
-                  isCalendarShown.toggle()
+                  vm.isCalendarShown.toggle()
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                  if isCalendarShown {
-                    withAnimation {
+                
+                Task { @MainActor in
+                  try? await Task.sleep(for: .seconds(0.1))
+                  if vm.isCalendarShown {
+                    withAnimation(.easeInOut) {
                       proxy.scrollTo("calendar", anchor: .bottom)
                     }
                   }
@@ -61,7 +53,7 @@ struct TourView: View {
                 Text("Book now")
                   .styledText(.buttonPrimary, 20, .semibold)
                   .frame(width: 170, height: 42)
-                  .background(.customBlue)
+                  .background(.customGreen)
                   .roundedCorners(12)
               }
             }
@@ -69,8 +61,8 @@ struct TourView: View {
           }
           .padding(.bottom, 30)
           
-          if isCalendarShown {
-            TourBookingComponent(vm: vm, startingDate: startingDate)
+          if vm.isCalendarShown {
+            TourBookingComponent()
           }
           
           Spacer()
@@ -83,36 +75,31 @@ struct TourView: View {
     }
     .overlay {
       if vm.isLoading {
-        ZStack {
-          Color.primaryWhite.ignoresSafeArea()
-          
-          ProgressView()
-            .scaleEffect(1.5)
-            .tint(.customBlue)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        PlaceDetailsShimmer()
+          .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
       }
       
-      if isLightBoxVisible {
+      if vm.isLightBoxVisible {
         LightBoxViewReusable(
-          selectedImage: $selectedImage,
-          isLightBoxVisible: $isLightBoxVisible,
+          selectedImage: $vm.selectedImage,
+          isLightBoxVisible: $vm.isLightBoxVisible,
           album: vm.tour?.album ?? [""]
         )
         .ignoresSafeArea(.all)
       }
       
       if vm.isPaymentOpened {
-        TourPurchaseComponent(vm: vm)
+        TourPurchaseComponent()
       }
       
       if vm.isSuccessfullyPurchased {
-        TourSuccessComponent(vm: vm)
+        TourSuccessComponent()
       }
     }
     .ignoresSafeArea()
     .onAppear {
       vm.fetchSingleTour(with: tourId, and: .tours)
     }
+    .environmentObject(vm)
   }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TourSuccessComponent: View {
-  @ObservedObject var vm: TourViewModel
+  @EnvironmentObject var vm: TourViewModel
   
   var body: some View {
     ZStack {
@@ -23,11 +23,11 @@ struct TourSuccessComponent: View {
             .frame(width: 36, height: 36)
         }
         .frame(width: 70, height: 70)
-        .background(.customVine)
+        .background(.customGreen)
         .clipShape(Circle())
         
         Text("Congratulations, your adventure begins!")
-          .styledText(.customVine, 20, .bold, .center)
+          .styledText(.customGreen, 20, .bold, .center)
           .padding(.horizontal, 18)
       }
     }

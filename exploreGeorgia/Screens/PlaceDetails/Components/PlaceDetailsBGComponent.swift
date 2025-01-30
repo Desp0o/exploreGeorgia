@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct PlaceDetailsBGComponent: View {
-  @ObservedObject var vm: PlaceDetailsViewModel
+  let cover: String
+  
   var body: some View {
     VStack {
-      CachedAsyncImage(url: URL(string: vm.currentPlace?.cover ?? ""))
+      CachedAsyncImage(url: URL(string: cover))
         .frame(maxWidth: .infinity)
-        .frame(height: UIScreen.main.bounds.height < 800 ? 270 : 350)
     }
   }
 }

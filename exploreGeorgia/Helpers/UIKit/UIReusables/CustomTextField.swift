@@ -25,7 +25,7 @@ final class CustomTextField: UIView, UITextFieldDelegate {
     field.clipsToBounds = true
     field.layer.cornerRadius = 12
     field.layer.borderWidth = 1
-    field.layer.borderColor = UIColor.customBlue.cgColor
+    field.layer.borderColor = UIColor.customGreen.cgColor
     field.backgroundColor = .customWhite
     field.delegate = delegate
     field.keyboardType = keyboardType ?? .default

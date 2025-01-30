@@ -10,7 +10,6 @@ import SwiftUI
 struct AllToursView: View {
   @Environment(\.presentationMode) var dismiss
   @StateObject var vm = AllToursViewModel()
-  @State private var pageSize = 10
   
   var body: some View {
     ScrollView {
@@ -31,13 +30,7 @@ struct AllToursView: View {
             dismiss.wrappedValue.dismiss()
           } label: {
             ZStack {
-              Circle()
-                .fill(.customBlue)
-                .frame(width: 40, height: 40)
-              
-              Image("backArrow")
-                .renderingMode(.template)
-                .foregroundStyle(.white)
+              OverlayActionButtonIcon(iconName: .backButton)
             }
           }
           
@@ -53,13 +46,10 @@ struct AllToursView: View {
             TourView(tourId: currentTour.id ?? "").navigationBarHidden(true)
           } label: {
             SingleTourFeedView(tour: currentTour, tourMaxWidth: .infinity, isBookButtonVisible: true)
-          }
-
-          if index == vm.fetchedData.count - 4 {
-            Color.white.opacity(0)
-              .frame(width: 1, height: 0)
               .onAppear {
-                pageSize += 10
+                if index == vm.fetchedData.count - 2 {
+                  vm.fetchTours()
+                }
               }
           }
         }
@@ -67,15 +57,10 @@ struct AllToursView: View {
     }
     .padding(.horizontal, 20)
     .background(.primaryWhite)
-    .onAppear {
-      vm.fetchTours(pageSize: 10)
-    }
-    .onChange(of: pageSize) { _ in
-      vm.fetchTours(pageSize: pageSize)
+    .overlay {
+      if vm.isLoading {
+        AllToursShimmer()
+      }
     }
   }
-}
-
-#Preview {
-  AllToursView()
 }

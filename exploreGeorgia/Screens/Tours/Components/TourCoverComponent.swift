@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TourCoverComponent: View {
-  @ObservedObject var vm: TourViewModel
+  @EnvironmentObject var vm: TourViewModel
   
   var body: some View {
     ZStack(alignment: .bottomLeading) {
@@ -21,9 +21,9 @@ struct TourCoverComponent: View {
           .styledText(.white, 24, .semibold)
         
         HStack {
-          Image("locationPin")
-            .renderingMode(.template)
-            .foregroundStyle(.white)
+          Image(IconsEnum.location.rawValue)
+            .defaultOptions(color: .white)
+            .frame(width: 18, height: 18)
           
           Text(vm.tour?.adress ?? "")
             .styledText(.white, 18)

@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct ProfileSettingsComponent: View {
-  @Binding var isPresented: Bool
-  @ObservedObject var vm = ProfileViewModel()
+  @EnvironmentObject var vm: ProfileViewModel
   
   var body: some View {
     ZStack {
@@ -11,13 +10,13 @@ struct ProfileSettingsComponent: View {
         .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
       
       VStack(spacing: 0) {
-        //edit profile
+        //profile edit
         Button(action: {
-          isPresented = true
+          vm.isPresented = true
         }) {
           HStack(spacing: 14) {
-            Image("profile")
-              .defaultOptions()
+            Image(IconsEnum.profile.rawValue)
+              .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
             Text("Edit Profile")
@@ -25,7 +24,45 @@ struct ProfileSettingsComponent: View {
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
+          }
+          .frame(height: 56)
+        }
+        
+        // privacy
+        Button(action: {
+          vm.isSecurotyPresented = true
+        }) {
+          HStack(spacing: 14) {
+            Image(IconsEnum.password.rawValue)
+              .defaultOptions(color: .customGray)
+              .frame(width: 24, height: 24)
+            
+            Text("Change password")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image(IconsEnum.arrowRight.rawValue)
+          }
+          .frame(height: 56)
+        }
+        
+        //appereance
+        Button(action: {
+          vm.isAppereancePresented = true
+        }) {
+          HStack(spacing: 14) {
+            Image(IconsEnum.moonProfile.rawValue)
+              .defaultOptions(color: .customGray)
+              .frame(width: 24, height: 24)
+            
+            Text("Aappearance")
+              .styledText(.customBlack, 16, .semibold)
+            
+            Spacer()
+            
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
@@ -34,67 +71,65 @@ struct ProfileSettingsComponent: View {
         NavigationLink(destination: PaymentViewWrapper()
           .ignoresSafeArea()
           .navigationBarHidden(true)) {
-          HStack(spacing: 14) {
-            Image(systemName: "creditcard")
-              .defaultOptions()
-              .frame(width: 22, height: 16)
-              .tint(.customGray)
-            
-            Text("Payment methods")
-              .styledText(.customBlack, 16, .semibold)
-            
-            Spacer()
-            
-            Image("arrowRight")
+            HStack(spacing: 14) {
+              Image(IconsEnum.creditcard.rawValue)
+                .defaultOptions(color: .customGray)
+                .frame(width: 24, height: 24)
+              
+              Text("Payment methods")
+                .styledText(.customBlack, 16, .semibold)
+              
+              Spacer()
+              
+              Image(IconsEnum.arrowRight.rawValue)
+            }
+            .frame(height: 56)
           }
-          .frame(height: 56)
-        }
         
-        //purchased
+        //purchased tours
         NavigationLink(destination: PurchaseHistoryView()
           .navigationBarHidden(true)) {
-          HStack(spacing: 14) {
-            Image(systemName: "purchased")
-              .defaultOptions()
-              .frame(width: 14, height: 14)
-              .tint(.customGray)
-            
-            Text("  Purchased tours")
-              .styledText(.customBlack, 16, .semibold)
-            
-            Spacer()
-            
-            Image("arrowRight")
+            HStack(spacing: 14) {
+              Image(IconsEnum.ticket.rawValue)
+                .defaultOptions(color: .customGray)
+                .frame(width: 24, height: 24)
+              
+              Text("Purchased tours")
+                .styledText(.customBlack, 16, .semibold)
+              
+              Spacer()
+              
+              Image(IconsEnum.arrowRight.rawValue)
+            }
+            .frame(height: 56)
           }
-          .frame(height: 56)
-        }
         
-        //bookmarked
+        //bookmarks
         NavigationLink(destination: AllBookmarkView().navigationBarHidden(true)) {
           HStack(spacing: 14) {
-            Image("bookmark")
-              .defaultOptions()
+            Image(IconsEnum.bookmarkTab.rawValue)
+              .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
-            Text("Bookmarked")
+            Text("Bookmarks")
               .styledText(.customBlack, 16, .semibold)
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
         
-        //trip
+        // my explores
         NavigationLink(
           destination: MyExploresViewControllerWrapper()
             .navigationBarHidden(true)
             .ignoresSafeArea()
         ) {
           HStack(spacing: 14) {
-            Image("trip")
-              .defaultOptions()
+            Image(IconsEnum.location.rawValue)
+              .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
             Text("My Explored")
@@ -102,35 +137,31 @@ struct ProfileSettingsComponent: View {
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
         
-        
-        //contact
+        // delete acc
         Button(action: {
-          
+          vm.isDeleteAccPresented = true
         }) {
           HStack(spacing: 14) {
-            Image("support")
-              .defaultOptions()
+            Image(IconsEnum.privacy.rawValue)
+              .defaultOptions(color: .customGray)
               .frame(width: 24, height: 24)
             
-            Text("Contact")
+            Text("Delete account")
               .styledText(.customBlack, 16, .semibold)
             
             Spacer()
             
-            Image("arrowRight")
+            Image(IconsEnum.arrowRight.rawValue)
           }
           .frame(height: 56)
         }
-        
-        
-        
       }
-      .frame(height: CGFloat(6) * 56)
+      .frame(height: CGFloat(8) * 56)
       .padding(.leading, 16)
       .padding(.trailing, 10)
     }

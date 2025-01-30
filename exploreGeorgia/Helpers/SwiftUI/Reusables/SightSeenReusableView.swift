@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct SightSeenReusableView: View {
-  @StateObject var bookmarkManager = BookMarkManager()
   @State private var isSaved = false
   @State var place: SightSeenModel
   let maxWidth: CGFloat
   let height: CGFloat
-  let isBookmarkIconHidden: Bool
   
   var body: some View {
     VStack(alignment: .leading, spacing: 8) {
@@ -21,72 +19,40 @@ struct SightSeenReusableView: View {
         .frame(height: height)
         .frame(maxWidth: maxWidth - 28)
         .roundedCorners(12)
-        .overlay(alignment: .topTrailing) {
-          if !isBookmarkIconHidden {
-            Button {
-              place.isBookmarked?.toggle()
-              bookmarkManager
-                .savePlaceInBookmark(
-                  placeId: place.id ?? "",
-                  isBookmarked: !(place.isBookmarked ?? false)
-                )
-            } label: {
-              OverlayActionButtonIcon(
-                iconName: place.isBookmarked ?? false ? IconsEnum.bookmarkActive.rawValue : IconsEnum.bookmarkInactive.rawValue,
-                tint: .customVine
-              )
-            }
-            .offset(x: -10, y: 10)
-            .frame(width: 34, height: 34)
-          }
-        }
       
       HStack(spacing: 2) {
         Text(place.name)
-          .styledText(
-            .customBlack,
-            18,
-            .semibold,
-            .leading,
-            linesCount: 2
-          )
+          .styledText(.customBlack, 18, .semibold, .leading, linesCount: 1)
         
         Spacer()
         
-        Image(systemName: "star.fill")
-          .resizable()
-          .renderingMode(.template)
-          .foregroundStyle(.yellow)
-          .frame(width: 12, height: 12)
-        
-        Text(place.rating)
-          .styledText(
-            .customBlack,
-            13,
-            .semibold
-          )
+        if place.user == nil {
+          Image(systemName: "star.fill")
+            .resizable()
+            .renderingMode(.template)
+            .foregroundStyle(.yellow)
+            .frame(width: 12, height: 12)
+          
+          Text(place.rating)
+            .styledText(.customBlack, 13, .semibold)
+        }
       }
       
       HStack(spacing: 2) {
-        Image("locationPin")
+        Image("location")
+          .resizable()
           .renderingMode(.template)
           .foregroundStyle(.customGray)
           .frame(width: 16, height: 16)
         
         Text(place.region)
-          .styledText(
-            .customGray,
-            14
-          )
+          .styledText(.customGray, 14, linesCount: 1)
         
         Spacer()
         
         Text(place.price == 0 ? "Free" : "₾\(place.price)")
           .styledText(
-            .customVine,
-            14,
-            .semibold
-          )
+            .customGreen, 14, .semibold)
       }
     }
     .padding(.all, 14)

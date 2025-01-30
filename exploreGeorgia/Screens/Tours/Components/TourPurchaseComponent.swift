@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TourPurchaseComponent: View {
-  @ObservedObject var vm: TourViewModel
+  @EnvironmentObject var vm: TourViewModel
   @State var selectedCardIndex = 0
   
   var body: some View {
@@ -26,7 +26,7 @@ struct TourPurchaseComponent: View {
               }
           } label: {
             Text("Tap to add payment method")
-              .styledText(.customBlue, 18, .semibold)
+              .styledText(.customGreen, 18, .semibold)
           }
         }
         .frame(width: UIScreen.main.bounds.width - 60, height: 170)
@@ -57,7 +57,7 @@ struct TourPurchaseComponent: View {
                     .scaledToFill()
                     .frame(width: 40, height: 30)
                     .padding(5)
-                    .background(.customBlue.opacity(selectedCardIndex == index ? 1 : 0.3))
+                    .background(.customGreen.opacity(selectedCardIndex == index ? 1 : 0.3))
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .onTapGesture {
                       withAnimation {
@@ -76,7 +76,7 @@ struct TourPurchaseComponent: View {
           
           HStack {
             Text("\(vm.totalAmount) ₾")
-              .styledText(.customBlue, 18, .bold)
+              .styledText(.customGreen, 18, .bold)
             
             Button {
               vm.createPurchase()
@@ -84,7 +84,7 @@ struct TourPurchaseComponent: View {
               Text("Pay")
                 .styledText(.buttonPrimary, 20, .semibold)
                 .frame(width: 75, height: 32)
-                .background(.customBlue)
+                .background(.customGreen)
                 .roundedCorners(10)
             }
           }

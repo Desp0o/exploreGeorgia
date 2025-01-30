@@ -5,6 +5,8 @@
 //  Created by Despo on 18.01.25.
 //
 
+import SwiftUI
+
 struct TourModel: Codable, IdentifiableAndBookmarkable, Hashable {
   var isBookmarked: Bool?
   var id: String?
@@ -18,4 +20,5 @@ struct TourModel: Codable, IdentifiableAndBookmarkable, Hashable {
   let description: String
   let price: Int
   var isBookMarked: Bool?
+  var createdAt: Date?
 }

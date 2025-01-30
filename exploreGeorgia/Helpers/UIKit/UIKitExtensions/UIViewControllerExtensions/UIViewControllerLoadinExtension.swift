@@ -12,17 +12,17 @@ extension UIViewController {
         view.subviews.first { $0.tag == 999 }
     }
     
-    func showLoading(backgroundOpacity: CGFloat = 0.7) {
+  func showLoading(backgroundOpacity: CGFloat = 0.7, bgColor: UIColor = .black) {
         guard loadingView == nil else { return }
         
         let loadingView = UIView()
         loadingView.frame = view.bounds
         loadingView.tag = 999
-        loadingView.backgroundColor = UIColor.black.withAlphaComponent(backgroundOpacity)
+        loadingView.backgroundColor = bgColor.withAlphaComponent(backgroundOpacity)
         
         let activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.color = .customVine
+        activityIndicator.color = .customGreen
         activityIndicator.startAnimating()
 
         loadingView.addSubview(activityIndicator)

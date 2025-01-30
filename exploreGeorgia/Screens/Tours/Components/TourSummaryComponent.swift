@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TourSummaryComponent: View {
-  @ObservedObject var vm: TourViewModel
+  @EnvironmentObject var vm: TourViewModel
   
   var body: some View {
     VStack(spacing: 12) {
@@ -27,10 +27,7 @@ struct TourSummaryComponent: View {
             ZStack {
               Image(element.icon)
                 .renderingMode(.template)
-                .foregroundStyle(.customBlue)
-                .onTapGesture {
-                  print(index)
-                }
+                .foregroundStyle(.customGreen)
             }
             .frame(width: 40, height: 40)
             .background(.customWhite)

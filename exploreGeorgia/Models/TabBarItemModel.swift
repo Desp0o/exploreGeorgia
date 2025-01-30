@@ -7,6 +7,5 @@
 
 struct TabBarItemModel {
   let title: String
-  let activeIcon: String
-  let inactiveIcon: String
+  let icon: String
 }

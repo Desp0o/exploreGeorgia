@@ -27,25 +27,24 @@ protocol FirebasePhotoUrlGeneratorProtocol {
 }
 
 protocol FirebaseSinglePlaceGenericProtocol {
-  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: String) async throws -> T
+  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: FirebaseCollectionEnum) async throws -> T
 }
 
-protocol FirebasePayemntsProtocol {
-  func fetchPayments(
+protocol FirebaseSimpleCollectionFetchProtocol {
+  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum, limit: Int) async throws -> [T]
+}
+
+protocol FetchSingleUserExploredPlacesProtocol {
+  func fetchUserPlaces(
     userId: String,
     pageSize: Int,
     lastDocument: DocumentSnapshot?
   ) async throws -> (
-    payments: [CreditCardModel],
+    places: [SightSeenModel],
     lastDocument: DocumentSnapshot?,
     hasMoreData: Bool
   )
 }
-
-protocol FirebaseSimpleCollectionFetchProtocol {
-  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum) async throws -> [T]
-}
-
 
 final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
   let db = Firestore.firestore()
@@ -56,7 +55,9 @@ final class FirebaseFetchingService: FirebaseFetchingServicePorotocol {
     lastDocument: DocumentSnapshot?,
     userBucketList: [String]
   ) async throws -> (places: [T], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
-    let collectionRef = db.collection(collectionName.rawValue).limit(to: pageSize + 1)
+    let collectionRef = db.collection(collectionName.rawValue)
+      .order(by: "createdAt", descending: true)
+      .limit(to: pageSize + 1)
     let query: Query
     
     if let lastDocument = lastDocument {
@@ -109,8 +110,8 @@ extension FirebaseFetchingService: FirebasePhotoUrlGeneratorProtocol {
 }
 
 extension FirebaseFetchingService: FirebaseSinglePlaceGenericProtocol {
-  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: String) async throws -> T {
-    let documentRef = db.collection(collection).document(id)
+  func fetchSinglePlaceGeneric<T: Decodable>(with id: String, and collection: FirebaseCollectionEnum) async throws -> T {
+    let documentRef = db.collection(collection.rawValue).document(id)
     
     do {
       let documentSnapshot = try await documentRef.getDocument()
@@ -124,51 +125,54 @@ extension FirebaseFetchingService: FirebaseSinglePlaceGenericProtocol {
   }
 }
 
-extension FirebaseFetchingService: FirebasePayemntsProtocol {
-  func fetchPayments(
-    userId: String,
-    pageSize: Int,
-    lastDocument: DocumentSnapshot?
-  ) async throws -> (payments: [CreditCardModel], lastDocument: DocumentSnapshot?, hasMoreData: Bool) {
-    let collectionRef = db.collection(FirebaseCollectionEnum.payments.rawValue)
-      .whereField("userId", isEqualTo: userId)
-      .limit(to: pageSize + 1)
-    
-    let query: Query
-    if let lastDocument = lastDocument {
-      query = collectionRef.start(afterDocument: lastDocument)
-    } else {
-      query = collectionRef
-    }
-    
-    let snapshot = try await query.getDocuments()
-    let documents = snapshot.documents
-    
-    let hasMoreData = documents.count > pageSize
-    
-    let documentsToProcess = hasMoreData ? Array(documents.prefix(pageSize)) : documents
-    
-    let payments = try documentsToProcess.compactMap { document -> CreditCardModel? in
-      var creditCard = try document.data(as: CreditCardModel.self)
-      creditCard.id = document.documentID
-      return creditCard
-    }
-    
-    return (
-      payments: payments,
-      lastDocument: documentsToProcess.last,
-      hasMoreData: hasMoreData
-    )
-  }
-}
-
 extension FirebaseFetchingService: FirebaseSimpleCollectionFetchProtocol {
-  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum) async throws -> [T] {
+  func fetchCollection<T: Decodable>(collectionName: FirebaseCollectionEnum, limit: Int) async throws -> [T] {
     let db = Firestore.firestore()
-    let querySnapshot = try await db.collection(collectionName.rawValue).limit(to: 100).getDocuments()
+    let querySnapshot = try await db.collection(collectionName.rawValue).limit(to: limit).getDocuments()
     
     return try querySnapshot.documents.map { document in
       try document.data(as: T.self)
     }
+  }
+}
+
+extension FirebaseFetchingService: FetchSingleUserExploredPlacesProtocol {
+  func fetchUserPlaces(
+    userId: String,
+    pageSize: Int,
+    lastDocument: DocumentSnapshot? = nil
+  ) async throws -> (
+    places: [SightSeenModel],
+    lastDocument: DocumentSnapshot?,
+    hasMoreData: Bool
+  ) {
+    let userDocument = try await db.collection("users").document(userId).getDocument()
+    
+    guard let data = userDocument.data(),
+          let exploredIds = data["explored"] as? [String] else {
+      throw NSError(domain: "FirestoreError", code: 404, userInfo: [NSLocalizedDescriptionKey: "User's explored list is empty or not found."])
+    }
+    
+    var query = db.collection("usersPlaces")
+      .limit(to: pageSize)
+    
+    if let lastDocument = lastDocument {
+      query = query.start(afterDocument: lastDocument)
+    }
+    
+    let snapshot = try await query.getDocuments()
+    
+    let places = snapshot.documents.compactMap { document in
+      let sightSeen = try? document.data(as: SightSeenModel.self)
+      return sightSeen?.id != nil && exploredIds.contains(sightSeen!.id!) ? sightSeen : nil
+    }
+    
+    let hasMoreData = snapshot.documents.count == pageSize
+    
+    return (
+      places,
+      snapshot.documents.last,
+      hasMoreData
+    )
   }
 }

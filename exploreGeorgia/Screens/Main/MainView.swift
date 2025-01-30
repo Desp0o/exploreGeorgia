@@ -16,30 +16,31 @@ struct MainView: View {
     ScrollView {
       VStack(spacing: 30) {
         Group {
-          MainUserComponet(vm: vm)
+          MainUserComponet()
           MainViewTitleComponent()
         }
         .padding(.leading, 20)
         
-        PlacesFromAppComponents(vm: vm)
+        PlacesFromAppComponents()
         
         Group {
-          IntrestingFacts(vm: vm)
-          PlacesFromUserComponent(vm: vm, tabIndex: $tabIndex)
-          ToursComponent(vm: vm)
+          IntrestingFacts()
+          PlacesFromUserComponent(tabIndex: $tabIndex)
+          ToursComponent()
         }
         .padding(.horizontal, 20)
         
         Spacer()
       }
       .padding(.top, 10)
-      .onAppear {
-        vm.getPopularPlaces()
-        vm.fetchSingleFact()
-        vm.fetchUsersAddedPlaces()
+      .overlay {
+        if vm.isLoading {
+          MainScreenShimmer()
+        }
       }
     }
     .scrollIndicators(.hidden)
     .background(.primaryWhite)
+    .environmentObject(vm)
   }
 }

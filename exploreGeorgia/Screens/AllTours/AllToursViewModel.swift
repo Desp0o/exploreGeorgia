@@ -6,34 +6,45 @@
 //
 
 import Firebase
+import FirebaseFirestore
 
+@MainActor
 final class AllToursViewModel: ObservableObject {
   private let firebaseManager: FirebaseFetchingServicePorotocol
+  private var lastDocument: DocumentSnapshot? = nil
+  private var hasMoreData = true
+  private var isFetching = false
+  
   @Published var fetchedData: [TourModel] = []
   @Published var isLoading = true
   
   init(firebaseManager: FirebaseFetchingServicePorotocol = FirebaseFetchingService()) {
     self.firebaseManager = firebaseManager
+    
+    fetchTours()
   }
   
-  func fetchTours(pageSize: Int) {
+  func fetchTours() {
+    guard !isFetching && hasMoreData else { return }
+    isFetching = true
+    
     Task {
       do {
-        let (places, _, _): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
+        let (places, newLastDocument, hasMore): ([TourModel], DocumentSnapshot?, Bool) = try await firebaseManager.fetchCollectionFromFirebase(
           collectionName: .tours,
-          pageSize: pageSize,
-          lastDocument: nil,
+          pageSize: 10,
+          lastDocument: lastDocument,
           userBucketList: [""]
         )
         
-        await MainActor.run {
-          fetchedData = places
-          isLoading = false
-        }
+        lastDocument = newLastDocument
+        hasMoreData = hasMore
+        fetchedData.append(contentsOf: places)
+        isLoading = false
+        isFetching = false
       } catch {
-        await MainActor.run {
-          isLoading = false
-        }
+        isLoading = false
+        isFetching = false
       }
     }
   }

@@ -8,19 +8,18 @@
 import SwiftUI
 
 struct TourBookingComponent: View {
-  @ObservedObject var vm: TourViewModel
+  @EnvironmentObject var vm: TourViewModel
   @State var isBounced = false
-  let startingDate: Date
   
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
       DatePicker(
         "Booking Date",
         selection: $vm.selectedDate,
-        in: startingDate...,
+        in: vm.startingDate...,
         displayedComponents: [.date]
       )
-      .accentColor(.customBlue)
+      .accentColor(.customGreen)
       .datePickerStyle(GraphicalDatePickerStyle())
       .padding(.horizontal, 20)
       .background(.customWhite)
@@ -66,7 +65,8 @@ struct TourBookingComponent: View {
         Button {
           if vm.totalAmount == 0 {
             isBounced = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            Task { @MainActor in
+              try? await Task.sleep(for: .seconds(0.1))
               isBounced = false
             }
           } else {
@@ -78,7 +78,7 @@ struct TourBookingComponent: View {
           Text("Pay")
             .styledText(.buttonPrimary, 20, .semibold)
             .frame(width: 95, height: 32)
-            .background(.customBlue)
+            .background(.customGreen)
             .roundedCorners(10)
         }
       }

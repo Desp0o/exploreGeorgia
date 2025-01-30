@@ -26,4 +26,5 @@ struct SightSeenModel: Codable, Identifiable, Hashable, IdentifiableAndBookmarka
   var userDetails: UserModel?
   var isSightseen: Bool?
   var isFood: Bool?
+  var createdAt: Date
 }

@@ -49,7 +49,7 @@ struct MapViewReusable: View {
           }
         }
         .padding(.all, 12)
-        .background(.customBlue.opacity(0.7))
+        .background(.customGreen.opacity(0.7))
         .clipShape(Circle())
         .zIndex(2)
         
@@ -63,7 +63,7 @@ struct MapViewReusable: View {
         }
         .pickerStyle(.segmented)
         .onAppear {
-          UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customBlue)
+          UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.customGreen)
           let attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.white
           ]
@@ -98,11 +98,12 @@ struct MapViewReusable: View {
               )
               .frame(maxWidth: .infinity)
               .frame(height: 50)
-              .background(.customBlue)
+              .background(.customGreen)
               .roundedCorners(12)
               .padding(.horizontal, 20)
           }
         }
+        .padding(.bottom, 10)
       }
     }
     .actionSheet(

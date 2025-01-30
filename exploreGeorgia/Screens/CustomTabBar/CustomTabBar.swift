@@ -20,25 +20,20 @@ struct CustomTabBar: View {
   @State private var currentIdenx = 0
   
   var body: some View {
+    
     VStack(spacing: 0) {
       ZStack {
         switch currentIdenx {
         case 0:
-          NavigationStack {
-            MainView(tabIndex: $currentIdenx)
-          }
+          MainView(tabIndex: $currentIdenx)
         case 1:
-          NavigationStack {
-            ExploreView()
-          }
+          ExploreView()
         case 2:
-          VocabularyViewControllerWrapper()
+          FoodView()
         case 3:
-          Text("hello")
+          VocabularyViewControllerWrapper()
         case 4:
-          NavigationStack {
-            ProfileView()
-          }
+          ProfileView()
         default:
           VStack {
             Text("Default Tab")
@@ -55,19 +50,16 @@ struct CustomTabBar: View {
             Button {
               currentIdenx = index
             } label: {
-              Image(currentIdenx == index ? item.activeIcon : item.inactiveIcon)
+              Image(item.icon)
                 .resizable()
+                .renderingMode(.template)
                 .scaledToFill()
-                .frame(
-                  width: 24,
-                  height: 24
-                )
+                .foregroundStyle(index == currentIdenx ? .customGreen : .customGray)
+                .frame(width: 24, height: 24)
             }
             
             Text(item.title)
-              .styledText(
-                currentIdenx == index ? Color.customVine : Color.customGray,
-                12)
+              .styledText(currentIdenx == index ? Color.customGreen : Color.customGray, 12)
           }
           
           Spacer()
@@ -77,7 +69,7 @@ struct CustomTabBar: View {
       .padding(.horizontal, 20)
       .frame(maxWidth: .infinity)
       .frame(height: 70)
-      .background(.customWhite)
+      .background(.primaryWhite)
       .clipShape(
         .rect(
           topLeadingRadius: 12,
@@ -94,10 +86,3 @@ struct CustomTabBar: View {
     .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
   }
 }
-
-#Preview {
-  CustomTabBar()
-    .preferredColorScheme(.dark)
-}
-
-

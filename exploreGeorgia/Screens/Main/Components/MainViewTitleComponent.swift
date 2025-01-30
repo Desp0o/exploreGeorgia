@@ -28,7 +28,7 @@ struct MainViewTitleComponent: View {
         
         Text("G e o r g i a")
           .styledText(
-            .customBlue,
+            .customGreen,
             28,
             .bold
           )
@@ -36,7 +36,7 @@ struct MainViewTitleComponent: View {
             Image("arc")
               .renderingMode(.template)
               .offset(y: 20)
-              .foregroundStyle(.customBlue)
+              .foregroundStyle(.customGreen)
           }
         
         Spacer()

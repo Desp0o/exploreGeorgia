@@ -27,7 +27,7 @@ struct PlaceFromUserReusable: View {
         Spacer()
         
         HStack {
-          Image("locationPin")
+          Image("location")
             .renderingMode(.template)
             .resizable()
             .scaledToFill()
@@ -35,10 +35,7 @@ struct PlaceFromUserReusable: View {
             .frame(width: 16, height: 16)
           
           Text(place.region)
-            .styledText(
-              .customGray,
-              15
-            )
+            .styledText(.customGray, 15)
         }
       }
       
@@ -52,22 +49,17 @@ struct PlaceFromUserReusable: View {
     .background(.customWhite)
     .roundedCorners(12)
     .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
+    .overlay {
+      ZStack {
+        if place.isFood ?? false {
+          Image(systemName: "fork.knife.circle.fill")
+            .foregroundStyle(.customGreen)
+            .scaleEffect(1.2)
+            .offset(x: -10, y: 10)
+        }
+      }
+      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+    }
   }
 }
 
-#Preview {
-  let place = SightSeenModel(
-    cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjgmH2fHlwIrF-tdyLBjr7m-cEO-ODvDZQCg&s",
-    name: "Maui",
-    region: "Hawaii",
-    album: [""],
-    description: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjgmH2fHlwIrF-tdyLBjr7m-cEO-ODvDZQCg&s",
-    rating: "",
-    price: 0,
-    adress: "Hawaii, maui 27/1",
-    ratingCount: 0,
-    latitude: 0,
-    longitude: 0
-  )
-  PlaceFromUserReusable(place: place)
-}

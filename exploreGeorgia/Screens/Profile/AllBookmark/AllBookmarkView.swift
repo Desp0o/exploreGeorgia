@@ -1,0 +1,116 @@
+//
+//  AllBookmarkView.swift
+//  exploreGeorgia
+//
+//  Created by Despo on 14.01.25.
+//
+
+import SwiftUI
+
+struct AllBookmarkView: View {
+  @Environment(\.presentationMode) var dismiss
+  @StateObject private var vm = AllBookmarkViewModel()
+  @ObservedObject private var alertManager = CustomAlertManager()
+  @State private var alertBoxMessage = ""
+  
+  var body: some View {
+    ZStack {
+      Color.primaryWhite
+        .ignoresSafeArea()
+      
+      VStack(spacing: 30) {
+        HStack {
+          Text("Bookmarks")
+            .styledText(.customGreen, 20, .bold)
+        }
+        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity)
+        .overlay {
+          ZStack {
+            HStack {
+              Button {
+                dismiss.wrappedValue.dismiss()
+              } label: {
+                OverlayActionButtonIcon(
+                  iconName: .backButton,
+                  scale: 0.9
+                )
+              }
+              Spacer()
+            }
+          }
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
+        
+        HStack() {
+          ScrollView(.horizontal) {
+            HStack {
+              ForEach(vm.buttonsArray.indices, id: \.self) { index in
+                let currentButton = vm.buttonsArray[index]
+                
+                Button {
+                  withAnimation {
+                    vm.dataIndex = index
+                  }
+                } label: {
+                  Text(currentButton)
+                    .styledText(.buttonPrimary, 16, .semibold)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(.customGreen.opacity(index == vm.dataIndex ? 1 : 0.3))
+                    .roundedCorners(12)
+                }
+              }
+            }
+            .padding(.horizontal, 20)
+          }
+          .scrollIndicators(.hidden)
+        }
+        
+        if vm.isLoading {
+          VStack {
+            ProgressView()
+              .scaleEffect(1.5)
+              .tint(.customGreen)
+          }
+          .frame(maxHeight: .infinity)
+        } else {
+          ScrollView {
+            Spacer()
+              .frame(height: 20)
+            
+            VStack(spacing: 12) {
+              switch vm.dataIndex {
+              case 0:
+                PlacesBookmarkViewComponent(collectionName: .appPlace)
+              case 1:
+                PlacesBookmarkViewComponent(collectionName: .usersPlace)
+              case 2:
+                ToursBookmarkViewComponent()
+              case 3:
+                FoodBookmarksView(collection: .resturant)
+              case 4:
+                FoodBookmarksView(collection: .drinks)
+              case 5:
+                FoodBookmarksView(collection: .bakery)
+              default:
+                NoBookmarksComponent()
+              }
+            }
+          }
+          .scrollBounceBehavior(.basedOnSize)
+          .scrollIndicators(.hidden)
+        }
+      }
+    }
+    .onAppear {
+      vm.requestData()
+    }
+    .onChange(of: vm.dataIndex) { _ in
+      vm.requestData()
+    }
+    .environmentObject(vm)
+  }
+}

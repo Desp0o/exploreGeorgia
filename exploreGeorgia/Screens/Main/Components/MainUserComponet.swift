@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainUserComponet: View {
-  @ObservedObject var vm: MainViewModel
+  @EnvironmentObject var vm: MainViewModel
   
   var body: some View {
     HStack {
@@ -18,11 +18,7 @@ struct MainUserComponet: View {
         .frame(width: 37, height: 37)
         
         Text(vm.user?.firstName ?? "")
-          .styledText(
-            .customBlack,
-            14,
-            .semibold
-          )
+          .styledText(.customBlack, 14, .semibold)
       }
       .padding(.vertical, 6)
       .padding(.horizontal, 10)
@@ -31,10 +27,6 @@ struct MainUserComponet: View {
       
       Spacer()
     }
+    .shadow(color: .black.opacity(0.25), radius: 4, y: 2)
   }
-}
-
-#Preview {
-  let vm = MainViewModel()
-  MainUserComponet(vm: vm)
 }

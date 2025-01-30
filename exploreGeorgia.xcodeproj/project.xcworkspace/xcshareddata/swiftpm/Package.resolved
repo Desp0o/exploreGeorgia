@@ -1,5 +1,5 @@
 {
-  "originHash" : "e4144ee5ff9bc02076a67011991059508a69041bb8ada463676057ec69e92542",
+  "originHash" : "af1d49644ae1817695ad7e138bd8f9e7084bc6af68fbc4466e357a832ab7f162",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -143,6 +143,15 @@
       "state" : {
         "revision" : "ebc7251dd5b37f627c93698e4374084d98409633",
         "version" : "1.28.2"
+      }
+    },
+    {
+      "identity" : "webservice",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Desp0o/webService.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "fbf8794e3bbe44b1cb25242234717a6b5a4edc97"
       }
     }
   ],

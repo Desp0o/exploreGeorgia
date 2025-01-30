@@ -9,65 +9,98 @@ import SwiftUI
 
 struct ProfileView: View {
   @StateObject var vm = ProfileViewModel()
-  @State var isPresented = false
-  @State var isSomethingChanged = false
+  @StateObject var editViewModel = EditProfileViewModel()
+  @ObservedObject private var toastManager = ToastManager()
+  @State private var toastMessage = ""
+  @State private var toastBgColor = ToastTypes.successfully
+
+  private let isSmallSize = UIScreen.main.bounds.height <= 700
 
   var body: some View {
     ZStack {
       Color.primaryWhite.ignoresSafeArea()
       
-      if vm.isLoading {
+      if toastManager.isShown {
         VStack {
-          ProgressView()
-            .scaleEffect(2.0)
-            .tint(.customBlue)
+          ToastView(
+            message: toastMessage,
+            bgColor: toastBgColor
+          )
+          
+          Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: UIScreen.main.bounds.height)
-      } else {
-        ScrollView {
-          VStack(spacing: 40) {
-            Spacer()
-            
-            ProfileStatisticComponent(
-              user: vm.user,
-              statisticArray: vm.profileStatistic
-            )
-            
-            ProfileSettingsComponent(isPresented: $isPresented)
-            
-            Button{
-              vm.logOut()
-            } label: {
-              Text("Log out")
-                .styledText(
-                  .customBlue,
-                  16,
-                  .semibold
-                )
-            }
-          }
-          .padding(.horizontal, 20)
-          .padding(.bottom, 20)
-        }
-        .scrollIndicators(.hidden)
-        .scrollBounceBehavior(.basedOnSize)
-        .sheet(isPresented: $isPresented) {
-          EditProfile()
-        }
-        .onChange(of: isPresented) { newValue in
-          if !newValue {
-            vm.fetchProfile()
+        .padding(.horizontal, 20)
+        .zIndex(4)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+      }
+      ScrollView {
+        VStack(spacing: 40) {
+          Spacer()
+          
+          ProfileStatisticComponent()
+          ProfileSettingsComponent()
+          
+          Button{
+            vm.logOut()
+          } label: {
+            Text("Log out")
+              .styledText(.customGreen, 16, .semibold)
           }
         }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 20)
+      }
+      .scrollIndicators(.hidden)
+      .scrollBounceBehavior(.basedOnSize)
+      .sheet(isPresented: $vm.isPresented) {
+        UserInfoUpdateComponent(editViewModel: editViewModel)
+          .presentationDetents([.fraction(isSmallSize ? 0.52 : 0.42)])
+      }
+      .sheet(isPresented: $vm.isSecurotyPresented) {
+        ProfilePrivacyComponent(editViewModel: editViewModel)
+          .presentationDetents(
+            [.fraction(
+              editViewModel.isUserFromGoogle ? 0.22 : (isSmallSize ? 0.55 : 0.45)
+            )]
+          )
+      }
+      .sheet(isPresented: $vm.isAppereancePresented) {
+        ThemeTogglerComponent()
+          .ignoresSafeArea()
+          .presentationDetents([.fraction(isSmallSize ? 0.15 : 0.1)])
+      }
+      .sheet(isPresented: $vm.isDeleteAccPresented) {
+        UserDeleteComponent()
+          .presentationDetents([.fraction(isSmallSize ? 0.25 : 0.2)])
+      }
+    }
+    .overlay {
+      if vm.isLoading {
+        ProfileViewShimmer()
       }
     }
     .onAppear {
-      isSomethingChanged.toggle()
       vm.fetchProfile()
     }
+    .onChange(of: vm.isPresented) { newValue in
+      if !newValue {
+        vm.fetchProfile()
+      }
+    }
+    .onReceive(editViewModel.$completionMessage, perform: { message in
+      if !message.isEmpty {
+        toastBgColor = .successfully
+        toastMessage = message
+        toastManager.showToast()
+      }
+    })
+    .onReceive(editViewModel.$errorMessage, perform: { message in
+      if !message.isEmpty {
+        toastBgColor = .error
+        toastMessage = message
+        toastManager.showToast()
+      }
+    })
+    .environmentObject(vm)
   }
 }
-
-//#Preview {
-//  ProfileView()
-//}

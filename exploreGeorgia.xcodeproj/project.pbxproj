@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E368FD242D4946E100ACFF60 /* NetworkManagerFramework in Frameworks */ = {isa = PBXBuildFile; productRef = E368FD232D4946E100ACFF60 /* NetworkManagerFramework */; };
 		E38C68702D31E9F500EC2BFE /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E38C686F2D31E9F500EC2BFE /* FirebaseAuth */; };
 		E38C68722D31E9F500EC2BFE /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = E38C68712D31E9F500EC2BFE /* FirebaseCore */; };
 		E38C68742D31E9F500EC2BFE /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = E38C68732D31E9F500EC2BFE /* FirebaseDatabase */; };
@@ -48,6 +49,7 @@
 			files = (
 				E38C68742D31E9F500EC2BFE /* FirebaseDatabase in Frameworks */,
 				E38C68762D31E9F500EC2BFE /* FirebaseFirestore in Frameworks */,
+				E368FD242D4946E100ACFF60 /* NetworkManagerFramework in Frameworks */,
 				E38C687D2D31EA1100EC2BFE /* GoogleSignInSwift in Frameworks */,
 				E38C68722D31E9F500EC2BFE /* FirebaseCore in Frameworks */,
 				E38C68782D31E9F500EC2BFE /* FirebaseStorage in Frameworks */,
@@ -102,6 +104,7 @@
 				E38C68772D31E9F500EC2BFE /* FirebaseStorage */,
 				E38C687A2D31EA1100EC2BFE /* GoogleSignIn */,
 				E38C687C2D31EA1100EC2BFE /* GoogleSignInSwift */,
+				E368FD232D4946E100ACFF60 /* NetworkManagerFramework */,
 			);
 			productName = exploreGeorgia;
 			productReference = E32A68692D1D66340028F217 /* exploreGeorgia.app */;
@@ -134,6 +137,7 @@
 			packageReferences = (
 				E38C686E2D31E9F500EC2BFE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				E38C68792D31EA1100EC2BFE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				E368FD222D4946E100ACFF60 /* XCRemoteSwiftPackageReference "webService" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E32A686A2D1D66340028F217 /* Products */;
@@ -389,6 +393,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E368FD222D4946E100ACFF60 /* XCRemoteSwiftPackageReference "webService" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Desp0o/webService.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		E38C686E2D31E9F500EC2BFE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://www.github.com/firebase/firebase-ios-sdk.git";
@@ -408,6 +420,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E368FD232D4946E100ACFF60 /* NetworkManagerFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E368FD222D4946E100ACFF60 /* XCRemoteSwiftPackageReference "webService" */;
+			productName = NetworkManagerFramework;
+		};
 		E38C686F2D31E9F500EC2BFE /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E38C686E2D31E9F500EC2BFE /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

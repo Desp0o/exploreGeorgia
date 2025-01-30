@@ -10,7 +10,7 @@ import SwiftUI
 extension Button {
   func customStyledButton(
     height: CGFloat = 50,
-    bg: Color = .customBlue
+    bg: Color = .customGreen
   ) -> some View {
     self.frame(height: height)
       .frame(maxWidth: .infinity)

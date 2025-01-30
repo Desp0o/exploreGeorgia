@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct IntrestingFacts: View {
-  @ObservedObject var vm: MainViewModel
+  @EnvironmentObject var vm: MainViewModel
   @State private var currentFatc = 0
   
   var body: some View {
@@ -16,9 +16,7 @@ struct IntrestingFacts: View {
       HStack {
         HStack {
           Text("Did you know")
-            .styledText(.customBlue, 20, .semibold)
-          Image(systemName: "lightbulb.max.fill")
-            .foregroundStyle(.yellow)
+            .styledText(.customGreen, 20, .semibold)
         }
         
         Spacer()
@@ -31,7 +29,7 @@ struct IntrestingFacts: View {
           }
         } label: {
           Text("Next fact")
-            .styledText(.customBlue, 16, .semibold)
+            .styledText(.customGreen, 16, .semibold)
         }
       }
       if !vm.intrestingFacts.isEmpty {

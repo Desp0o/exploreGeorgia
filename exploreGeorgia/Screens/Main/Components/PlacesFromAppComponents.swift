@@ -8,80 +8,53 @@
 import SwiftUI
 
 struct PlacesFromAppComponents: View {
-  @ObservedObject var vm: MainViewModel
-  @State private var lastSelectedID: String?
-  @State private var isSomethingChanged = false
+  @EnvironmentObject var vm: MainViewModel
   
   var body: some View {
     VStack(spacing: 5) {
       HStack {
         Text("Popular Destinations")
-          .styledText(
-            .customBlack,
-            20,
-            .bold
-          )
+          .styledText(.customBlack, 20, .bold)
         
         Spacer()
         
         NavigationLink {
           AllPopularPlaces()
-            .navigationBarHidden(
-              true
-            )
+            .navigationBarHidden(true)
         } label: {
           Text("View all")
-            .styledText(.customVine, 14)
+            .styledText(.customGreen, 14)
         }
       }
       .padding(.horizontal, 20)
       
-      ScrollViewReader { proxy in
-        ScrollView(.horizontal, showsIndicators: false) {
-          LazyHStack(spacing: 20) {
-            if vm.placesFromApp.isEmpty {
-              ProgressView()
-                .tint(.customBlue)
-                .frame(width: UIScreen.main.bounds.width - 20, height: 200)
-            } else {
-              ForEach(vm.placesFromApp, id: \.id) { place in
-                NavigationLink(
-                  destination: PlaceDetailsView(
-                    elementID: place.id ?? "",
-                    collectionName: .appPlace
-                  )
-                  .navigationBarHidden(true)
-                ) {
-                  SightSeenReusableView(
-                    place: place,
-                    maxWidth: 268,
-                    height: 250,
-                    isBookmarkIconHidden: false
-                  )
-                }
-                .onTapGesture {
-                  lastSelectedID = place.id
-                }
+      ScrollView(.horizontal, showsIndicators: false) {
+        HStack(spacing: 20) {
+          if vm.placesFromApp.isEmpty {
+            ProgressView()
+              .tint(.customGreen)
+              .frame(width: UIScreen.main.bounds.width - 20, height: 200)
+          } else {
+            ForEach(vm.placesFromApp, id: \.id) { place in
+              NavigationLink(
+                destination: PlaceDetailsView(
+                  elementID: place.id ?? "",
+                  collectionName: .appPlace,
+                  isNavigationDisabled: true
+                ).navigationBarHidden(true)
+              ) {
+                SightSeenReusableView(
+                  place: place,
+                  maxWidth: 268,
+                  height: 250
+                )
               }
             }
           }
-          .padding(.horizontal, 20)
-          .id(vm.placesFromApp)
-          .id(isSomethingChanged)
         }
+        .padding(.horizontal, 20)
         .frame(height: 350)
-        .onAppear {
-          isSomethingChanged.toggle()
-          if let id = lastSelectedID {
-            proxy.scrollTo(id, anchor: .leading)
-          }
-        }
       }
     }
   }
 }
-
-//#Preview {
-//  let vm = MainViewModel()
-//  PlacesFromAppComponents(vm: vm)
-//}
