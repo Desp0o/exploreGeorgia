@@ -110,7 +110,7 @@ struct ResturantViewInfoComponent: View {
         
         VStack {
           TextEditorComponent(textForEditor: $vm.usersReviweText, placeholder: "Write your review")
-
+            .frame(minHeight: 60)
           
           Button {
             vm.addUserReview(collection: collection)
