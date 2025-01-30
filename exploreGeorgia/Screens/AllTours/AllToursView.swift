@@ -36,6 +36,7 @@ struct AllToursView: View {
           
           Spacer()
         }
+        .padding(.horizontal, 20)
       }
       
       LazyVStack(spacing: 20) {
@@ -54,8 +55,8 @@ struct AllToursView: View {
           }
         }
       }
+      .padding(.horizontal, 20)
     }
-    .padding(.horizontal, 20)
     .background(.primaryWhite)
     .overlay {
       if vm.isLoading {

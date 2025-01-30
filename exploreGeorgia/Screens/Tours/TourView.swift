@@ -57,8 +57,7 @@ struct TourView: View {
                   .roundedCorners(12)
               }
             }
-            .padding(.horizontal, 20)
-          }
+           }
           .padding(.bottom, 30)
           
           if vm.isCalendarShown {
