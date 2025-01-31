@@ -36,6 +36,7 @@ final class FoodCategoryViewModel {
     Task {
       await MainActor.run {
         isLoading = true
+        loadingDelegate?.DidDataLoaded()
       }
       
       do {
@@ -53,11 +54,13 @@ final class FoodCategoryViewModel {
           dataDelegate?.didDataFetched()
           isFetching = false
           isLoading = false
+          loadingDelegate?.DidDataLoaded()
         }
       } catch {
         await MainActor.run {
           isFetching = false
           isLoading = false
+          loadingDelegate?.DidDataLoaded()
         }
       }
     }
