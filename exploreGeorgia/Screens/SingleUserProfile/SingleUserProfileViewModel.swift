@@ -19,10 +19,15 @@ protocol SingleUserDataDelegate: AnyObject {
   func didDataFetched()
 }
 
+protocol SingleUserErrorDelegate: AnyObject {
+  func didErrorDuringLogin()
+}
+
 final class SingleUserProfileViewModel {
   weak var userDelegate: SingleUserFetchDelegate?
   weak var loadingDelegate: SingleUserLoadingDelegate?
   weak var dataDelegate: SingleUserDataDelegate?
+  weak var errorDelegate: SingleUserErrorDelegate?
   private let userManager: UserManager
   private let firebaseManager: FetchSingleUserExploredPlacesProtocol
   private var hasMoreData = true
@@ -50,7 +55,8 @@ final class SingleUserProfileViewModel {
           userDelegate?.didUserFetched()
         }
       } catch {
-        print(error.localizedDescription)
+        errorMessage = error.localizedDescription
+        errorDelegate?.didErrorDuringLogin()
       }
     }
   }

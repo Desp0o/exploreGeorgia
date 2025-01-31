@@ -13,8 +13,8 @@ struct ResturantModel: Codable, IdentifiableAndBookmarkable, Identifiable, Equat
   let cover: String
   let workingHours: String
   let minCost: Double
-  let latitude: Int
-  let longitude: Int
+  let latitude: Double
+  let longitude: Double
   var isBookmarked: Bool?
   let isGlutein: Bool
   let isVegan: Bool

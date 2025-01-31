@@ -104,6 +104,7 @@ final class SingleUserProfileViewController: UIViewController {
     vm.userDelegate = self
     vm.loadingDelegate = self
     vm.dataDelegate = self
+    vm.errorDelegate = self
     
     setupConstraints()
   }
@@ -208,6 +209,13 @@ extension SingleUserProfileViewController: SingleUserLoadingDelegate {
 extension SingleUserProfileViewController: SingleUserDataDelegate {
   func didDataFetched() {
     table.reloadData()
+  }
+}
+
+extension SingleUserProfileViewController: SingleUserErrorDelegate {
+  func didErrorDuringLogin() {
+    let overlay = UIKitCustomAlert()
+    overlay.appear(sender: self, message: "something went wrong", messageType: .error)
   }
 }
 

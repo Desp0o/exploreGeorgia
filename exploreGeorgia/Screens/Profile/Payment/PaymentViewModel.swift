@@ -191,7 +191,8 @@ final class PaymentViewModel {
         }
         
       } catch {
-        print(error.localizedDescription)
+        errorMessage = error.localizedDescription
+        errorDelegate?.didErrorOccur()
       }
     }
   }
@@ -201,7 +202,8 @@ final class PaymentViewModel {
       do {
         try await removeElementFromPaymentsAndUsers(card: card)
       } catch {
-        print(error)
+        errorMessage = error.localizedDescription
+        errorDelegate?.didErrorOccur()
       }
     }
   }
