@@ -45,7 +45,6 @@ final class BookMarkManager: ObservableObject {
 extension BookMarkManager: BookmarkActivityProtocol {
   func toggleBookmark(placeId: String, isBookmarked: Bool) async throws {
     guard let userId = Auth.auth().currentUser?.uid else {
-      print("User not logged in")
       return
     }
     

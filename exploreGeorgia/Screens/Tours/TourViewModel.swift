@@ -74,7 +74,6 @@ final class TourViewModel: ObservableObject {
           isLoading = false
         }
       } catch {
-        print(error.localizedDescription)
         await MainActor.run {
           isLoading = false
         }

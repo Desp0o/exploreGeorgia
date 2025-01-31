@@ -153,14 +153,12 @@ struct ResturantView: View {
       if message != "" {
         isError = false
         toastManager.showToast()
-        print("🟢")
       }
     })
     .onReceive(vm.$errorMessage, perform: { message in
       if message == .feedbackError || message == .noFeedback {
         isError = true
         toastManager.showToast()
-        print("🔴")
       }
     })
     .sheet(isPresented: $vm.isPresent) {

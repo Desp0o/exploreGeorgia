@@ -80,7 +80,6 @@ extension AuthManager: GoogleAuthProtocol {
     guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
           let window = windowScene.windows.first,
           let rootViewController = window.rootViewController else {
-      print("There is no root view controller!")
       throw AuthenticationError.unknownError(message: "unknown error")
     }
     
