@@ -9,7 +9,8 @@ import SwiftUI
 
 struct PlaceDetailsNavigationBar: View {
   @Environment(\.presentationMode) var presentationMode
-  @ObservedObject var bookmarkManager = BookMarkManager()
+  @StateObject var bookmarkManager = BookMarkManager()
+  @ObservedObject var toastManager = ToastManager()
   @Binding var isBookMarked: Bool
   let placeID: String
   
@@ -38,5 +39,18 @@ struct PlaceDetailsNavigationBar: View {
     .padding(.top, (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.top ?? 0)
     .frame(width: UIScreen.main.bounds.width - 20)
     .zIndex(10)
+    .onReceive(bookmarkManager.$isError) { isError in
+      if isError {
+        toastManager.showToast()
+      }
+    }
+    .overlay {
+      if toastManager.isShown {
+        VStack {
+          ToastView(message: "Please try again later.", bgColor: .error)
+        }
+        .offset(y: 15)
+      }
+    }
   }
 }

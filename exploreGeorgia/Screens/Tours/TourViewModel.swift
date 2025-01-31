@@ -35,6 +35,7 @@ final class TourViewModel: ObservableObject {
   @Published var selectedImage = ""
   @Published var startingDate: Date = Date().addingTimeInterval(86400)
   @Published var isCalendarShown = false
+  @Published var errorMessage = ""
   
   init(
     firebaseManager: FirebaseSinglePlaceGenericProtocol = FirebaseFetchingService(),
@@ -92,7 +93,9 @@ final class TourViewModel: ObservableObject {
           currentUserId = userID
         }
       } catch {
-        print(error.localizedDescription)
+        await MainActor.run {
+          errorMessage = "Could not retrieve credit cards."
+        }
       }
     }
   }
@@ -119,14 +122,16 @@ final class TourViewModel: ObservableObject {
           isSuccessfullyPurchased = true
         }
       } catch {
-        print("Failed to add purchased tour: \(error.localizedDescription)")
+        await MainActor.run {
+          errorMessage = "Failed to purchase the tour."
+        }
       }
     }
   }
   
   func addPurchasedTour(purchasedTour: PurchasedTourModel, forUser userId: String) async throws {
     do {
-      let purchasedTourRef = db.collection("purchasedTours").document(purchasedTour.id)
+      let purchasedTourRef = db.collection("purcha12sedTours").document(purchasedTour.id)
       try await purchasedTourRef.setData([
         "id": purchasedTour.id,
         "userId": purchasedTour.userId,

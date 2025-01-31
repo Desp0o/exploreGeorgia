@@ -69,7 +69,7 @@ final class PlaceDetailsViewModel: ObservableObject {
 
       isBookmarked = currentUser.bucketList.contains(placeId)
     } catch {
-      print("Error checking bookmark status: \(error.localizedDescription)")
+      isError = true
     }
   }
 }

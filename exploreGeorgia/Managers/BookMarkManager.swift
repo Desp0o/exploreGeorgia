@@ -26,17 +26,22 @@ protocol GetDocumetnsFromBucketListProtocol {
 
 final class BookMarkManager: ObservableObject {
   private let userManager: UserManager
+  @Published var isError = false
   
   init(userManager: UserManager = UserManager()) {
     self.userManager = userManager
   }
   
   func savePlaceInBookmark(placeId: String, isBookmarked: Bool) {
+    isError = false
+    
     Task {
       do {
         try await toggleBookmark(placeId: placeId, isBookmarked: isBookmarked)
       } catch {
-        print("Error: \(error.localizedDescription)")
+        await MainActor.run {
+          isError = true
+        }
       }
     }
   }

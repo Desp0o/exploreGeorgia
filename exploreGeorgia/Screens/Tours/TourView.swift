@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TourView: View {
   @StateObject var vm = TourViewModel()
+  @ObservedObject var toastManager = ToastManager()
   let tourId: String
   
   var body: some View {
@@ -57,6 +58,7 @@ struct TourView: View {
                   .roundedCorners(12)
               }
             }
+            .padding(.horizontal, 20)
            }
           .padding(.bottom, 30)
           
@@ -94,11 +96,26 @@ struct TourView: View {
       if vm.isSuccessfullyPurchased {
         TourSuccessComponent()
       }
+      
+      if toastManager.isShown {
+        VStack {
+          ToastView(message: vm.errorMessage, bgColor: .error)
+          
+          Spacer()
+        }
+        .padding(.horizontal, 20)
+        .offset(y: 30)
+      }
     }
     .ignoresSafeArea()
     .onAppear {
       vm.fetchSingleTour(with: tourId, and: .tours)
     }
+    .onReceive(vm.$errorMessage, perform: { message in
+      if !message.isEmpty {
+        toastManager.showToast()
+      }
+    })
     .environmentObject(vm)
   }
 }
