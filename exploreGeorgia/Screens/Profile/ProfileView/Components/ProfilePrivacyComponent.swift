@@ -16,7 +16,7 @@ struct ProfilePrivacyComponent: View {
     VStack(spacing: 20) {
       
       
-      if !editViewModel.isUserFromGoogle {Text("Change password or delete account")
+      if !editViewModel.isUserFromGoogle {Text("Change password")
           .styledText(.customBlack, 18, .bold)
         
         VStack(spacing: 20) {

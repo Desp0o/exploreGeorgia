@@ -26,6 +26,7 @@ struct AddPlaceView: View {
           message: "Your travel memory has been successfully added!",
           bgColor: .successfully
         )
+        .padding(.horizontal, 20)
       }
       
       if vm.isLoading {
