@@ -131,7 +131,7 @@ final class TourViewModel: ObservableObject {
   
   func addPurchasedTour(purchasedTour: PurchasedTourModel, forUser userId: String) async throws {
     do {
-      let purchasedTourRef = db.collection("purcha12sedTours").document(purchasedTour.id)
+      let purchasedTourRef = db.collection("purchasedTours").document(purchasedTour.id)
       try await purchasedTourRef.setData([
         "id": purchasedTour.id,
         "userId": purchasedTour.userId,
