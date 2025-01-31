@@ -19,17 +19,7 @@ struct ResturantView: View {
   
   var body: some View {
     ZStack {
-      VStack {
-        if toastManager.isShown {
-          if isError {
-            ToastView(message: vm.errorMessage?.rawValue ?? "", bgColor: .error)
-          } else {
-            ToastView(message: vm.successMessage, bgColor: .successfully)
-          }
-        }
-        Spacer()
-      }
-      .padding(.horizontal, 20)
+      
       
       VStack {
         PlaceDetailsBGComponent(cover: vm.singleResturant?.cover ?? "")
@@ -153,7 +143,7 @@ struct ResturantView: View {
     .onTapGesture {
       hideKeyboard()
     }
-    .ignoresSafeArea(.container, edges: .top)
+    .ignoresSafeArea(.container, edges: [.top, .bottom])
     .background(.primaryWhite)
     .onAppear {
       vm.fetchData(id: place.id ?? "", collection: collection)
@@ -163,12 +153,14 @@ struct ResturantView: View {
       if message != "" {
         isError = false
         toastManager.showToast()
+        print("🟢")
       }
     })
     .onReceive(vm.$errorMessage, perform: { message in
-      if message == .feedbackError {
+      if message == .feedbackError || message == .noFeedback {
         isError = true
         toastManager.showToast()
+        print("🔴")
       }
     })
     .sheet(isPresented: $vm.isPresent) {
@@ -183,6 +175,20 @@ struct ResturantView: View {
       if vm.isLoading {
         PlaceDetailsShimmer()
       }
+      
+      VStack {
+        if toastManager.isShown {
+          if isError {
+            ToastView(message: vm.errorMessage?.rawValue ?? "", bgColor: .error)
+          } else {
+            ToastView(message: vm.successMessage, bgColor: .successfully)
+          }
+        }
+        
+        Spacer()
+      }
+      .padding(.horizontal, 20)
+      .zIndex(4)
     }
     .environmentObject(vm)
     

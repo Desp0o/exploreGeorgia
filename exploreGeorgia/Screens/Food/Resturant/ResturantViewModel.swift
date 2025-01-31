@@ -58,7 +58,10 @@ final class ResturantViewModel: ObservableObject {
   }
   
   func addUserReview(collection: FirebaseCollectionEnum) {
-    guard !usersReviweText.isEmpty else { return }
+    guard !usersReviweText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+      errorMessage = .noFeedback
+      return
+    }
     
     Task {
       do {
