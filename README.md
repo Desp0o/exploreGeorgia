@@ -1,85 +1,86 @@
-# 🏔 Explore Georgia - შენი მეგზური საქართველოში!
+# 🏔 Explore Georgia - Your Guide in Georgia!
 
-**Explore Georgia** არის აპლიკაცია, რომელიც მოგზაურებს ეხმარება საქართველოს უკეთ გაცნობაში.  
-მომხმარებლებს შეუძლიათ მიიღონ რჩევები, აღმოაჩინონ საინტერესო ადგილები, გააზიარონ თავიანთი გამოცდილება  
-და გაწევრიანდნენ აქტიურ ტურისტულ საზოგადოებაში.  
+**Explore Georgia** is an application that helps travelers get to know Georgia better.  
+Users can get tips, discover interesting places, share their experiences,  
+and join an active travel community.  
 
 ---
 
-## ✨ ფუნქციები
+## ✨ Features
 
-### 🔑 **რეგისტრაცია / ავტორიზაცია**
-- რეგისტრაცია
-- ავტორიზაცია
-- Google ავტორიზაცია
-- პაროლის აღდგენა
+### 🔑 **Registration / Authorization**
+- Registration
+- Authorization
+- Google Authorization
+- Password Recovery
 
-### 👤 **პროფილის მართვა**
-- ავატარის განახლება
-- პერსონალური მონაცემების განახლება
-- პაროლის შეცვლა
-  - google-თი ავტორიზებულ მომხარებლს არ შეუძლია პაროლის ცვლილება აპლიკაციიდან
-- დღის და ღამის რეჟიმის არჩევა
-- გადახდის მეთოდები
-  - მიაბას და წაშალოს საბანკო ბარათები
-- შეძენილი ტურები
-  - ნახოს აქტიური და გასული ტურები
-- ბუქმარქები
-  - მართოს ბუქმარქები სექციების მიხედვით
-- მომხმარებლის წაშლა
+### 👤 **Profile Management**
+- Update Avatar
+- Update Personal Information
+- Change Password  
+  - Users authorized via Google cannot change the password from the app
+- Choose Between Light and Dark Mode
+- Payment Methods  
+  - Link and remove bank cards
+- Purchased Tours  
+  - View active and past tours
+- Bookmarks  
+  - Manage bookmarks by sections
+- Delete User Account
 
-### 🏞 **რეკომენდირებული მოსანახულებელი ადგილები**
-- გაეცნოს აპლიკაციის მიერ რეკომენდირებულ სანახავ ადგილებს
-- ნახოს ლოკაცია აპლიკაციაში ჩაშენებულ რუკაზე
-- გახსნას აპლიკაციიდან მოცემული კოორდინატებით Google maps ან Apple maps
-- დაათვალიეროს სანახავი ადგილის სურათები Lightbox Effect-ით.
-- შეინახოს ბუქმარქებში
+### 🏞 **Recommended Places to Visit**
+- Explore places recommended by the app
+- View location on the in-app map
+- Open coordinates in Google Maps or Apple Maps from the app
+- Browse place photos with Lightbox Effect
+- Save to bookmarks
 
-### 🚍 **რეკომენდირებული ტურები**
-- გაეცნოს აპლიკაციის რეკომენიდრებულ ტურებს
-- დაათვალიეროს ტურის სურათები Lightbox Effect-ით.
-- გაეცნოს ტურის ხანგრძლივობას, კილომეტრაჟსა და შეფასებას.
-- აირჩიოს სასურველი თარიღი და ბილეთების რაოდენობა
-- შეიძინოს ტური საბანკო ბარათით
-- შეინახოს ბუქმარქებში
+### 🚍 **Recommended Tours**
+- Explore tours recommended by the app
+- Browse tour photos with Lightbox Effect
+- Learn about tour duration, distance, and rating
+- Choose a preferred date and number of tickets
+- Purchase the tour using a bank card
+- Save to bookmarks
 
-### 🍽 **რეკომენდირებული საკვები ობიექტები**
-- გაეცნოს რესტორნებს, სასმელ ობეიქეტებსა და საკონდიტრო\საცხობებს.
-- გაეცნოს ინფორმაცია ობიექტზე, მინიმალური ღირებულება და სამუშაო საათები
-- გაეცნოს მენიუს
-- ლოკაცია რუკაზე
-- გაეცნოს შეფასებებს
-- დატოვოს საკუთარი შეფასება
-- შეინახოს ბუქმარქებში
-- ჩაშენებული **AI** დახმარებით მიიღოს სასურველი ინფორმაცია ან რეცეპტი ქართულ სამზარეულოზე.
-  - აპლიკაციის **AI** პასუხისმგებელია კითვებზე, რომელიც ეხება მხოლოდ კულინარიას
- 
-### 🗺 **მოგზაურობა და რჩევები**
-- გაეცნოს მოგზაურების მიერ გაზიარებულ სანახავ ადგილებსა თუ საკევბ ობიექტებს.
-- ლოკაცია რუკაზე.
-- დაათვალიეროს სანახავი ადგილის სურათები Lightbox Effect-ით.
-- გაეცნოს გამზიარებელი მოგზაურის პროფილი და მისი ყველა აღმოჩენა.
-- შეინახოს ბუქმარქებში.
-- დაამატოს აპლიკაციაში მისი აზრით საინტერესო მოსანახულებელი ადგილები
-  - მონიშნოს რუკაზე
-  - ატვირთოს სურათები
- 
-### 🗣 მინი ლექსიკონი - სასარგებლო ფრაზები
-- გამოიყენოს მინი ლექისკონი ისეთი სიტყვებისა და წინადადებებისთვის რომელიც დაეხამრება მოგზაუორბაში.
-- მოძებნოს მინი ლექსიკონში სასურველი სიტყვის ქართული თარგმანი.
+### 🍽 **Recommended Food Places**
+- Discover restaurants, drink venues, and pastry/bakery shops
+- View information about the place, minimum cost, and working hours
+- View the menu
+- See location on the map
+- Read reviews
+- Leave your own review
+- Save to bookmarks
+- Use built-in **AI** to get desired information or recipes about Georgian cuisine  
+  - The app's **AI** responds only to culinary-related questions
 
-### ✨ ძალიან მალე 🚀
-- 🎖 ქულების დაგროვება აღმოჩენილ ადგილებზე.
-- 💰 ქულების გამოყენება.
-- 🏆 ეიჩივმენტების სისტემის დანერგვა.
+### 🗺 **Travel & Tips**
+- Explore places or food spots shared by other travelers
+- Location on the map
+- Browse place photos with Lightbox Effect
+- View the traveler's profile and all their discoveries
+- Save to bookmarks
+- Add your own suggested places to visit in the app  
+  - Mark on the map  
+  - Upload photos
 
-⚒️ ტექნიკური მხარე
+### 🗣 Mini Dictionary - Useful Phrases
+- Use the mini dictionary for words and phrases useful while traveling
+- Search for the Georgian translation of a desired word in the mini dictionary
+
+### ✨ Coming Very Soon 🚀
+- 🎖 Earn points by discovering places
+- 💰 Use points
+- 🏆 Achievement system implementation
+
+⚒️ Technical Side
 - 🖥 UI Framework: UIKit / SwiftUI
 - 🔥 Back-End: Firebase SDK
 - 🛠 IDE: Xcode 16.2
 - 📱 Deployment Target: iOS 16
 - 📐 Architecture: MVVM (Model-View-ViewModel)
 
+  
 # 📽️ Demo
  - [Demo Video](https://www.youtube.com/shorts/tsn-Mfu0xgE)
 
